@@ -19,9 +19,6 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/fakerphp/faker" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/fruitcake/php-cors" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/graham-campbell/result-type" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/guzzlehttp/guzzle" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/guzzlehttp/promises" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/guzzlehttp/psr7" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/guzzlehttp/uri-template" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/hamcrest/hamcrest-php" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/laravel/framework" />
@@ -55,13 +52,9 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/clock" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/container" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/event-dispatcher" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/http-client" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/http-factory" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/http-message" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/log" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psr/simple-cache" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/psy/psysh" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/ralouphie/getallheaders" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/ramsey/collection" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/ramsey/uuid" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/sebastian/cli-parser" />
@@ -79,7 +72,6 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/sebastian/recursion-context" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/sebastian/version" />
-      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/symfony/clock" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/symfony/console" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/symfony/css-selector" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/symfony/deprecation-contracts" />
@@ -113,6 +105,13 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/vlucas/phpdotenv" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/voku/portable-ascii" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/webmozart/assert" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/bacon/bacon-qr-code" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/dasprid/enum" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/laravel/fortify" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/laravel/jetstream" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/mobiledetect/mobiledetectlib" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/paragonie/constant_time_encoding" />
+      <excludeFolder url="file://$MODULE_DIR$/Back/vendor/pragmarx/google2fa" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

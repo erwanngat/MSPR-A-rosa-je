@@ -16,9 +16,6 @@
       <path value="$PROJECT_DIR$/Back/vendor/psr/clock" />
       <path value="$PROJECT_DIR$/Back/vendor/psr/container" />
       <path value="$PROJECT_DIR$/Back/vendor/psr/event-dispatcher" />
-      <path value="$PROJECT_DIR$/Back/vendor/psr/http-client" />
-      <path value="$PROJECT_DIR$/Back/vendor/psr/http-factory" />
-      <path value="$PROJECT_DIR$/Back/vendor/psr/http-message" />
       <path value="$PROJECT_DIR$/Back/vendor/psr/log" />
       <path value="$PROJECT_DIR$/Back/vendor/psr/simple-cache" />
       <path value="$PROJECT_DIR$/Back/vendor/psy/psysh" />
@@ -40,7 +37,6 @@
       <path value="$PROJECT_DIR$/Back/vendor/egulias/email-validator" />
       <path value="$PROJECT_DIR$/Back/vendor/laravel/framework" />
       <path value="$PROJECT_DIR$/Back/vendor/laravel/pint" />
-      <path value="$PROJECT_DIR$/Back/vendor/laravel/prompts" />
       <path value="$PROJECT_DIR$/Back/vendor/laravel/sail" />
       <path value="$PROJECT_DIR$/Back/vendor/laravel/serializable-closure" />
       <path value="$PROJECT_DIR$/Back/vendor/laravel/tinker" />
@@ -55,7 +51,6 @@
       <path value="$PROJECT_DIR$/Back/vendor/phpunit/php-text-template" />
       <path value="$PROJECT_DIR$/Back/vendor/phpunit/php-timer" />
       <path value="$PROJECT_DIR$/Back/vendor/phpunit/phpunit" />
-      <path value="$PROJECT_DIR$/Back/vendor/symfony/clock" />
       <path value="$PROJECT_DIR$/Back/vendor/symfony/console" />
       <path value="$PROJECT_DIR$/Back/vendor/symfony/css-selector" />
       <path value="$PROJECT_DIR$/Back/vendor/symfony/deprecation-contracts" />
@@ -92,7 +87,6 @@
       <path value="$PROJECT_DIR$/Back/vendor/carbonphp/carbon-doctrine-types" />
       <path value="$PROJECT_DIR$/Back/vendor/fruitcake/php-cors" />
       <path value="$PROJECT_DIR$/Back/vendor/phpoption/phpoption" />
-      <path value="$PROJECT_DIR$/Back/vendor/ralouphie/getallheaders" />
       <path value="$PROJECT_DIR$/Back/vendor/sebastian/cli-parser" />
       <path value="$PROJECT_DIR$/Back/vendor/sebastian/code-unit" />
       <path value="$PROJECT_DIR$/Back/vendor/sebastian/code-unit-reverse-lookup" />
@@ -109,14 +103,19 @@
       <path value="$PROJECT_DIR$/Back/vendor/sebastian/type" />
       <path value="$PROJECT_DIR$/Back/vendor/sebastian/version" />
       <path value="$PROJECT_DIR$/Back/vendor/webmozart/assert" />
-      <path value="$PROJECT_DIR$/Back/vendor/guzzlehttp/guzzle" />
-      <path value="$PROJECT_DIR$/Back/vendor/guzzlehttp/promises" />
-      <path value="$PROJECT_DIR$/Back/vendor/guzzlehttp/psr7" />
       <path value="$PROJECT_DIR$/Back/vendor/guzzlehttp/uri-template" />
       <path value="$PROJECT_DIR$/Back/vendor/nunomaduro/termwind" />
       <path value="$PROJECT_DIR$/Back/vendor/tijsverkoyen/css-to-inline-styles" />
       <path value="$PROJECT_DIR$/Back/vendor/dragonmantank/cron-expression" />
       <path value="$PROJECT_DIR$/Back/vendor/graham-campbell/result-type" />
+      <path value="$PROJECT_DIR$/Back/vendor/dasprid/enum" />
+      <path value="$PROJECT_DIR$/Back/vendor/pragmarx/google2fa" />
+      <path value="$PROJECT_DIR$/Back/vendor/paragonie/constant_time_encoding" />
+      <path value="$PROJECT_DIR$/Back/vendor/bacon/bacon-qr-code" />
+      <path value="$PROJECT_DIR$/Back/vendor/mobiledetect/mobiledetectlib" />
+      <path value="$PROJECT_DIR$/Back/vendor/laravel/fortify" />
+      <path value="$PROJECT_DIR$/Back/vendor/laravel/jetstream" />
+      <path value="$PROJECT_DIR$/Back/vendor/laravel/prompts" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
