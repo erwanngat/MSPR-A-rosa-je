@@ -116,6 +116,7 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/mobiledetect/mobiledetectlib" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/pragmarx/google2fa" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-permission" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
