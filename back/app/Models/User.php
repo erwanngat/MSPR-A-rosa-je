@@ -64,4 +64,8 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function plantes(){
+        return $this->hasMany(Plante::class);
+}
 }
