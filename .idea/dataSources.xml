@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:C:\Users\DÉVELOPPEUR\PhpstormProjects\MSPR-A-rosa-je\back\database\database.sqlite</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="database [2]" uuid="a7787689-b7ca-43c6-9932-0573b3a9cd8f">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:C:\Users\ilyes\PhpstormProjects\MSPR-A-rosa-je\back\database\database.sqlite</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>
