@@ -20,6 +20,9 @@ RUN apt-get update && apt-get install -y \
 # Installer uniquement l'extension PHP pour SQLite
 RUN docker-php-ext-install pdo_sqlite
 
+# Activer le module rewrite d'Apache
+RUN a2enmod rewrite
+
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
@@ -45,8 +48,21 @@ RUN composer install
 # Installer les dépendances NPM
 RUN npm install
 
+# Générer les assets front-end avec Vite
+RUN npm run build
+
 # Générer la clé d'application Laravel
 RUN php artisan key:generate
+
+# Éfectuer les migrations
+RUN php artisan migrate
+
+# Donner les permissions appropriées aux répertoires de stockage et de cache Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
+
+# Copier le fichier de configuration Apache
+COPY apache-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Exposer le port 80
 EXPOSE 80
