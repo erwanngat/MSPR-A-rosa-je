@@ -67,5 +67,21 @@ class User extends Authenticatable
 
     public function plantes(){
         return $this->hasMany(Plante::class);
-}
+    }
+
+    public function adress(){
+        return $this->belongsTo(Adress::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function ownerReservations(){
+        return $this->hasMany(Reservation::class, 'owner_user_id');
+    }
+
+    public function gardenerReservations(){
+        return $this->hasMany(Reservation::class, 'gardener_user_id');
+    }
 }
