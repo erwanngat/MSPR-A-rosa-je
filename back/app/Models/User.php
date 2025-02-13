@@ -69,10 +69,6 @@ class User extends Authenticatable
         return $this->hasMany(Plante::class);
     }
 
-    public function adress(){
-        return $this->belongsTo(Adress::class);
-    }
-
     public function comments(){
         return $this->hasMany(Comment::class);
     }
