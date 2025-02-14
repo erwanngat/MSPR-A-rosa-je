@@ -15,6 +15,6 @@ class Plante extends Model
     }
 
     public function adress(){
-        return $this->belongsTo(Adress::class);
+        return $this->belongsTo(Address::class);
     }
 }
