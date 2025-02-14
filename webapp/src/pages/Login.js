@@ -12,7 +12,9 @@ const Login = () => {
     e.preventDefault();
     console.log('Login submitted', { email, password });
     // Ajouter la logique de soumission du formulaire
-    navigate('/');  // Redirection vers la page d'index
+    navigate('/');  
+    sessionStorage.setItem('email', email);
+
   };
 
   return (

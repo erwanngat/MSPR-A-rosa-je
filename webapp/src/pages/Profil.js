@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import {  useNavigate } from 'react-router-dom';  
 //import './styles.css'; // Assurez-vous d'importer le fichier CSS
 
 const Profil = () => {
+  const navigate = useNavigate();  
+
   const [user, setUser] = useState({
     name: 'John Doe',
     email: 'johndoe@example.com',
@@ -15,7 +18,9 @@ const Profil = () => {
   };
 
   const handleLogout = () => {
-    alert("Déconnexion réussie !");
+    sessionStorage.setItem('email', "");
+    navigate("/login");
+    
     // Ajoute ici la logique de déconnexion
   };
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Inscription = () => {
+const Register = () => {
   const [lastname, setLastname] = useState('');
   const [firstname, setFirstname] = useState('');
   const [tel, setTel] = useState('');
@@ -112,4 +112,4 @@ const Inscription = () => {
   );
 };
 
-export default Inscription;
+export default Register;
