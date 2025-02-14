@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('plantes', function (Blueprint $table) {
+        Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('adress_id')->constrained('adresses');
+            $table->foreignId('owner_user_id')->constrained('users');
+            $table->foreignId('gardener_user_id')->constrained('users');
+            $table->datetime('start_date');
+            $table->datetime('end_date');
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('plantes');
+        Schema::dropIfExists('reservations');
     }
 };
