@@ -20,7 +20,7 @@ class PlanteController extends Controller
             return response()->json([['error' => 'No plants found'], 404]);
         }
 
-        return response()->json($plantes);
+        return response()->json($plantes, 200);
     }
 
     /**

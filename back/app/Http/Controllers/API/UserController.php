@@ -20,7 +20,7 @@ class UserController extends Controller
             return response()->json([['error' => 'No users found'], 404]);
         }
 
-        return response()->json($users);
+        return response()->json($users, 200);
     }
 
     /**
