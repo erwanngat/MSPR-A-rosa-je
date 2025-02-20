@@ -35,7 +35,7 @@ class CommentController extends Controller
         $comment = Comment::create([
             'comment' => $request->comment,
             'user_id' => auth()->id(),
-            'plante_id' => $request->planteId
+            'plante_id' => $request->plante_id
         ]);
 
         return response()->json($comment, 201);
@@ -72,7 +72,7 @@ class CommentController extends Controller
         $comment->update([
             'comment' => $request->comment,
             'user_id' => auth()->id(),
-            'plante_id' => $request->planteId
+            'plante_id' => $request->plante_id
         ]);
 
         return response()->json($comment, 200);

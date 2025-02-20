@@ -40,10 +40,10 @@ class ReservationController extends Controller
         }
 
         $reservation = Reservation::create([
-            'owner_user_id' => $request->ownerId,
-            'gardener_user_id' => $request->gardenerId,
-            'start_date' => $request->startDate,
-            'end_date' => $request->endDate
+            'owner_user_id' => $request->owner_id,
+            'gardener_user_id' => $request->gardener_id,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
         ]);
 
         return response()->json($reservation, 201);
@@ -80,10 +80,10 @@ class ReservationController extends Controller
         }
 
         $reservation->update([
-            'owner_user_id' => $request->ownerId,
-            'gardener_user_id' => $request->gardenerId,
-            'start_date' => $request->startDate,
-            'end_date' => $request->endDate
+            'owner_user_id' => $request->owner_id,
+            'gardener_user_id' => $request->gardener_id,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
         ]);
 
         return response()->json($reservation, 200);
