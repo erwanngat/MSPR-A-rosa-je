@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\CommentController;
+use App\Http\Controllers\API\ReservationController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -14,6 +15,7 @@ Route::withoutMiddleware([VerifyCsrfToken::class])
     Route::apiResource('users', UserController::class);
     Route::apiResource('plantes', PlanteController::class);
     Route::apiResource('comments', CommentController::class);
+    Route::apiResource('reservations', ReservationController::class);
 
     Route::post('register', [AuthController::class, 'register']);
     Route::post('login', [AuthController::class, 'login']);
