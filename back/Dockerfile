@@ -55,7 +55,7 @@ RUN npm run build
 RUN php artisan key:generate
 
 # Éfectuer les migrations
-RUN php artisan migrate
+RUN php artisan migrate --seed
 
 # Donner les permissions appropriées aux répertoires de stockage et de cache Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite

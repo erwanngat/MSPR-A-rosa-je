@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -15,6 +16,10 @@ class UserController extends Controller
     {
         $users = User::all();
 
+        if(!$users){
+            return response()->json([['error' => 'No users found'], 404]);
+        }
+
         return response()->json($users);
     }
 
@@ -23,11 +28,16 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users',
+            'phone_number' => 'required|phone:FR',
             'password' => 'required|min:8'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -41,8 +51,14 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(string $id)
     {
+        $user = User::find($id);
+
+        if(!$user){
+            return response()->json([['error' => 'User not found'], 404]);
+        }
+
         return response()->json($user);
     }
 
@@ -51,11 +67,15 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->validate($request, [
+        $validator = Validator::make($request->all(), [
             'name' => 'required|max:100',
             'email' => 'required|email',
             'password' => 'required|min:8'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 400);
+        }
 
         $user->update([
             "name" => $request->name,
@@ -63,7 +83,7 @@ class UserController extends Controller
             "password" => bcrypt($request->password)
         ]);
 
-        return response()->json();
+        return response()->json($user, 200);
     }
 
     /**
@@ -72,7 +92,6 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $user->delete();
-
-        return response()->json();
+        return response()->json(null, 204);
     }
 }

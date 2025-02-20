@@ -3,24 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Models\Plante;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-class PlanteController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $plantes = Plante::all();
-
-        if(!$plantes){
-            return response()->json([['error' => 'No plants found'], 404]);
-        }
-
-        return response()->json($plantes);
+        $comments = Comment::all();
+        return response()->json($comments);
     }
 
     /**
@@ -29,21 +24,21 @@ class PlanteController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'address_id' => 'required|integer|exists:addresses,id',
+            'comment' => 'required',
+            'plante_id' => 'required|integer|exists:plantes,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $plante = Plante::create([
-            'name' => $request->name,
+        $comment = Comment::create([
+            'comment' => $request->comment,
             'user_id' => auth()->id(),
-            'address_id' => $request->adressId
+            'plante_id' => $request->planteId
         ]);
 
-        return response()->json($plante, 201);
+        return response()->json($comment, 201);
     }
 
     /**
@@ -51,44 +46,44 @@ class PlanteController extends Controller
      */
     public function show(string $id)
     {
-        $plante = Plante::find($id);
+        $comment = Comment::find($id);
 
-        if(!$plante){
-            return response()->json([['error' => 'Plante not found'], 404]);
+        if(!$comment){
+            return response()->json([['error' => 'Comment not found'], 404]);
         }
 
-        return response()->json($plante);
+        return response()->json($comment);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Plante $plante)
+    public function update(Request $request, Comment $comment)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'address_id' => 'required|integer|exists:addresses,id',
+            'comment' => 'required',
+            'plante_id' => 'required|integer|exists:plantes,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 400);
         }
 
-        $plante->update([
-            "name" => $request->name,
-            "user_id" => auth()->id(),
-            "address_id" => $request->adressId,
+        $comment->update([
+            'comment' => $request->comment,
+            'user_id' => auth()->id(),
+            'plante_id' => $request->planteId
         ]);
 
-        return response()->json($plante, 200);
+        return response()->json($comment, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Plante $plante)
+    public function destroy(Comment $comment)
     {
-        $plante->delete();
+        $comment->delete();
         return response()->json(null, 204);
     }
 }
