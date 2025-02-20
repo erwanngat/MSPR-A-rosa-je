@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plante extends Model
 {
+    protected $fillable = ['name', 'user_id', 'address_id'];
     public function user(){
         return $this->belongsTo(User::class);
     }
