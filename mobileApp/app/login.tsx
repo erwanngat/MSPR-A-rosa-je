@@ -1,16 +1,28 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, StyleSheet } from 'react-native';
+import { View, TextInput, Button, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useUserStore } from '@/stores/userStore';
 
 const LoginScreen = () => {
-    const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const login = useUserStore((state) => state.login);
+  const router = useRouter();
 
-  const handleLogin = () => {
-    if (username === 'user' && password === 'password') { //APPEL API
-      router.replace('/');
+  const handleLogin = async () => {
+    if (username === 'user' && password === 'password') {
+      const userData = {
+        id: '1',
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        role: 'user',
+        phone: '1234567890',
+        token: 'fake-jwt-token',
+      };
+
+      login(userData);
+      router.replace('/'); // Redirige vers la page d'accueil
     } else {
       setError('Identifiants incorrects');
     }
@@ -34,6 +46,11 @@ const LoginScreen = () => {
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <Button title="Se connecter" onPress={handleLogin} />
+      
+      {/* Lien vers l'inscription */}
+      <Pressable onPress={() => router.push('/inscription')}>
+        <Text style={styles.link}>Pas encore de compte ? S'inscrire</Text>
+      </Pressable>
     </View>
   );
 };
@@ -59,6 +76,12 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     marginBottom: 10,
+  },
+  link: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: 'blue',
+    fontSize: 16,
   },
 });
 
