@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reservation extends Model
 {
+    protected $fillable = ['owner_user_id', 'gardener_user_id', 'start_date', 'end_date'];
     public function owner(){
         return $this->belongsTo(User::class, 'onwer_user_id');
     }

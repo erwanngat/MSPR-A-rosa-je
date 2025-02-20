@@ -40,7 +40,7 @@ class PlanteController extends Controller
         $plante = Plante::create([
             'name' => $request->name,
             'user_id' => auth()->id(),
-            'address_id' => $request->adress_id
+            'address_id' => $request->address_id
         ]);
 
         return response()->json($plante, 201);
