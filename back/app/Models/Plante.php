@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plante extends Model
 {
+    protected $fillable = ['name', 'user_id', 'address_id'];
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -15,6 +16,6 @@ class Plante extends Model
     }
 
     public function adress(){
-        return $this->belongsTo(Adress::class);
+        return $this->belongsTo(Address::class);
     }
 }

@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePlanteRequest;
+use App\Http\Requests\UpdatePlanteRequest;
 use App\Models\Plante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class PlanteController extends Controller
 {
@@ -15,21 +18,22 @@ class PlanteController extends Controller
     {
         $plantes = Plante::all();
 
-        return response()->json($plantes);
+        if(!$plantes){
+            return response()->json([['error' => 'No plants found'], 404]);
+        }
+
+        return response()->json($plantes, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePlanteRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:100',
-        ]);
-
         $plante = Plante::create([
             'name' => $request->name,
-            'user_id' => $request->userId
+            'user_id' => auth()->id(),
+            'address_id' => $request->address_id
         ]);
 
         return response()->json($plante, 201);
@@ -38,25 +42,29 @@ class PlanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Plante $plante)
+    public function show(string $id)
     {
+        $plante = Plante::find($id);
+
+        if(!$plante){
+            return response()->json([['error' => 'Plante not found'], 404]);
+        }
+
         return response()->json($plante);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Plante $plante)
+    public function update(UpdatePlanteRequest $request, Plante $plante)
     {
-        $this->validate($request, [
-            'name' => 'required|max:100',
-        ]);
-
         $plante->update([
             "name" => $request->name,
+            "user_id" => auth()->id(),
+            "address_id" => $request->adress_id,
         ]);
 
-        return response()->json();
+        return response()->json($plante, 200);
     }
 
     /**
@@ -65,7 +73,6 @@ class PlanteController extends Controller
     public function destroy(Plante $plante)
     {
         $plante->delete();
-
-        return response()->json();
+        return response()->json(null, 204);
     }
 }

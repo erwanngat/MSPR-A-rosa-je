@@ -42,6 +42,12 @@ RUN touch database/database.sqlite
 #Donner les droits de super utilisateur pour installer composer
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
+# Ajouter les perms sur la bdd et les répertoires nécessaires
+RUN chown -R www-data:www-data /var/www/html/database/database.sqlite
+RUN chmod 664 /var/www/html/database/database.sqlite
+RUN chown -R www-data:www-data /var/www/html/database
+RUN chmod -R 775 /var/www/html/database
+
 # Installer les dépendances Composer
 RUN composer install
 
@@ -55,7 +61,7 @@ RUN npm run build
 RUN php artisan key:generate
 
 # Éfectuer les migrations
-RUN php artisan migrate
+RUN php artisan migrate:fresh --seed
 
 # Donner les permissions appropriées aux répertoires de stockage et de cache Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
