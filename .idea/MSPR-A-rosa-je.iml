@@ -6,6 +6,8 @@
       <sourceFolder url="file://$MODULE_DIR$/back/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/back/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/back/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/back/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/back/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/carbonphp/carbon-doctrine-types" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/composer" />
@@ -110,6 +112,12 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/mobiledetect/mobiledetectlib" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/pragmarx/google2fa" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/giggsey/libphonenumber-for-php-lite" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/propaganistas/laravel-phone" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/kitloong/laravel-app-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/rakutentech/laravel-request-docs" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-http-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-package-tools" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
