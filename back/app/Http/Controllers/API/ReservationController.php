@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreReservationRequest;
+use App\Http\Requests\UpdateReservationRequest;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,19 +28,8 @@ class ReservationController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreReservationRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'owner_user_id' => 'required|integer|exists:users,id',
-            'gardener_user_id' => 'required|integer|exists:users,id',
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $reservation = Reservation::create([
             'owner_user_id' => $request->owner_id,
             'gardener_user_id' => $request->gardener_id,
@@ -66,19 +57,8 @@ class ReservationController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
-        $validator = Validator::make($request->all(), [
-            'owner_user_id' => 'required|integer|exists:users,id',
-            'gardener_user_id' => 'required|integer|exists:users,id',
-            'start_date' => 'required',
-            'end_date' => 'required',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $reservation->update([
             'owner_user_id' => $request->owner_id,
             'gardener_user_id' => $request->gardener_id,

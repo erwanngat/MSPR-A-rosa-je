@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreAddressRequest;
+use App\Http\Requests\UpdateAddressRequest;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,20 +28,8 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAddressRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'country' => 'required|max:100',
-            'city' => 'required|max:100',
-            'zip_code' => 'required|max:100',
-            'street' => 'required|max:100',
-            'additional_address_details' => 'max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $address = Address::create([
             'country' => $request->country,
             'city' => $request->city,
@@ -68,20 +58,8 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address)
+    public function update(UpdateAddressRequest $request, Address $address)
     {
-        $validator = Validator::make($request->all(), [
-            'country' => 'required|max:100',
-            'city' => 'required|max:100',
-            'zip_code' => 'required|max:100',
-            'street' => 'required|max:100',
-            'additional_address_details' => 'max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $address->update([
             'country' => $request->country,
             'city' => $request->city,

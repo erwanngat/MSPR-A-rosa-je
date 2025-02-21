@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreCommentRequest;
+use App\Http\Requests\UpdateCommentRequest;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -21,17 +23,8 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCommentRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'comment' => 'required',
-            'plante_id' => 'required|integer|exists:plantes,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $comment = Comment::create([
             'comment' => $request->comment,
             'user_id' => auth()->id(),
@@ -58,17 +51,8 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
-        $validator = Validator::make($request->all(), [
-            'comment' => 'required',
-            'plante_id' => 'required|integer|exists:plantes,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $comment->update([
             'comment' => $request->comment,
             'user_id' => auth()->id(),
