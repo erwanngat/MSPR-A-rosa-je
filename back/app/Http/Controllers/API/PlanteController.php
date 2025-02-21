@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StorePlanteRequest;
+use App\Http\Requests\UpdatePlanteRequest;
 use App\Models\Plante;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -26,17 +28,8 @@ class PlanteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePlanteRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'address_id' => 'required|integer|exists:addresses,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $plante = Plante::create([
             'name' => $request->name,
             'user_id' => auth()->id(),
@@ -63,17 +56,8 @@ class PlanteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Plante $plante)
+    public function update(UpdatePlanteRequest $request, Plante $plante)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|max:100',
-            'address_id' => 'required|integer|exists:addresses,id',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
-
         $plante->update([
             "name" => $request->name,
             "user_id" => auth()->id(),
