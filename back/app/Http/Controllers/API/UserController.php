@@ -43,9 +43,9 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(User $user)
     {
-        $user = User::find($id);
+        $user = User::find($user);
 
         if(!$user){
             return response()->json([['error' => 'User not found'], 404]);

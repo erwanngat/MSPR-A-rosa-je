@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="LaravelPint">
+    <laravel_pint_settings>
+      <LaravelPintConfiguration tool_path="$PROJECT_DIR$/back/vendor/bin/pint" />
+    </laravel_pint_settings>
+  </component>
   <component name="MessDetectorOptionsConfiguration">
     <option name="transferred" value="true" />
   </component>
@@ -129,6 +134,12 @@
       <path value="$PROJECT_DIR$/back/vendor/laravel/pail" />
       <path value="$PROJECT_DIR$/back/vendor/symfony/clock" />
       <path value="$PROJECT_DIR$/back/vendor/ralouphie/getallheaders" />
+      <path value="$PROJECT_DIR$/back/vendor/propaganistas/laravel-phone" />
+      <path value="$PROJECT_DIR$/back/vendor/giggsey/libphonenumber-for-php-lite" />
+      <path value="$PROJECT_DIR$/back/vendor/rakutentech/laravel-request-docs" />
+      <path value="$PROJECT_DIR$/back/vendor/kitloong/laravel-app-logger" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/laravel-http-logger" />
+      <path value="$PROJECT_DIR$/back/vendor/spatie/laravel-package-tools" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />
