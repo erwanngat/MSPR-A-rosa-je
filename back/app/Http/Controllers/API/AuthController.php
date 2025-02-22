@@ -20,10 +20,12 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
         ]);
-
+        auth()->login($user);
+        $token = $user->createToken('authToken')->plainTextToken;
         return response()->json([
             'message' => 'User registered successfully',
-            'user' => $user
+            'user' => $user,
+            'token' => $token,
         ], 201);
     }
 
@@ -39,7 +41,6 @@ class AuthController extends Controller
                 'token' => $token,
             ]);
         }
-
         return response()->json(['message' => 'Invalid credentials'], 401);
     }
 }

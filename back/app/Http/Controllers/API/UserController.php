@@ -43,12 +43,12 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(int $id)
     {
-        $user = User::find($user);
+        $user = User::find($id);
 
         if(!$user){
-            return response()->json([['error' => 'User not found'], 404]);
+            return response()->json(['error' => 'User not found'], 404);
         }
 
         return response()->json($user);
@@ -72,9 +72,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(int $id)
     {
-        $user->delete();
+        User::destroy($id);
         return response()->json(null, 204);
     }
 }

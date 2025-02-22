@@ -44,12 +44,12 @@ class AddressController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         $address = Address::find($id);
 
         if(!$address){
-            return response()->json([['error' => 'Address not found'], 404]);
+            return response()->json(['error' => 'Address not found'], 404);
         }
 
         return response()->json($address);
@@ -74,9 +74,9 @@ class AddressController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Address $address)
+    public function destroy(int $id)
     {
-        $address->delete();
+        Address::destroy($id);
         return response()->json(null, 204);
     }
 }

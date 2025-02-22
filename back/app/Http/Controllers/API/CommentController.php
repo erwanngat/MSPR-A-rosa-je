@@ -17,6 +17,9 @@ class CommentController extends Controller
     public function index()
     {
         $comments = Comment::all();
+        if($comments->isEmpty()){
+            return response()->json(['error' => 'No comments found'], 404);
+        }
         return response()->json($comments, 200);
     }
 
@@ -37,12 +40,12 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         $comment = Comment::find($id);
 
         if(!$comment){
-            return response()->json([['error' => 'Comment not found'], 404]);
+            return response()->json(['error' => 'Comment not found'], 404);
         }
 
         return response()->json($comment);
@@ -65,9 +68,9 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(int $id)
     {
-        $comment->delete();
+        Comment::destroy($id);
         return response()->json(null, 204);
     }
 }
