@@ -18,8 +18,8 @@ class PlanteController extends Controller
     {
         $plantes = Plante::all();
 
-        if(!$plantes){
-            return response()->json([['error' => 'No plants found'], 404]);
+        if($plantes->isEmpty()){
+            return response()->json(['error' => 'No plants found'], 404);
         }
 
         return response()->json($plantes, 200);
@@ -42,15 +42,15 @@ class PlanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         $plante = Plante::find($id);
 
         if(!$plante){
-            return response()->json([['error' => 'Plante not found'], 404]);
+            return response()->json(['error' => 'Plante not found'], 404);
         }
 
-        return response()->json($plante);
+        return response()->json($plante, 200);
     }
 
     /**
@@ -61,7 +61,7 @@ class PlanteController extends Controller
         $plante->update([
             "name" => $request->name,
             "user_id" => auth()->id(),
-            "address_id" => $request->adress_id,
+            "address_id" => $request->address_id,
         ]);
 
         return response()->json($plante, 200);
@@ -70,9 +70,9 @@ class PlanteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Plante $plante)
+    public function destroy(int $id)
     {
-        $plante->delete();
+        Plante::destroy($id);
         return response()->json(null, 204);
     }
 
