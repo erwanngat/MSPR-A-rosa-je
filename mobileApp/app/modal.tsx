@@ -1,72 +1,180 @@
-import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, Text, View, Button } from 'react-native';
-import { Link } from 'expo-router';
+import React, { useState, useEffect } from "react";
+import { View, Text, TextInput, Button, FlatList, Image, StyleSheet, ScrollView, TouchableOpacity } from "react-native";
+import CommentService from "../services/commentService";
+import { IComment } from "@/types/comment";
+import { useUserStore } from '@/stores/userStore';
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ModalScreen() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Informations détaillées</Text>
+    const [comments, setComments] = useState<IComment[]>([]);
+    const [newComment, setNewComment] = useState("");
+    const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+    const [editedComment, setEditedComment] = useState<string>("");
+    const token = useUserStore().user?.token;
+    const plantId = 1;
 
-      {/* Description détaillée de l'objet de la modal */}
-      <Text style={styles.description}>
-        Cette page vous fournit des informations détaillées sur les fonctionnalités disponibles 
-        dans l'application. Vous pouvez voir vos informations personnelles, modifier vos préférences 
-        et gérer d'autres paramètres pertinents à votre profil. Cette page sert aussi à fournir des 
-        explications sur l'utilisation de certaines options de l'application.
-      </Text>
+    useEffect(() => {
+        fetchComments();
+    }, []);
 
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
+    const fetchComments = async () => {
+        const fetchedComments = await CommentService().getCommentsByPlant(plantId, token);
+        setComments(fetchedComments);
+    };
 
-      {/* Autre texte pour plus d'information */}
-      <Text style={styles.text}>
-        Cette fenêtre modale est utilisée pour afficher des informations complémentaires et des actions 
-        que vous pouvez prendre concernant votre compte ou d'autres sections de l'application.
-      </Text>
+    const handleAddComment = async () => {
+        if (newComment.trim() === "") return;
 
-      {/* Lien de retour à la page précédente (par exemple à partir de l'écran principal) */}
-      <Link href="/" style={styles.link}>
-        <Button title="Retour à l'accueil" />
-      </Link>
+        const success = await CommentService().addComment(
+            {
+                comment: newComment,
+                plant_id: plantId,
+            },
+            token
+        );
 
-      {/* Utilisation du StatusBar pour adapter le style en fonction de la plateforme */}
-      <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
-    </View>
-  );
+        if (success) {
+            setNewComment("");
+            fetchComments();
+        }
+    };
+
+    const handleDeleteComment = async (commentId: number) => {
+        const success = await CommentService().deleteComment(commentId, token);
+        if (success) {
+            fetchComments();
+        }
+    };
+
+    const handleEditComment = (commentId: number, currentComment: string) => {
+        setEditingCommentId(commentId);
+        setEditedComment(currentComment);
+    };
+
+    const handleUpdateComment = async () => {
+        if (editedComment.trim() === "") return;
+
+        const success = await CommentService().updateComment(editingCommentId!, { 
+            comment: editedComment, 
+            plant_id: plantId 
+        }, token);
+
+        if (success) {
+            setEditingCommentId(null);
+            setEditedComment("");
+            fetchComments();
+        }
+    };
+
+    return (
+        <ScrollView style={styles.container}>
+            <Text style={styles.title}>Titre de la Plante</Text>
+            <Image 
+                source={{ uri: "https://via.placeholder.com/600x400" }}
+                style={styles.image} 
+            />
+            <Text style={styles.description}>Ceci est une description détaillée de la plante...</Text>
+            
+            <View style={styles.commentSection}>
+                <Text style={styles.commentTitle}>Commentaires</Text>
+                <FlatList
+                    data={comments}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item }) => (
+                        <View style={styles.commentContainer}>
+                            {editingCommentId === item.id ? (
+                                <View style={styles.editContainer}>
+                                    <TextInput
+                                        style={styles.input}
+                                        value={editedComment}
+                                        onChangeText={setEditedComment}
+                                    />
+                                    <Button title="Mettre à jour" onPress={handleUpdateComment} color="#007bff" />
+                                </View>
+                            ) : (
+                                <>
+                                    <Text style={styles.commentItem}>{item.comment}</Text>
+                                    <TouchableOpacity onPress={() => handleEditComment(item.id, item.comment)}>
+                                        <Ionicons name="pencil" size={20} color="#007bff" />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleDeleteComment(item.id)}>
+                                        <Ionicons name="trash" size={20} color="red" />
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                        </View>
+                    )}
+                />
+                <TextInput 
+                    style={styles.input} 
+                    value={newComment} 
+                    onChangeText={setNewComment}
+                    placeholder="Ajouter un commentaire..."
+                />
+                <Button title="Ajouter" onPress={handleAddComment} color="#007bff" />
+            </View>
+        </ScrollView>
+    );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-  },
-  description: {
-    fontSize: 16,
-    color: '#333',
-    textAlign: 'center',
-    marginVertical: 20,
-    paddingHorizontal: 20,
-  },
-  separator: {
-    marginVertical: 20,
-    height: 1,
-    width: '80%',
-    backgroundColor: '#ccc',
-  },
-  text: {
-    fontSize: 14,
-    color: '#555',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  link: {
-    marginTop: 20,
-  },
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: "white",
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 16,
+        textAlign: "center",
+    },
+    image: {
+        width: "100%",
+        height: 200,
+        borderRadius: 8,
+        marginBottom: 16,
+    },
+    description: {
+        fontSize: 16,
+        color: "#666",
+        textAlign: "center",
+        marginBottom: 16,
+    },
+    commentSection: {
+        width: "100%",
+        paddingHorizontal: 16,
+    },
+    commentTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 8,
+        textAlign: "center",
+    },
+    commentContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        paddingVertical: 8,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+    },
+    commentItem: {
+        fontSize: 14,
+        color: "#333",
+        flex: 1,
+    },
+    input: {
+        width: "100%",
+        padding: 8,
+        borderRadius: 4,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        fontSize: 14,
+        marginBottom: 8,
+    },
+    editContainer: {
+        width: "100%",
+        paddingVertical: 8,
+    }
 });
