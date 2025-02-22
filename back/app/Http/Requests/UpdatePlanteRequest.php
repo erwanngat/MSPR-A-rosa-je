@@ -22,8 +22,8 @@ class UpdatePlanteRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|max:100',
-            'address_id' => 'required|integer|exists:addresses,id',
+            'name' => 'required|string|max:100',
+            'address_id' => 'required|exists:addresses,id',
         ];
     }
 }

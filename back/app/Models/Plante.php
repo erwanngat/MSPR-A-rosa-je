@@ -15,7 +15,7 @@ class Plante extends Model
         return $this->hasMany(Comment::class);
     }
 
-    public function adress(){
+    public function address(){
         return $this->belongsTo(Address::class);
     }
 }

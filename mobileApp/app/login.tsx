@@ -2,29 +2,36 @@ import React, { useState } from 'react';
 import { View, TextInput, Button, Text, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '@/stores/userStore';
+import userService from '../services/userService'
 
 const LoginScreen = () => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const login = useUserStore((state) => state.login);
   const router = useRouter();
 
   const handleLogin = async () => {
-    if (username === 'user' && password === 'password') {
-      const userData = {
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'user',
-        phone: '1234567890',
-        token: 'fake-jwt-token',
-      };
-
-      login(userData);
-      router.replace('/'); // Redirige vers la page d'accueil
-    } else {
-      setError('Identifiants incorrects');
+    setError('');
+    try {
+      const data = await userService().login(email, password);
+      console.log(data);
+      const user = await userService().getUser(data.token, data.user.id);
+      console.log(user);
+      //console.log(dataUser);
+      login({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        password: "data.user.id",
+        //role: "data.user.role",
+        phone:data.user.phone_number,
+        token: data.token,
+      });
+      router.replace('/');
+    } catch (err) {
+      console.log(err);
+      setError("Aucun utilisteur trouvé");
     }
   };
 
@@ -33,9 +40,9 @@ const LoginScreen = () => {
       <Text style={styles.title}>Se connecter</Text>
       <TextInput
         style={styles.input}
-        placeholder="Nom d'utilisateur"
-        value={username}
-        onChangeText={setUsername}
+        placeholder="Email"
+        value={email}
+        onChangeText={setEmail}
       />
       <TextInput
         style={styles.input}
@@ -46,7 +53,7 @@ const LoginScreen = () => {
       />
       {error ? <Text style={styles.error}>{error}</Text> : null}
       <Button title="Se connecter" onPress={handleLogin} />
-      
+
       {/* Lien vers l'inscription */}
       <Pressable onPress={() => router.push('/inscription')}>
         <Text style={styles.link}>Pas encore de compte ? S'inscrire</Text>

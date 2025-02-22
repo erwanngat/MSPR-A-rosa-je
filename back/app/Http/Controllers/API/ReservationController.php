@@ -31,8 +31,8 @@ class ReservationController extends Controller
     public function store(StoreReservationRequest $request)
     {
         $reservation = Reservation::create([
-            'owner_user_id' => $request->owner_id,
-            'gardener_user_id' => $request->gardener_id,
+            'owner_user_id' => $request->owner_user_id,
+            'gardener_user_id' => $request->gardener_user_id,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date
         ]);
@@ -43,12 +43,12 @@ class ReservationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(int $id)
     {
         $reservation = Reservation::find($id);
 
         if(!$reservation){
-            return response()->json([['error' => 'Reservation not found'], 404]);
+            return response()->json(['error' => 'Reservation not found'], 404);
         }
 
         return response()->json($reservation, 200);
@@ -60,8 +60,8 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $reservation->update([
-            'owner_user_id' => $request->owner_id,
-            'gardener_user_id' => $request->gardener_id,
+            'owner_user_id' => $request->owner_user_id,
+            'gardener_user_id' => $request->gardener_user_id,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date
         ]);
@@ -72,9 +72,9 @@ class ReservationController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy(int $id)
     {
-        $reservation->delete();
+        Reservation::destroy($id);
         return response()->json(null, 204);
     }
 }
