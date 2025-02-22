@@ -2,6 +2,8 @@
 
 namespace Tests\Unit;
 
+use App\Models\Address;
+use App\Models\Plante;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -14,11 +16,25 @@ class ReservationApiTest extends TestCase
     public function test_user_can_view_all_reservations()
     {
         $user = User::factory()->create();
-
         $owner = User::factory()->create();
         $gardener = User::factory()->create();
 
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
+
         $reservation1 = Reservation::create([
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-03-01',
@@ -26,6 +42,7 @@ class ReservationApiTest extends TestCase
         ]);
 
         $reservation2 = Reservation::create([
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-04-01',
@@ -50,11 +67,24 @@ class ReservationApiTest extends TestCase
     public function test_user_can_view_a_single_reservation()
     {
         $user = User::factory()->create();
-
         $owner = User::factory()->create();
         $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
 
         $reservation = Reservation::create([
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-05-01',
@@ -80,11 +110,24 @@ class ReservationApiTest extends TestCase
     public function test_user_can_create_reservation()
     {
         $user = User::factory()->create();
-
         $owner = User::factory()->create();
         $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
 
         $reservationData = [
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-06-01',
@@ -98,11 +141,24 @@ class ReservationApiTest extends TestCase
     public function test_user_can_update_reservation()
     {
         $user = User::factory()->create();
-
         $owner = User::factory()->create();
         $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
 
         $reservation = Reservation::create([
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-07-01',
@@ -110,6 +166,7 @@ class ReservationApiTest extends TestCase
         ]);
 
         $updatedData = [
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-08-01',
@@ -124,11 +181,24 @@ class ReservationApiTest extends TestCase
     public function test_user_can_delete_reservation()
     {
         $user = User::factory()->create();
-
         $owner = User::factory()->create();
         $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
 
         $reservation = Reservation::create([
+            'plante_id' => $plante->id,
             'owner_user_id' => $owner->id,
             'gardener_user_id' => $gardener->id,
             'start_date' => '2025-09-01',
