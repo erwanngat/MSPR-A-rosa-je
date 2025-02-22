@@ -11,18 +11,15 @@ use App\Http\Controllers\API\PlanteController;
 use App\Http\Controllers\API\AddressController;
 
 
-Route::withoutMiddleware([VerifyCsrfToken::class])
-->group(function () {
+Route::withoutMiddleware([VerifyCsrfToken::class])->group(function () {
+    Route::post('register', [AuthController::class, 'register']);
+    Route::post('login', [AuthController::class, 'login']);
+});
+
+Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('plantes', PlanteController::class);
     Route::apiResource('comments', CommentController::class);
     Route::apiResource('reservations', ReservationController::class);
     Route::apiResource('addresses', AddressController::class);
-
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('login', [AuthController::class, 'login']);
 });
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
