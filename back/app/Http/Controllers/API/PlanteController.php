@@ -75,4 +75,14 @@ class PlanteController extends Controller
         $plante->delete();
         return response()->json(null, 204);
     }
+
+    public function getAllCommentsPlante(String $id){
+        $plante = Plante::find($id);
+
+        if (!$plante) {
+            return response()->json(['error' => 'Plante not found'], 404);
+        }
+
+        return response()->json($plante->comments, 200);
+    }
 }
