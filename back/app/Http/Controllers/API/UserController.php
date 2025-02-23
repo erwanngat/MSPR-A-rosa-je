@@ -77,4 +77,12 @@ class UserController extends Controller
         User::destroy($id);
         return response()->json(null, 204);
     }
+
+    public function getUserPlantes(int $id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        return response()->json($user->plantes, 200);
+    }
 }
