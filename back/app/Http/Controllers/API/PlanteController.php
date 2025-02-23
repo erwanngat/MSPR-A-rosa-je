@@ -104,6 +104,6 @@ class PlanteController extends Controller
             return response()->json(['error' => 'Plante not found'], 404);
         }
 
-        return response()->json($plante->reservations(), 200);
+        return response()->json($plante->reservations, 200);
     }
 }
