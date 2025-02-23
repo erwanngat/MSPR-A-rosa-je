@@ -92,7 +92,7 @@ class PlanteController extends Controller
         return response()->json(null, 204);
     }
 
-    public function getPlanteComments(String $id){
+    public function getPlanteComments(int $id){
         $plante = Plante::find($id);
 
         if (!$plante) {
@@ -102,7 +102,7 @@ class PlanteController extends Controller
         return response()->json($plante->comments, 200);
     }
 
-    public function getPlanteReservation(String $id){
+    public function getPlanteReservation(int $id){
         $plante = Plante::find($id);
         if (!$plante) {
             return response()->json(['error' => 'Plante not found'], 404);
