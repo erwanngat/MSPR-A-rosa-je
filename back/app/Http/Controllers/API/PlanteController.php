@@ -7,6 +7,7 @@ use App\Http\Requests\StorePlanteRequest;
 use App\Http\Requests\UpdatePlanteRequest;
 use App\Models\Plante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PlanteController extends Controller
@@ -66,12 +67,15 @@ class PlanteController extends Controller
     {
         $path = null;
         if($request->hasFile('image')){
+            if($plante->image) {
+                Storage::disk('public')->delete($plante->image);
+            }
             $path = $request->file('image')->store('plantes', 'public');
+            $plante->image = $path;
         }
         $plante->update([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $path,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id,
         ]);

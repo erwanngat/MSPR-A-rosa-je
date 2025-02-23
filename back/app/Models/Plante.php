@@ -26,6 +26,6 @@ class Plante extends Model
     }
 
     public function getImageUrlAttribute(){
-        return $this->image ? Storage::url($this->image) : null;
+        return $this->image ? env('APP_URL') . Storage::url($this->image) : null;
     }
 }
