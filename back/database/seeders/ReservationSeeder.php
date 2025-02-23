@@ -14,6 +14,7 @@ class ReservationSeeder extends Seeder
     public function run(): void
     {
         DB::table('reservations')->insert([
+            'plante_id' => 2,
             'owner_user_id' => 1,
             'gardener_user_id' => 2,
             'start_date' => '2025/02/14',

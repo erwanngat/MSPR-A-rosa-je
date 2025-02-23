@@ -25,6 +25,7 @@ class CommentApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id,
         ]);
@@ -72,6 +73,7 @@ class CommentApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id,
         ]);
@@ -111,6 +113,7 @@ class CommentApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id,
         ]);
@@ -137,6 +140,7 @@ class CommentApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id,
         ]);
@@ -168,6 +172,7 @@ class CommentApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id,
         ]);
