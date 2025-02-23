@@ -4,12 +4,15 @@ import { View } from '@/components/Themed';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { useUserStore } from '@/stores/userStore';
+import plantesService from '@/services/plantesService';
 
 export default function TabOneScreen() {
   const router = useRouter();
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const [isReady, setIsReady] = useState(false);
-
+  const [plantes, setPlantes] = useState([]);
+  const token = useUserStore().user?.token;
+  console.log(useUserStore().user)
   useEffect(() => {
     setIsReady(true);
   }, []);
@@ -20,6 +23,21 @@ export default function TabOneScreen() {
     }
   }, [isAuthenticated, isReady, router]);
 
+  useEffect(() => {
+    const fetchPlantes = async () => {
+      try {
+        const data = await plantesService(token).getPlantes();
+        setPlantes(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des plantes:', error);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchPlantes();
+    }
+  }, [isAuthenticated]);
+
   if (isAuthenticated === false || !isReady) {
     return null;
   }
@@ -27,12 +45,15 @@ export default function TabOneScreen() {
   return (
     <View style={styles.container}>
       <ScrollView>
-        <Card
-          avatarUrl="https://example.com/avatar.jpg"
-          title="Card Title"
-          description="This is a description of the card."
-          imageUrl="https://example.com/image.jpg"
-        />
+        {plantes.map((plante) => (
+          <Card
+            id={plante.id}
+            avatarUrl="https://example.com/avatar.jpg"
+            title={plante.name}
+            description={plante.description}
+            imageUrl={plante.image}
+          />
+        ))}
       </ScrollView>
     </View>
   );

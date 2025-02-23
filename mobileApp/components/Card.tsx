@@ -3,18 +3,18 @@ import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 
 interface CardProps {
+  id: number;
   avatarUrl: string;
   title: string;
   description: string;
   imageUrl: string;
 }
 
-const Card: React.FC<CardProps> = ({ avatarUrl, title, description, imageUrl }) => {
+const Card: React.FC<CardProps> = ({id, avatarUrl, title, description, imageUrl }) => {
   const router = useRouter();
 
   const handlePress = () => {
-    // Redirige vers la page modal lorsque la carte est pressée
-    router.push('/modal'); // Assure-toi que l'écran modal est correctement configuré dans expo-router
+    router.push(`/modal/${id}`);
   };
 
   return (

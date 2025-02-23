@@ -16,9 +16,6 @@ const LoginScreen = () => {
     try {
       const data = await userService().login(email, password);
       console.log(data);
-      const user = await userService().getUser(data.token, data.user.id);
-      console.log(user);
-      //console.log(dataUser);
       login({
         id: data.user.id,
         name: data.user.name,
