@@ -24,6 +24,7 @@ class UpdatePlanteRequest extends FormRequest
         return [
             'name' => 'required|string|max:100',
             'description' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'address_id' => 'required|exists:addresses,id',
         ];
     }
