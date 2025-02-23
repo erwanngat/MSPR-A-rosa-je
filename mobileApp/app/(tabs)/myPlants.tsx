@@ -2,6 +2,7 @@ import { StyleSheet, ScrollView, Pressable } from 'react-native';
 import Card from '../../components/Card';
 import { Text, View } from '@/components/Themed';
 import { Link } from 'expo-router';  // Pour la navigation
+import { useUserStore } from '@/stores/userStore';
 
 export default function MyPlantsScreen() {
   return (
@@ -17,7 +18,7 @@ export default function MyPlantsScreen() {
       </ScrollView>
 
       {/* Bouton + en bas pour éditer la carte */}
-      <Link href="/editPlant" style={styles.editButtonContainer}>
+      <Link href="/addPlant" style={styles.editButtonContainer}>
         <Pressable style={styles.editButton}>
           <Text style={styles.editButtonText}>+</Text>
         </Pressable>
