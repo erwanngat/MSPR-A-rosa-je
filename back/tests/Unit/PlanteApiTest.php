@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\Address;
 use App\Models\Comment;
 use App\Models\Plante;
+use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -25,6 +26,7 @@ class PlanteApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id
         ]);
@@ -62,6 +64,7 @@ class PlanteApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id
         ]);
@@ -98,6 +101,7 @@ class PlanteApiTest extends TestCase
 
         $planteData = [
             'name' => 'Plante',
+            'description' => 'Plante description',
             'address_id' => $address->id
         ];
 
@@ -117,12 +121,14 @@ class PlanteApiTest extends TestCase
 
         $plante = Plante::create([
             'name' => 'Plante',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id
         ]);
 
         $planteData = [
             'name' => 'PlanteUpdate',
+            'description' => 'Plante description',
             'address_id' => $address->id
         ];
 
@@ -142,6 +148,7 @@ class PlanteApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id
         ]);
@@ -164,6 +171,7 @@ class PlanteApiTest extends TestCase
         ]);
         $plante = Plante::create([
             'name' => 'Plante Test',
+            'description' => 'Plante description',
             'user_id' => $user->id,
             'address_id' => $address->id
         ]);
@@ -184,6 +192,46 @@ class PlanteApiTest extends TestCase
         ]);
         $response->assertJsonFragment([
             'comment' => 'Deuxième commentaire',
+        ]);
+    }
+    public function test_user_can_get_all_reservations_of_a_plante()
+    {
+        $user = User::factory()->create();
+        $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante Test',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
+        $reservation = Reservation::create([
+            'plante_id' => $plante->id,
+            'owner_user_id' => $user->id,
+            'gardener_user_id' => $gardener->id,
+            'start_date' => '2025-04-01',
+            'end_date' => '2025-04-10'
+        ]);
+        $reservation = Reservation::create([
+            'plante_id' => $plante->id,
+            'owner_user_id' => $user->id,
+            'gardener_user_id' => $gardener->id,
+            'start_date' => '2025-09-01',
+            'end_date' => '2025-09-10'
+        ]);
+        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}/reservations");
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'start_date' => '2025-04-01',
+        ]);
+        $response->assertJsonFragment([
+            'start_date' => '2025-09-01',
         ]);
     }
 }

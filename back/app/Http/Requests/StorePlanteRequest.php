@@ -23,6 +23,7 @@ class StorePlanteRequest extends FormRequest
     {
         return [
             'name' => 'required|max:100',
+            'description' => 'required',
             'address_id' => 'required|integer|exists:addresses,id',
         ];
     }

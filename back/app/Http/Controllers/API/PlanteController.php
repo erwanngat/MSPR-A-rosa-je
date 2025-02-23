@@ -32,6 +32,7 @@ class PlanteController extends Controller
     {
         $plante = Plante::create([
             'name' => $request->name,
+            'description' => $request->description,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id
         ]);
@@ -59,9 +60,10 @@ class PlanteController extends Controller
     public function update(UpdatePlanteRequest $request, Plante $plante)
     {
         $plante->update([
-            "name" => $request->name,
-            "user_id" => auth()->id(),
-            "address_id" => $request->address_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => auth()->id(),
+            'address_id' => $request->address_id,
         ]);
 
         return response()->json($plante, 200);
@@ -76,7 +78,7 @@ class PlanteController extends Controller
         return response()->json(null, 204);
     }
 
-    public function getAllCommentsPlante(String $id){
+    public function getPlanteComments(String $id){
         $plante = Plante::find($id);
 
         if (!$plante) {
@@ -84,5 +86,14 @@ class PlanteController extends Controller
         }
 
         return response()->json($plante->comments, 200);
+    }
+
+    public function getPlanteReservation(String $id){
+        $plante = Plante::find($id);
+        if (!$plante) {
+            return response()->json(['error' => 'Plante not found'], 404);
+        }
+
+        return response()->json($plante->reservations, 200);
     }
 }

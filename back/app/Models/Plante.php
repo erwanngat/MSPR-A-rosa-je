@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Plante extends Model
 {
-    protected $fillable = ['name', 'user_id', 'address_id'];
+    protected $fillable = ['name', 'description', 'user_id', 'address_id'];
     public function user(){
         return $this->belongsTo(User::class);
     }
@@ -17,5 +17,8 @@ class Plante extends Model
 
     public function address(){
         return $this->belongsTo(Address::class);
+    }
+    public function reservations(){
+        return $this->hasMany(Reservation::class);
     }
 }
