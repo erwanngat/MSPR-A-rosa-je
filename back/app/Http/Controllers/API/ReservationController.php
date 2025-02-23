@@ -31,6 +31,7 @@ class ReservationController extends Controller
     public function store(StoreReservationRequest $request)
     {
         $reservation = Reservation::create([
+            'plante_id' => $request->plante_id,
             'owner_user_id' => $request->owner_user_id,
             'gardener_user_id' => $request->gardener_user_id,
             'start_date' => $request->start_date,
@@ -60,6 +61,7 @@ class ReservationController extends Controller
     public function update(UpdateReservationRequest $request, Reservation $reservation)
     {
         $reservation->update([
+            'plante_id' => $request->plante_id,
             'owner_user_id' => $request->owner_user_id,
             'gardener_user_id' => $request->gardener_user_id,
             'start_date' => $request->start_date,

@@ -7,6 +7,7 @@ use App\Http\Requests\StorePlanteRequest;
 use App\Http\Requests\UpdatePlanteRequest;
 use App\Models\Plante;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class PlanteController extends Controller
@@ -30,8 +31,14 @@ class PlanteController extends Controller
      */
     public function store(StorePlanteRequest $request)
     {
+        $path = null;
+        if($request->hasFile('image')){
+            $path = $request->file('image')->store('plantes', 'public');
+        }
         $plante = Plante::create([
             'name' => $request->name,
+            'description' => $request->description,
+            'image' => $path,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id
         ]);
@@ -58,10 +65,19 @@ class PlanteController extends Controller
      */
     public function update(UpdatePlanteRequest $request, Plante $plante)
     {
+        $path = null;
+        if($request->hasFile('image')){
+            if($plante->image) {
+                Storage::disk('public')->delete($plante->image);
+            }
+            $path = $request->file('image')->store('plantes', 'public');
+            $plante->image = $path;
+        }
         $plante->update([
-            "name" => $request->name,
-            "user_id" => auth()->id(),
-            "address_id" => $request->address_id,
+            'name' => $request->name,
+            'description' => $request->description,
+            'user_id' => auth()->id(),
+            'address_id' => $request->address_id,
         ]);
 
         return response()->json($plante, 200);
@@ -76,7 +92,7 @@ class PlanteController extends Controller
         return response()->json(null, 204);
     }
 
-    public function getAllCommentsPlante(String $id){
+    public function getPlanteComments(String $id){
         $plante = Plante::find($id);
 
         if (!$plante) {
@@ -84,5 +100,14 @@ class PlanteController extends Controller
         }
 
         return response()->json($plante->comments, 200);
+    }
+
+    public function getPlanteReservation(String $id){
+        $plante = Plante::find($id);
+        if (!$plante) {
+            return response()->json(['error' => 'Plante not found'], 404);
+        }
+
+        return response()->json($plante->reservations, 200);
     }
 }
