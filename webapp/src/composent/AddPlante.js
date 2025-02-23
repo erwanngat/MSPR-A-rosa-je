@@ -1,99 +1,61 @@
-import React, { useState } from 'react';
-import PlantesService from '../services/PlantesService.ts'; // Importation du service
+import React, { useState, useEffect } from 'react';
+import PlantesService from '../services/PlantesService.ts';
+import AddPlanteDialog from '../composent/dialogs/AddPlanteDialog';
+import EditPlanteDialog from '../composent/dialogs/EditPlanteDialog';
 
-const AddPlante = () => {
-  // États pour stocker les valeurs du formulaire
-  const [name, setName] = useState('');
-  const [userId, setUserId] = useState('');
-  const [addressId, setAddressId] = useState('');
-  const [loading, setLoading] = useState(false); // État pour gérer le chargement
-  const [message, setMessage] = useState(''); // État pour gérer les messages
+const MyPlants = () => {
+  const [plantes, setPlantes] = useState([]);
+  const [selectedPlante, setSelectedPlante] = useState(null);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  // Fonction de soumission du formulaire
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // Fonction pour ouvrir la boîte de dialogue d'ajout
+  const openAddDialog = () => setIsAddDialogOpen(true);
 
-    // Vérifier que tous les champs sont remplis
-    if (!name || !userId || !addressId) {
-      setMessage('Veuillez remplir tous les champs.');
-      return;
-    }
+  // Fonction pour ouvrir la boîte de dialogue de modification
+  const openEditDialog = (plante) => {
+    setSelectedPlante(plante);
+    setIsEditDialogOpen(true);
+  };
 
-    setLoading(true);
-    setMessage('');
+  // Fonction pour ajouter une plante
+  const handleAdd = async (planteData) => {
+    const newPlante = await PlantesService().addPlante(planteData);
+    setPlantes([...plantes, newPlante]);
+  };
 
-    // Données de la nouvelle plante à ajouter
-    const planteData = {
-      name,
-      user_id: userId,
-      address_id: addressId,
-    };
-
-    try {
-      // Appel de la méthode addPlante pour ajouter la plante
-      const newPlante = await PlantesService().addPlante(planteData);
-
-      // Message de succès après l'ajout
-      setMessage('Plante ajoutée avec succès!');
-      // Réinitialisation des champs du formulaire
-      setName('');
-      setUserId('');
-      setAddressId('');
-    } catch (error) {
-      // Message d'erreur en cas de problème
-      setMessage('Erreur lors de l\'ajout de la plante. Veuillez réessayer.');
-      console.error('Erreur lors de l\'ajout de la plante:', error);
-    } finally {
-      setLoading(false);
-    }
+  // Fonction pour mettre à jour une plante
+  const handleUpdate = async (planteData) => {
+    const updatedPlante = await PlantesService().updatePlante(selectedPlante.id, planteData);
+    setPlantes(plantes.map((p) => (p.id === updatedPlante.id ? updatedPlante : p)));
   };
 
   return (
     <div>
-      <h2>Ajouter une nouvelle plante</h2>
+      <h1>Mes Plantes</h1>
+      <button onClick={openAddDialog}>Ajouter une plante</button>
 
-      {/* Affichage du message de confirmation ou d'erreur */}
-      {message && <div>{message}</div>}
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom de la plante :</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+      {/* Liste des plantes */}
+      {plantes.map((plante) => (
+        <div key={plante.id} onClick={() => openEditDialog(plante)}>
+          <p>{plante.name}</p>
         </div>
+      ))}
 
-        <div>
-          <label>ID Utilisateur :</label>
-          <input
-            type="text"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>ID Adresse :</label>
-          <input
-            type="text"
-            value={addressId}
-            onChange={(e) => setAddressId(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <button type="submit" disabled={loading}>
-            {loading ? 'Ajout en cours...' : 'Ajouter la plante'}
-          </button>
-        </div>
-      </form>
+      {/* Boîtes de dialogue */}
+      <AddPlanteDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        onAdd={handleAdd}
+      />
+      <EditPlanteDialog
+        isOpen={isEditDialogOpen}
+        onClose={() => setIsEditDialogOpen(false)}
+        plante={selectedPlante}
+        onUpdate={handleUpdate}
+      />
     </div>
   );
 };
 
-export default AddPlante;
+export default MyPlants;

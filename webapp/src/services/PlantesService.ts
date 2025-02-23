@@ -1,4 +1,4 @@
-import { IPlante } from "../types/IPlantes";
+import { IPlante } from "../types/IPlantes"; // Assurez-vous d'avoir un type IPlante défini
 
 const PlantesService = () => {
   const baseUrl = 'http://localhost:8080/api/plantes'; // URL de base de l'API
@@ -25,7 +25,6 @@ const PlantesService = () => {
       }
 
       const data = await response.json();
-      console.log(data);
       return data;
     } catch (error) {
       console.error('Erreur dans getPlantes:', error);
@@ -33,44 +32,46 @@ const PlantesService = () => {
     }
   };
 
-  const addPlante = async (planteData : IPlante) => {
+  // Ajouter une nouvelle plante
+  const addPlante = async (planteData: IPlante) => {
     try {
       const token = getToken();
       const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(planteData),
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de l\'ajout de la plante ${response}`);
+        throw new Error(`Erreur lors de l'ajout de la plante: ${response.statusText}`);
       }
 
       const data = await response.json();
-      return data; 
+      return data;
     } catch (error) {
       console.error('Erreur dans addPlante:', error);
       throw error;
     }
   };
 
-  const updatePlante = async (id, planteData) => {
+  // Mettre à jour une plante existante
+  const updatePlante = async (id: number, planteData: IPlante) => {
     try {
       const token = getToken();
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(planteData),
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la mise à jour de la plante');
+        throw new Error(`Erreur lors de la mise à jour de la plante: ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -81,18 +82,19 @@ const PlantesService = () => {
     }
   };
 
-  const deletePlante = async (id) => {
+  // Supprimer une plante
+  const deletePlante = async (id: number) => {
     try {
       const token = getToken();
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la suppression de la plante');
+        throw new Error(`Erreur lors de la suppression de la plante: ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -103,11 +105,61 @@ const PlantesService = () => {
     }
   };
 
+  // Récupérer les réservations d'une plante
+  const getReservationsByPlanteId = async (id: number) => {
+    try {
+      const token = getToken();
+      const response = await fetch(`${baseUrl}/${id}/reservations`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération des réservations: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erreur dans getReservationsByPlanteId:', error);
+      throw error;
+    }
+  };
+
+  // Récupérer les commentaires d'une plante
+  const getCommentsByPlanteId = async (id: number) => {
+    try {
+      const token = getToken();
+      const response = await fetch(`${baseUrl}/${id}/comments`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erreur lors de la récupération des commentaires: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erreur dans getCommentsByPlanteId:', error);
+      throw error;
+    }
+  };
+
   return {
     getPlantes,
     addPlante,
     updatePlante,
     deletePlante,
+    getReservationsByPlanteId,
+    getCommentsByPlanteId,
   };
 };
 
