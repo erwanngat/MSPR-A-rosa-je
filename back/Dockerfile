@@ -63,6 +63,9 @@ RUN php artisan key:generate
 # Éfectuer les migrations
 RUN php artisan migrate:fresh --seed
 
+# Création d'un lien dans le dossier storage pour gérer les images
+RUN mkdir -p storage/app/public && php artisan storage:link
+
 # Donner les permissions appropriées aux répertoires de stockage et de cache Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
