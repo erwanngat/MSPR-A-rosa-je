@@ -26,6 +26,7 @@ const NavBar = () => {
             <div className="navbar">
             <Link to="/"><img src={logo} alt='logo' className='logo'/></Link> |
             {/* <Link to="/Profil">Profile</Link> | */}
+            <Link to="/AllPlantes">All Plantes</Link> |
             <Link to="/MyPlants">My Plantes</Link> |
             <Link to="/Test">Test</Link> |
             {/* <a href="/Profil">

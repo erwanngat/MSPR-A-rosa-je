@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PlantesService from '../../services/PlantesService.ts';
+import AddressesService from '../../services/AddressesService.ts'; // Importation du service des adresses
+import Select from 'react-select'; // Importation de react-select
 
 const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const [name, setName] = useState('');
@@ -7,7 +9,64 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const [description, setDescription] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [addresses, setAddresses] = useState([]); // Liste des adresses
+  const [selectedAddress, setSelectedAddress] = useState(null); // Adresse sélectionnée
+  const [showAddressForm, setShowAddressForm] = useState(false); // Afficher le formulaire d'adresse
+  const [newAddress, setNewAddress] = useState({ // Données de la nouvelle adresse
+    country: '',
+    city: '',
+    zip_code: '',
+    street: '',
+    additional_address_details: '',
+  });
 
+  // Récupérer toutes les adresses au chargement du composant
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const data = await AddressesService().getAddresses();
+        setAddresses(data);
+      } catch (error) {
+        console.error('Erreur lors de la récupération des adresses:', error);
+      }
+    };
+
+    fetchAddresses();
+  }, []);
+
+  // Options pour le dropdown (format attendu par react-select)
+  const addressOptions = addresses.map((address) => ({
+    value: address.id, // ID de l'adresse
+    label: `${address.street}, ${address.city}, ${address.country}`, // Affichage dans le dropdown
+  }));
+
+  // Gérer la sélection d'une adresse
+  const handleAddressChange = (selectedOption) => {
+    setSelectedAddress(selectedOption);
+    setAddressId(selectedOption ? selectedOption.value : ''); // Mettre à jour l'ID de l'adresse
+  };
+
+  // Gérer les changements dans le formulaire de création d'adresse
+  const handleAddressInputChange = (e) => {
+    const { name, value } = e.target;
+    setNewAddress({ ...newAddress, [name]: value });
+  };
+
+  // Créer une nouvelle adresse
+  const handleCreateAddress = async () => {
+    try {
+      const createdAddress = await AddressesService().createAddress(newAddress);
+      setAddresses([...addresses, createdAddress]); // Ajouter la nouvelle adresse à la liste
+      setSelectedAddress({ value: createdAddress.id, label: `${createdAddress.street}, ${createdAddress.city}, ${createdAddress.country}` }); // Sélectionner la nouvelle adresse
+      setAddressId(createdAddress.id); // Mettre à jour l'ID de l'adresse
+      setShowAddressForm(false); // Masquer le formulaire d'adresse
+    } catch (error) {
+      // console.error('Erreur lors de la création de l\'adresse:', error);
+      // setError('Erreur lors de la création de l\'adresse.');
+    }
+  };
+
+  // Gérer la soumission du formulaire de création de plante
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,6 +98,8 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setLoading(false);
     }
   };
+
+  // Fermer la boîte de dialogue si l'utilisateur clique sur l'overlay
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
@@ -60,13 +121,76 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             onChange={(e) => setName(e.target.value)}
             style={styles.input}
           />
-          <input
-            type="text"
-            placeholder="ID Adresse"
-            value={addressId}
-            onChange={(e) => setAddressId(e.target.value)}
-            style={styles.input}
-          />
+          <div style={styles.addressSection}>
+            <Select
+              placeholder="Sélectionner une adresse"
+              options={addressOptions}
+              value={selectedAddress}
+              onChange={handleAddressChange}
+              isSearchable // Activer la recherche
+              noOptionsMessage={() => "Aucune adresse trouvée"} // Message si aucune option
+              styles={customStyles} // Styles personnalisés
+            />
+            <button
+              type="button"
+              onClick={() => setShowAddressForm(!showAddressForm)}
+              style={styles.createButton}
+            >
+              Créer
+            </button>
+          </div>
+          {/* Formulaire de création d'adresse */}
+          {showAddressForm && (
+            <div style={styles.addressForm}>
+              <input
+                type="text"
+                name="country"
+                placeholder="Pays"
+                value={newAddress.country}
+                onChange={handleAddressInputChange}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                name="city"
+                placeholder="Ville"
+                value={newAddress.city}
+                onChange={handleAddressInputChange}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                name="zip_code"
+                placeholder="Code postal"
+                value={newAddress.zip_code}
+                onChange={handleAddressInputChange}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                name="street"
+                placeholder="Rue"
+                value={newAddress.street}
+                onChange={handleAddressInputChange}
+                style={styles.input}
+              />
+              <input
+                type="text"
+                name="additional_address_details"
+                placeholder="Détails supplémentaires"
+                value={newAddress.additional_address_details}
+                onChange={handleAddressInputChange}
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={handleCreateAddress}
+                style={styles.createAddressButton}
+              >
+                Créer l'adresse
+              </button>
+            </div>
+          )}
           <textarea
             placeholder="Description de la plante"
             value={description}
@@ -87,6 +211,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   );
 };
 
+// Styles CSS en ligne
 const styles = {
   overlay: {
     position: 'fixed',
@@ -103,7 +228,7 @@ const styles = {
     backgroundColor: '#fff',
     padding: '20px',
     borderRadius: '8px',
-    width: '300px',
+    width: '400px', // Ajustez la largeur si nécessaire
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
   input: {
@@ -130,6 +255,45 @@ const styles = {
     color: 'red',
     marginBottom: '10px',
   },
+  addressSection: {
+    display: 'flex',
+    gap: '10px',
+    marginBottom: '10px',
+  },
+  createButton: {
+    padding: '10px 20px',
+    borderRadius: '4px',
+    border: 'none',
+    backgroundColor: '#28a745',
+    color: '#fff',
+    cursor: 'pointer',
+  },
+  addressForm: {
+    marginBottom: '10px',
+  },
+  createAddressButton: {
+    padding: '10px 20px',
+    borderRadius: '4px',
+    border: 'none',
+    backgroundColor: '#007bff',
+    color: '#fff',
+    cursor: 'pointer',
+  },
+};
+
+// Styles personnalisés pour react-select
+const customStyles = {
+  control: (provided) => ({
+    ...provided,
+    marginBottom: '10px',
+    borderRadius: '4px',
+    border: '1px solid #ccc',
+  }),
+  option: (provided, state) => ({
+    ...provided,
+    backgroundColor: state.isSelected ? '#007bff' : 'white',
+    color: state.isSelected ? 'white' : 'black',
+  }),
 };
 
 export default AddPlanteDialog;
