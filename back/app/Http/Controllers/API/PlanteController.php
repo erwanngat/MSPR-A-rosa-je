@@ -30,9 +30,14 @@ class PlanteController extends Controller
      */
     public function store(StorePlanteRequest $request)
     {
+        $path = null;
+        if($request->hasFile('image')){
+            $path = $request->file('image')->store('plantes', 'public');
+        }
         $plante = Plante::create([
             'name' => $request->name,
             'description' => $request->description,
+            'image' => $path,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id
         ]);
@@ -59,9 +64,14 @@ class PlanteController extends Controller
      */
     public function update(UpdatePlanteRequest $request, Plante $plante)
     {
+        $path = null;
+        if($request->hasFile('image')){
+            $path = $request->file('image')->store('plantes', 'public');
+        }
         $plante->update([
             'name' => $request->name,
             'description' => $request->description,
+            'image' => $path,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id,
         ]);
