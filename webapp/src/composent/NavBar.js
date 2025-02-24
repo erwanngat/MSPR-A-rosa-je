@@ -63,9 +63,7 @@ const NavBar = () => {
                     </>
                 ) : (
                     <>
-                        <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-                            Home
-                        </Link>
+
                         <Link to="/Register" className={location.pathname === '/Register' ? 'active' : ''}>
                             Register
                         </Link>

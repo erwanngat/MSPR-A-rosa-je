@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert, Image } from 'react-native';
+import {View, TextInput, Button, StyleSheet, Alert, Image, Platform} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from '@/stores/userStore'; // Assurez-vous que cela fonctionne dans votre projet
 import { useRouter } from 'expo-router';
@@ -20,7 +20,6 @@ export default function AddPlanteScreen() {
   const handleImagePicker = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permission.granted) {
-
       const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         quality: 1,
@@ -49,42 +48,60 @@ export default function AddPlanteScreen() {
     // Créer un objet FormData pour l'envoi de l'image
     const formData = new FormData();
 
-    //Créer un objet de type fichier à partir de l'URI
-    const localUri = imageUri;
-    const filename = localUri.split('/').pop();
-    const match = /\.(\w+)$/.exec(filename!);
-    const type = match ? `image/${match[1]}` : 'image/jpeg'; // Utilisez le type MIME approprié
+    // Pour une image en base64
+    if (imageUri.startsWith('data:')) {
+      // Extraction de la partie base64 (après la virgule)
+      const base64Data = imageUri.split(',')[1];
+      // Extraction du type MIME
+      const mimeType = imageUri.split(';')[0].split(':')[1];
 
-    const photo = {
-      uri: localUri,
-      type: type,
-      name: filename,
-    };
+      // Conversion en Blob
+      const byteCharacters = atob(base64Data);
+      const byteArrays = [];
 
-    formData.append('file', photo);
+      for (let i = 0; i < byteCharacters.length; i += 512) {
+        const slice = byteCharacters.slice(i, i + 512);
 
-    const newPlante: IPlante = {
-      name,
-      description,
-      user_id: user.id,
-      address_id: addressId,
-      image : photo,
-    };
+        const byteNumbers = new Array(slice.length);
+        for (let j = 0; j < slice.length; j++) {
+          byteNumbers[j] = slice.charCodeAt(j);
+        }
 
-    formData.append('name', newPlante.name);
-    formData.append('description', newPlante.description);
-    formData.append('user_id', newPlante.user_id.toString());
-    formData.append('address_id', newPlante.address_id);
+        const byteArray = new Uint8Array(byteNumbers);
+        byteArrays.push(byteArray);
+      }
+
+      const blob = new Blob(byteArrays, { type: mimeType });
+
+      // Créer un nom de fichier avec extension
+      const fileName = `image_${Date.now()}.${mimeType.split('/')[1]}`;
+
+      // Ajouter le blob comme fichier au FormData
+      formData.append('image', blob, fileName);
+    } else {
+      // Pour une URI de fichier normale (non base64)
+      const filename = imageUri.split('/').pop();
+      const match = /\.(\w+)$/.exec(filename || '');
+      const type = match ? `image/${match[1]}` : 'image/jpeg';
+
+      formData.append('image', {
+        uri: Platform.OS === 'ios' ? imageUri.replace('file://', '') : imageUri,
+        type: type,
+        name: filename || 'photo.jpg',
+      });
+    }
+
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('address_id', addressId);
+    // 'user_id' n'est pas nécessaire car vous utilisez auth()->id() côté backend
 
     try {
-      const response = await service.addPlante(formData); // Utiliser le service pour ajouter la plante
+      const response = await service.addPlante(formData);
+
       const data = await response.json();
-      if (data.success) {
-        Alert.alert('Succès', 'Plante ajoutée avec succès !');
-        router.push('/'); // Rediriger vers la page principale
-      } else {
-        Alert.alert('Erreur', 'Impossible d\'ajouter la plante.');
-      }
+      Alert.alert('Succès', 'Plante ajoutée avec succès !');
+      router.push('/');
     } catch (error) {
       console.error('Erreur lors de l\'ajout de la plante:', error);
       Alert.alert('Erreur', 'Impossible d\'ajouter la plante.');
@@ -92,32 +109,32 @@ export default function AddPlanteScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Nom de la plante"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Description"
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="ID de l'adresse"
-        value={addressId}
-        onChangeText={setAddressId}
-      />
-      <Button title="Sélectionner une image" onPress={handleImagePicker} />
-      {imageUri ? (
-        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-      ) : null}
-      <Button title="Ajouter la plante" onPress={handleSave} />
-    </View>
+      <View style={styles.container}>
+        <TextInput
+            style={styles.input}
+            placeholder="Nom de la plante"
+            value={name}
+            onChangeText={setName}
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
+            multiline
+        />
+        <TextInput
+            style={styles.input}
+            placeholder="ID de l'adresse"
+            value={addressId}
+            onChangeText={setAddressId}
+        />
+        <Button title="Sélectionner une image" onPress={handleImagePicker} />
+        {imageUri ? (
+            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+        ) : null}
+        <Button title="Ajouter la plante" onPress={handleSave} />
+      </View>
   );
 }
 

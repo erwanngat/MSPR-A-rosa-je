@@ -33,7 +33,6 @@ const Register = () => {
     setLoading(true);
     setMessage('');
 
-    // Données de l'utilisateur à inscrire
     const userData = {
       name,
       email,
@@ -42,7 +41,6 @@ const Register = () => {
     };
 
     try {
-      // Appel de la méthode register pour créer un compte
       const isRegistered = await UserService().register(userData, passwordConfirmation);
 
       if (isRegistered) {
@@ -53,82 +51,84 @@ const Register = () => {
           navigate('/login');
         }, 2000);
       } else {
-        setMessage('Erreur lors de la création du compte. Veuillez réessayer.');
+        setMessage('Error');
       }
     } catch (error) {
-      // Message d'erreur en cas de problème
-      setMessage('Erreur lors de la création du compte. Veuillez réessayer.');
-      console.error('Erreur lors de la création du compte:', error);
+      setMessage('Error');
+      console.error('Error', error);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Créer un compte</h2>
+      <div className="bg-login">
+        <div className="login-form">
+          <h2>A'Rosa-je</h2>
 
-      {/* Affichage du message de confirmation ou d'erreur */}
-      {message && <div>{message}</div>}
+          {message && <div>{message}</div>}
 
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Nom :</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <form onSubmit={handleSubmit}>
+            <div className="input-group">
+              <label>Name :</label>
+              <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Email :</label>
+              <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Phone number :</label>
+              <input
+                  type="text"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Password :</label>
+              <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+              />
+            </div>
+
+            <div className="input-group">
+              <label>Confirmation password:</label>
+              <input
+                  type="password"
+                  value={passwordConfirmation}
+                  onChange={(e) => setPasswordConfirmation(e.target.value)}
+                  required
+              />
+            </div>
+            <div>
+              <a href="/login">Have an account</a>
+            </div>
+            <div>
+              <button type="submit" className="login-btn">Register</button>
+            </div>
+          </form>
+
+
         </div>
-
-        <div>
-          <label>Email :</label>
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Téléphone :</label>
-          <input
-            type="text"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Mot de passe :</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <label>Confirmer le mot de passe :</label>
-          <input
-            type="password"
-            value={passwordConfirmation}
-            onChange={(e) => setPasswordConfirmation(e.target.value)}
-            required
-          />
-        </div>
-
-        <div>
-          <button type="submit" disabled={loading}>
-            {loading ? 'Création en cours...' : 'Créer un compte'}
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
   );
 };
 
