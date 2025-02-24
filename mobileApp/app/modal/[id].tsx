@@ -5,6 +5,8 @@ import { IComment } from "@/types/comment";
 import { useUserStore } from '@/stores/userStore';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
+import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 
 export default function ModalScreen() {
     const { id } = useLocalSearchParams();
@@ -12,14 +14,21 @@ export default function ModalScreen() {
     const [newComment, setNewComment] = useState("");
     const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
     const [editedComment, setEditedComment] = useState<string>("");
-    const [loading, setLoading] = useState<boolean>(false); // Ajout du loader
-    const token = useUserStore().user?.token;
+    const [loading, setLoading] = useState<boolean>(false);
+    const user = useUserStore().user;
+    const token = user?.token;
+    const userRole = user?.role;
+    const router = useRouter();
+
+    const goToProfile = () => {
+        router.push(`/profile/${id}`);
+    }
 
     useEffect(() => {
         if (id) {
-            fetchComments(Number(id)); // Utilisation de l'ID dynamique de la route
+            fetchComments(Number(id));
         }
-    }, [id]); // Si l'ID change, refetch
+    }, [id]);
 
     const fetchComments = async (plantId: number) => {
         setLoading(true);
@@ -39,16 +48,17 @@ export default function ModalScreen() {
         setLoading(true);
         try {
             const success = await CommentService().addComment(
+                 //@ts-ignore
                 {
                     comment: newComment,
-                    plant_id: Number(id), // Utilisation de l'ID dynamique
+                    plant_id: Number(id),
                 },
                 token
             );
 
             if (success) {
                 setNewComment("");
-                fetchComments(Number(id)); // Rafraîchir les commentaires
+                fetchComments(Number(id));
             }
         } catch (error) {
             console.error("Erreur lors de l'ajout du commentaire", error);
@@ -81,15 +91,15 @@ export default function ModalScreen() {
 
         setLoading(true);
         try {
-            const success = await CommentService().updateComment(editingCommentId!, { 
-                comment: editedComment, 
-                plant_id: Number(id), // Utilisation de l'ID dynamique
+            const success = await CommentService().updateComment(editingCommentId!, {
+                comment: editedComment,
+                plant_id: Number(id),
             }, token);
 
             if (success) {
                 setEditingCommentId(null);
                 setEditedComment("");
-                fetchComments(Number(id)); // Rafraîchir les commentaires
+                fetchComments(Number(id));
             }
         } catch (error) {
             console.error("Erreur lors de la mise à jour du commentaire", error);
@@ -97,16 +107,24 @@ export default function ModalScreen() {
             setLoading(false);
         }
     };
-
+    
     return (
         <ScrollView style={styles.container}>
+            {/* Image du profil avec clic pour accéder au profil */}
+            <TouchableOpacity onPress={goToProfile}>
+                <Image
+                    source={{ uri: user?.avatarUrl || "https://via.placeholder.com/100" }} // Image par défaut si aucune image
+                    style={styles.profileImage}
+                />
+            </TouchableOpacity>
+
             <Text style={styles.title}>Titre de la Plante</Text>
-            <Image 
+            <Image
                 source={{ uri: "https://via.placeholder.com/600x400" }}
-                style={styles.image} 
+                style={styles.image}
             />
             <Text style={styles.description}>Ceci est une description détaillée de la plante...</Text>
-            
+
             <View style={styles.commentSection}>
                 <Text style={styles.commentTitle}>Commentaires</Text>
                 {loading ? (
@@ -129,25 +147,33 @@ export default function ModalScreen() {
                                 ) : (
                                     <>
                                         <Text style={styles.commentItem}>{item.comment}</Text>
-                                        <TouchableOpacity onPress={() => handleEditComment(item.id, item.comment)}>
-                                            <Ionicons name="pencil" size={20} color="#007bff" />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => handleDeleteComment(item.id)}>
-                                            <Ionicons name="trash" size={20} color="red" />
-                                        </TouchableOpacity>
+                                        {userRole == "botaniste" ? (
+                                            <TouchableOpacity onPress={() => handleDeleteComment(item.id)}>
+                                                <Ionicons name="trash" size={20} color="red" />
+                                            </TouchableOpacity>
+                                        ) : null}
+                                        {item.user_id == user?.id ? (
+                                            <TouchableOpacity onPress={() => handleEditComment(item.id, item.comment)}>
+                                                <Ionicons name="pencil" size={20} color="#007bff" />
+                                            </TouchableOpacity>
+                                        ) : null}
                                     </>
                                 )}
                             </View>
                         )}
                     />
                 )}
-                <TextInput 
-                    style={styles.input} 
-                    value={newComment} 
-                    onChangeText={setNewComment}
-                    placeholder="Ajouter un commentaire..."
-                />
-                <Button title="Ajouter" onPress={handleAddComment} color="#007bff" />
+                {userRole == "botaniste" ? (
+                    <>
+                        <TextInput
+                            style={styles.input}
+                            value={newComment}
+                            onChangeText={setNewComment}
+                            placeholder="Ajouter un commentaire..."
+                        />
+                        <Button title="Ajouter" onPress={handleAddComment} color="#007bff" />
+                    </>
+                ) : null}
             </View>
         </ScrollView>
     );
@@ -158,6 +184,17 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         backgroundColor: "white",
+    },
+    profileImageContainer: {
+        alignItems: "center",
+        marginBottom: 16,
+    },
+    profileImage: {
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        borderWidth: 2,
+        borderColor: "#ddd",
     },
     title: {
         fontSize: 24,
@@ -212,5 +249,5 @@ const styles = StyleSheet.create({
     editContainer: {
         width: "100%",
         paddingVertical: 8,
-    }
+    },
 });
