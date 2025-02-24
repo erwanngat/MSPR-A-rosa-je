@@ -7,8 +7,7 @@
   
   .bg-login {
     font-family: Arial, sans-serif;
-    background-image: url('../../public/img/bg-connexion.jpg');
-    background-position: center; 
+    background-position: center;
     background-repeat: no-repeat; 
     background-size:cover; 
 
@@ -94,4 +93,53 @@
   .forgot-password a:hover {
     text-decoration: underline;
   }
-  
+.bg-login {
+  font-family: Arial, sans-serif;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+}
+
+
+.login-form {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-form a {
+  text-align: left;
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #2575fc;
+  text-decoration: none;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}
+
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #2d2d2d;
+}
