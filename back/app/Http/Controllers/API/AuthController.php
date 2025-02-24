@@ -5,10 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegisterRequest;
+use App\Models\EmailVerified;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -20,12 +22,18 @@ class AuthController extends Controller
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
         ]);
+        $emailDomain = Str::after($request->email, '@');
+        $isBotaniste = EmailVerified::where('end_email', $emailDomain);
+        $role = $isBotaniste ? 'botaniste' : 'user';
+        $user->assignRole($role);
         auth()->login($user);
         $token = $user->createToken('authToken')->plainTextToken;
+
         return response()->json([
             'message' => 'User registered successfully',
             'user' => $user,
             'token' => $token,
+            'role' => $role,
         ], 201);
     }
 
