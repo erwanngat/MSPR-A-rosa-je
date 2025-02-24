@@ -1,74 +1,80 @@
-import React , {useEffect , useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';  
-import { useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import logo from './../img/logo-aro.jpg';
 
 const NavBar = () => {
-    const navigate = useNavigate();  
+    const navigate = useNavigate();
     const location = useLocation();
     const [showOptions, setShowOptions] = useState(false);
-    console.log(sessionStorage.getItem('user'))
+    
     useEffect(() => {
         const currentUrl = location.pathname;
-        if (sessionStorage.getItem('user') == null && !(currentUrl == '/'|| currentUrl=='/Login'|| currentUrl=='/Register') ){
+        if (sessionStorage.getItem('user') == null && 
+            !(currentUrl === '/' || currentUrl === '/Login' || currentUrl === '/Register')) {
             navigate("/login");
         }
+    }, [navigate, location]);
 
-    }, [navigate]);
     const handleLogout = () => {
-        sessionStorage.clear(); // Supprimer toutes les données de session
-        navigate('/login'); // Rediriger vers la page de connexion
-      };
-    if (sessionStorage.getItem('user') != null ){
-        const userString = sessionStorage.getItem('user');
-        const user = JSON.parse(userString); 
-        return (
-            <div className="navbar">
-            <Link to="/"><img src={logo} alt='logo' className='logo'/></Link> |
-            {/* <Link to="/Profil">Profile</Link> | */}
-            <Link to="/AllPlantes">All Plantes</Link> |
-            <Link to="/MyPlants">My Plantes</Link> |
-            <Link to="/Test">Test</Link> |
-            {/* <a href="/Profil">
-                <img
-                src={user.profile_photo_url }
-                alt="Avatar"
-                className="profile-avatar"
-                />
-            </a>   */}
-                <div
-                className="navbar"
-                onMouseEnter={() => setShowOptions(true)} // Afficher les options au survol
-                onMouseLeave={() => setShowOptions(false)} // Cacher les options quand la souris quitte
-                >
-                <img
-                            src={user.profile_photo_url }
-                            alt="Avatar"
-                    className="profile-avatar"
-                />
+        sessionStorage.clear();
+        navigate('/login');
+    };
 
-                {/* Afficher les options si showOptions est true */}
-                {showOptions && (
-                    <div className="navbar-options">
-                    <Link to="/Profil">Profile</Link>
-                    <button onClick={handleLogout} className="profile-btn logout-btn">
-                        Log Out
-                    </button>
-                    </div>
-                )}
-            </div>      
-          </div>
-          
-          );
-    }
+    const userString = sessionStorage.getItem('user');
+    const user = userString ? JSON.parse(userString) : null;
+
     return (
         <div className="navbar">
-        <Link to="/"><img src={logo} alt='logo' className='logo'/></Link> |
-        <Link to="/Register">Inscription</Link>|
-        <Link to="/Login">Login</Link> 
+            <div className="navbar-left">
+                <Link to="/" className="logo-container">
+                    <img src={logo} alt='logo' className='logo'/>
+                </Link>
+            </div>
+            
+            <div className="navbar-right">
+                {user ? (
+                    <>
+                        <Link to="/AllPlantes" className={location.pathname === '/AllPlantes' ? 'active' : ''}>
+                            All Plants
+                        </Link>
+                        <Link to="/MyPlants" className={location.pathname === '/MyPlants' ? 'active' : ''}>
+                            My plants
+                        </Link>
+                        <div 
+                            className="profile-container"
+                            onMouseEnter={() => setShowOptions(true)}
+                            onMouseLeave={() => setShowOptions(false)}
+                        >
+                            <img
+                                src={user.profile_photo_url}
+                                alt="Avatar"
+                                className="profile-avatar"
+                            />
+                            
+                            {showOptions && (
+                                <div className="navbar-options">
+                                    <Link to="/Profil">Profile</Link>
+                                    <button onClick={handleLogout} className="profile-btn logout-btn">
+                                        Log Out
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </>
+                ) : (
+                    <>
+
+                        <Link to="/Register" className={location.pathname === '/Register' ? 'active' : ''}>
+                            Register
+                        </Link>
+                        <Link to="/Login" className={location.pathname === '/Login' ? 'active' : ''}>
+                            Login
+                        </Link>
+                    </>
+                )}
+            </div>
         </div>
-        );
-  
+    );
 };
 
 export default NavBar;

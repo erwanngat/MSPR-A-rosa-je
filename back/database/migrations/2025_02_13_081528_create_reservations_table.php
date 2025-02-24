@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('plante_id')->constrained('plantes');
             $table->foreignId('owner_user_id')->constrained('users');
-            $table->foreignId('gardener_user_id')->constrained('users');
+            $table->foreignId('gardener_user_id')->nullable()->constrained('users');
             $table->datetime('start_date');
             $table->datetime('end_date');
             $table->timestamps();

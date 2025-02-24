@@ -27,29 +27,23 @@ const plantesService = (token: string) => {
   };
 
   // Ajouter une nouvelle plante
-  const addPlante = async (planteData: IPlante) => {
-    console.log("token :::::::::::"+token);
+  const addPlante = async (formData: FormData) => {
     try {
       const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Accept': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({description: planteData.description, name: planteData.name, address_id: planteData.address_id, image: planteData.image }),
+        body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`Erreur lors de l'ajout de la plante: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data;
+      return response;
     } catch (error) {
       console.error('Erreur dans addPlante:', error);
       throw error;
     }
-  };
+  }
 
   // Mettre à jour une plante existante
   const updatePlante = async (id: number, planteData: IPlante) => {
