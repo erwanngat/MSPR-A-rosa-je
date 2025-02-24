@@ -35,7 +35,7 @@ const NavBar = () => {
                 {user ? (
                     <>
                         <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-                            Home
+                            Home 
                         </Link>
                         <Link to="/AllPlantes" className={location.pathname === '/AllPlantes' ? 'active' : ''}>
                             All Plants
