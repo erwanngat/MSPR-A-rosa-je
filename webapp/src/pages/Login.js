@@ -63,13 +63,10 @@ const Login = () => {
               required
             />
           </div>
-          <a href="/Inscription">Don't have an account?</a>
+          <a href="/Register">Don't have an account?</a>
 
           <button type="submit" className="login-btn">Log In</button>
-          
-          <div className="forgot-password">
-            <a href="/">Forgot password?</a>
-          </div>
+
         </form>
       </div>
     </div>

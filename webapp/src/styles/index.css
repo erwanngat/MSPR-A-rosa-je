@@ -122,3 +122,103 @@ code {
 .logout-btn {
   color: #e53e3e;
 }
+/* Styles communs entre Login et Register */
+
+/* Style pour la page de fond */
+.bg-login {
+  font-family: Arial, sans-serif;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Style de la section du formulaire */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+/* Formulaire commun aux deux pages */
+.login-form {
+  background-color: white;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Titre du formulaire */
+h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Styles des champs de saisie */
+.input-group {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.input-group label {
+  font-size: 14px;
+  color: #333;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.input-group input:focus {
+  outline: none;
+  border-color: #0bc505;
+}
+
+
+.login-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.login-btn:hover {
+  background-color: #2d2d2d;
+}
+
+.login-form a {
+  text-align: left;
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #2575fc;
+  text-decoration: none;
+}
+
+.login-form a:hover {
+  text-decoration: underline;
+}
+
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
