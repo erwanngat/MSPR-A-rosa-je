@@ -9,6 +9,7 @@ import NavBar from './composent/NavBar'
 import Test from './pages/Test'
 
 import MyPlants from './pages/MyPlants'
+import AllPlantes from './pages/AllPlantes'
 
 
 /*END */
@@ -27,6 +28,7 @@ function App() {
           <Route path="/Profil" element={<> <NavBar />  <Profil /> </>} />
           <Route path="/test" element={<> <NavBar />  <Test /> </>} />
           <Route path="/MyPlants" element={<> <NavBar />  <MyPlants /> </>} />
+          <Route path="/AllPlantes" element={<> <NavBar />  <AllPlantes /> </>} />
         </Routes>
       </div>
     </Router>

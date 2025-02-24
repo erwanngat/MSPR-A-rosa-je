@@ -83,6 +83,7 @@ const MyPlants = () => {
               style={styles.planteImage}
             />
             <p style={styles.planteName}>{plante.name}</p>
+            <p >{plante.description}</p>
           </div>
         ))}
       </div>
