@@ -26,6 +26,8 @@ class DatabaseSeeder extends Seeder
             PlanteSeeder::class,
             CommentSeeder::class,
             ReservationSeeder::class,
+            EmailVerifiedSeeder::class,
+            RoleSeeder::class,
         ]);
     }
 }
