@@ -14,7 +14,6 @@ const RegisterScreen = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone, setPhone] = useState('');
     const [role, setRole] = useState('user');
-
     const router = useRouter();
 
     const handleSubmit = async () => {

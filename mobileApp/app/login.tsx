@@ -23,7 +23,8 @@ const LoginScreen = () => {
         name: data.user.name,
         email: data.user.email,
         password: "data.user.id",
-        phone: data.user.phone_number,
+        role: data.user.roles[0].name,
+        phone:data.user.phone_number,
         token: data.token,
       });
       router.replace('/');
