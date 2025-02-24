@@ -23,7 +23,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
         $emailDomain = Str::after($request->email, '@');
-        $isBotaniste = EmailVerified::where('end_email', $emailDomain);
+        $isBotaniste = EmailVerified::where('end_email', $emailDomain)->exists();
         $role = $isBotaniste ? 'botaniste' : 'user';
         $user->assignRole($role);
         auth()->login($user);
@@ -43,10 +43,13 @@ class AuthController extends Controller
             $user = auth()->user();
             $token = $user->createToken('authToken')->plainTextToken;
 
+            $roles = $user->getRoleNames();
+
             return response()->json([
                 'message' => 'Login successful',
                 'user' => $user,
                 'token' => $token,
+                'roles' => $roles[0],
             ]);
         }
         return response()->json(['message' => 'Invalid credentials'], 401);
