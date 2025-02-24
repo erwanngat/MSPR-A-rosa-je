@@ -64,9 +64,9 @@ const MyPlants = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Mes Plantes</h1>
+      <h1 style={styles.title}>My plants</h1>
       <button onClick={openAddDialog} style={styles.addButton}>
-        Ajouter une plante
+        Add new Plant
       </button>
 
       {/* Grille des plantes */}

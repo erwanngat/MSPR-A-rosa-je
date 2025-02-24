@@ -30,16 +30,16 @@ const Profil = () => {
           />
           <h2>{user.name}</h2>
           <p>Email: {user.email}</p>
-          <p>Téléphone: {user.phone_number || 'N/A'}</p>
-          <p>ID: {user.id}</p>
-          <p>Créé le: {new Date(user.created_at).toLocaleDateString()}</p>
-          <p>Mis à jour le: {new Date(user.updated_at).toLocaleDateString()}</p>
+          <p>phone: {user.phone_number || 'N/A'}</p>
+          {/* <p>ID: {user.id}</p> */}
+          <p>Date Creat: {new Date(user.created_at).toLocaleDateString()}</p>
+          <p>Updated at: {new Date(user.updated_at).toLocaleDateString()}</p>
         </div>
 
         <div className="profile-actions">
-          <button onClick={handleEdit} className="profile-btn">
+          {/* <button onClick={handleEdit} className="profile-btn">
             Edit Profile
-          </button>
+          </button> */}
           <button onClick={handleLogout} className="profile-btn logout-btn">
             Log Out
           </button>

@@ -111,24 +111,24 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   return (
     <div style={styles.overlay} onClick={handleOverlayClick}>
       <div style={styles.dialog}>
-        <h2>Ajouter une plante</h2>
+        <h2>Add plant</h2>
         {error && <div style={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Nom de la plante"
+            placeholder="Plant name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             style={styles.input}
           />
           <div style={styles.addressSection}>
             <Select
-              placeholder="Sélectionner une adresse"
+              placeholder="Select adress"
               options={addressOptions}
               value={selectedAddress}
               onChange={handleAddressChange}
               isSearchable // Activer la recherche
-              noOptionsMessage={() => "Aucune adresse trouvée"} // Message si aucune option
+              noOptionsMessage={() => "No address found"} // Message si aucune option
               styles={customStyles} // Styles personnalisés
             />
             <button
@@ -136,7 +136,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               onClick={() => setShowAddressForm(!showAddressForm)}
               style={styles.createButton}
             >
-              Créer
+              Create
             </button>
           </div>
           {/* Formulaire de création d'adresse */}
@@ -145,7 +145,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               <input
                 type="text"
                 name="country"
-                placeholder="Pays"
+                placeholder="country"
                 value={newAddress.country}
                 onChange={handleAddressInputChange}
                 style={styles.input}
@@ -153,7 +153,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               <input
                 type="text"
                 name="city"
-                placeholder="Ville"
+                placeholder="city"
                 value={newAddress.city}
                 onChange={handleAddressInputChange}
                 style={styles.input}
@@ -161,7 +161,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               <input
                 type="text"
                 name="zip_code"
-                placeholder="Code postal"
+                placeholder="Post code"
                 value={newAddress.zip_code}
                 onChange={handleAddressInputChange}
                 style={styles.input}
@@ -169,7 +169,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               <input
                 type="text"
                 name="street"
-                placeholder="Rue"
+                placeholder="street"
                 value={newAddress.street}
                 onChange={handleAddressInputChange}
                 style={styles.input}
@@ -177,7 +177,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               <input
                 type="text"
                 name="additional_address_details"
-                placeholder="Détails supplémentaires"
+                placeholder="Further details"
                 value={newAddress.additional_address_details}
                 onChange={handleAddressInputChange}
                 style={styles.input}
@@ -187,22 +187,22 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 onClick={handleCreateAddress}
                 style={styles.createAddressButton}
               >
-                Créer l'adresse
+                Create adress
               </button>
             </div>
           )}
           <textarea
-            placeholder="Description de la plante"
+            placeholder="Description of the plant"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={styles.textarea}
           />
           <div style={styles.buttons}>
             <button type="submit" disabled={loading}>
-              {loading ? 'En cours...' : 'Ajouter'}
+              {loading ? 'In progress...' : 'Add'}
             </button>
             <button type="button" onClick={onClose}>
-              Annuler
+              Cancel
             </button>
           </div>
         </form>

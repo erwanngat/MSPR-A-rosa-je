@@ -57,14 +57,13 @@ const AllPlantes = () => {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Toutes les plantes</h1>
+      <h1 style={styles.title}>All plants</h1>
 
       {/* Grille des plantes */}
       <div style={styles.plantesGrid}>
         {plantes.map((plante) => {
-          const user = users[plante.user_id]; // Récupérer l'utilisateur associé à la plante
+          const user = users[plante.user_id]; 
           if (!user) {
-            // Si l'utilisateur n'est pas encore récupéré, le récupérer
             fetchUser(plante.user_id);
           }
 
@@ -82,7 +81,7 @@ const AllPlantes = () => {
               <p style={styles.planteName}>{plante.name}</p>
               <p>{plante.description}</p>
               <p>
-                <strong>Utilisateur:</strong> {user ? user.name : 'Chargement...'}
+                <strong>User:</strong> {user ? user.name : 'Chargement...'}
               </p>
             </div>
           );

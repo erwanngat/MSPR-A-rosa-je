@@ -127,58 +127,60 @@ const PlanteDialog = ({ plante, onClose }) => {
 
         {/* Réservations de la plante */}
         <div style={styles.section}>
-          <h3>Réservations</h3>
+          <h3>Reservations</h3>
           <div style={styles.cardContainer}>
             {reservations.length > 0 ? (
               reservations.map((reservation) => {
-                const ownerName = users[reservation.owner_user_id]?.name || 'Chargement...';
-                const gardenerName = users[reservation.gardener_user_id]?.name || 'Chargement...';
+                const ownerName = users[reservation.owner_user_id]?.name || 'Loading...';
+                const gardenerName = users[reservation.gardener_user_id]?.name || 'Loading...';
 
                 return (
                   <div key={reservation.id} style={styles.card}>
-                    <p><strong>ID:</strong> {reservation.id}</p>
-                    <p><strong>Propriétaire:</strong> {ownerName}</p>
-                    <p><strong>Jardinier:</strong> {gardenerName}</p>
-                    <p><strong>Date de début:</strong> {formatDate(reservation.start_date)}</p>
-                    <p><strong>Date de fin:</strong> {formatDate(reservation.end_date)}</p>
+                    {/* <p><strong>ID:</strong> {reservation.id}</p> */}
+                    <p><strong>Owner:</strong> {ownerName}</p>
+                    <p><strong>Gardener:</strong> {gardenerName}</p>
+                    <p><strong>Start date:</strong> {formatDate(reservation.start_date)}</p>
+                    <p><strong>End date:</strong> {formatDate(reservation.end_date)}</p>
                   </div>
                 );
               })
             ) : (
-              <p>Aucune réservation pour cette plante.</p>
+              <p>No reservation for this plant.</p>
             )}
           </div>
         </div>
 
         {/* Commentaires de la plante */}
         <div style={styles.section}>
-          <h3>Commentaires</h3>
+          <h3>Comments</h3>
           <div style={styles.cardContainer}>
             {comments.length > 0 ? (
               comments.map((comment) => {
-                const userName = users[comment.user_id]?.name || 'Chargement...';
+                const userName = users[comment.user_id]?.name || 'Loading...';
 
                 return (
                   <div key={comment.id} style={styles.card}>
-                    <p><strong>Utilisateur:</strong> {userName}</p>
-                    <p><strong>Commentaire:</strong> {comment.comment}</p>
+                    <p><strong>{userName}</strong> </p>
+                    <p>{comment.comment}</p>
                     <p><strong>Date:</strong> {formatDate(comment.created_at)}</p>
                   </div>
                 );
               })
             ) : (
-              <p>Aucun commentaire pour cette plante.</p>
+              <p>No comment for this plant.</p>
             )}
           </div>
         </div>
 
         {/* Bouton pour ajouter un commentaire */}
+        { sessionStorage.getItem('roles') == "botaniste" &&(
         <button
           onClick={() => setShowCommentForm(true)}
           style={styles.addCommentButton}
         >
-          Ajouter un commentaire
+          Add a comment
         </button>
+        )}
 
         {/* Formulaire pour ajouter un commentaire */}
         {showCommentForm && (
@@ -199,7 +201,7 @@ const PlanteDialog = ({ plante, onClose }) => {
                 onClick={() => setShowCommentForm(false)}
                 style={styles.cancelButton}
               >
-                Annuler
+                Cancel
               </button>
             </div>
           </form>
@@ -207,7 +209,7 @@ const PlanteDialog = ({ plante, onClose }) => {
 
         {/* Bouton pour fermer la boîte de dialogue */}
         <button onClick={onClose} style={styles.closeButton}>
-          Fermer
+          Close
         </button>
       </div>
     </div>

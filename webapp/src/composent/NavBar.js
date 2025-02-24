@@ -34,9 +34,6 @@ const NavBar = () => {
             <div className="navbar-right">
                 {user ? (
                     <>
-                        <Link to="/" className={location.pathname === '/' ? 'active' : ''}>
-                            Home 
-                        </Link>
                         <Link to="/AllPlantes" className={location.pathname === '/AllPlantes' ? 'active' : ''}>
                             All Plants
                         </Link>
