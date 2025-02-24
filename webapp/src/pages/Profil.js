@@ -1,13 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-// import './styles.css'; // Assurez-vous d'importer le fichier CSS
 
 const Profil = () => {
   const navigate = useNavigate();
 
-  // Récupérer les informations de l'utilisateur depuis sessionStorage
   const userString = sessionStorage.getItem('user');
-  const user = JSON.parse(userString); // Convertir la chaîne JSON en objet
+  const user = JSON.parse(userString); 
 
   const handleEdit = () => {
     alert("Fonction d'édition à implémenter");
