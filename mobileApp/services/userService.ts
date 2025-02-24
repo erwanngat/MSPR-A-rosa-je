@@ -5,11 +5,13 @@ const UserService = () => {
     const baseUrl: string = 'http://localhost:8080/api';
 
     const register = async (user: IUser, password_confirmation: string): Promise<boolean> => {
+        console.log(user);
         try {
             const response = await fetch(`${baseUrl}/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify({
                     name: user.name,

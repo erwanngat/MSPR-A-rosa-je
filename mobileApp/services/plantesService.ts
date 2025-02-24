@@ -27,16 +27,15 @@ const plantesService = (token: string) => {
   };
 
   // Ajouter une nouvelle plante
-  const addPlante = async (planteData: IPlante) => {
+  const addPlante = async (formData: FormData) => {
     console.log("token :::::::::::"+token);
     try {
       const response = await fetch(baseUrl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({description: planteData.description, name: planteData.name, address_id: planteData.address_id, image: planteData.image }),
+        body: formData,
       });
 
       if (!response.ok) {
@@ -75,7 +74,6 @@ const plantesService = (token: string) => {
     }
   };
 
-  // Supprimer une plante
   const deletePlante = async (id: number) => {
     try {
       const response = await fetch(`${baseUrl}/${id}`, {

@@ -10,7 +10,7 @@ export default function AddPlanteScreen() {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const token = user?.token;
-  const service = plantesService(token || ''); // Assurez-vous que le token est bien transmis
+  const service = plantesService(token || '');
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -27,8 +27,8 @@ export default function AddPlanteScreen() {
       });
 
       if (!result.canceled) {
+        console.log("hhhhhhhh "+result);
         setImageUri(result.assets[0].uri);
-        console.log(result.assets[0]);
       }
     } else {
       Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie.');
@@ -46,10 +46,8 @@ export default function AddPlanteScreen() {
       return;
     }
 
-    // Créer un objet FormData pour l'envoi de l'image
     const formData = new FormData();
 
-    //Créer un objet de type fichier à partir de l'URI
     const localUri = imageUri;
     const filename = localUri.split('/').pop();
     const match = /\.(\w+)$/.exec(filename!);
@@ -61,27 +59,19 @@ export default function AddPlanteScreen() {
       name: filename,
     };
 
-    formData.append('file', photo);
+    formData.append('image', photo);
 
-    const newPlante: IPlante = {
-      name,
-      description,
-      user_id: user.id,
-      address_id: addressId,
-      image : photo,
-    };
-
-    formData.append('name', newPlante.name);
-    formData.append('description', newPlante.description);
-    formData.append('user_id', newPlante.user_id.toString());
-    formData.append('address_id', newPlante.address_id);
+    formData.append('name', name);
+    formData.append('description', description);
+    formData.append('address_id', addressId);
+    formData.append('user_id', user.id.toString());
 
     try {
-      const response = await service.addPlante(formData); // Utiliser le service pour ajouter la plante
+      const response = await service.addPlante(formData);
       const data = await response.json();
       if (data.success) {
         Alert.alert('Succès', 'Plante ajoutée avec succès !');
-        router.push('/'); // Rediriger vers la page principale
+        router.push('/');
       } else {
         Alert.alert('Erreur', 'Impossible d\'ajouter la plante.');
       }

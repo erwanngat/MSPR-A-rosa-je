@@ -47,6 +47,7 @@ export default function TabOneScreen() {
       <ScrollView>
         {plantes.map((plante) => (
           <Card
+          key={plante.id}
             id={plante.id}
             avatarUrl="https://example.com/avatar.jpg"
             title={plante.name}
