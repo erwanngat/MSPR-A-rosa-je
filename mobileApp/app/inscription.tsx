@@ -21,7 +21,6 @@ const RegisterScreen = () => {
       return;
     }
     const user: IUser = {
-      id: '',
       name,
       email,
       phone,
