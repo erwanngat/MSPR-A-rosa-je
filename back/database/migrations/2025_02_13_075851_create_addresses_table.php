@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('city');
             $table->string('zip_code');
             $table->string('street');
-            $table->string('additional_address_details');
+            $table->string('additional_address_details')->nullable();
             $table->timestamps();
         });
     }
