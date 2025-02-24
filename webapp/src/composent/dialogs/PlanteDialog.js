@@ -1,27 +1,50 @@
 import React, { useEffect, useState } from 'react';
 import PlantesService from '../../services/PlantesService.ts';
-import UserService from '../../services/userService.ts'; // Pour récupérer les informations des utilisateurs
-import CommentService from '../../services/CommentService.ts'; // Pour gérer les commentaires
+import UserService from '../../services/userService.ts';
+import CommentService from '../../services/CommentService.ts';
 
 const PlanteDialog = ({ plante, onClose }) => {
-  const [reservations, setReservations] = useState([]); // Réservations de la plante
-  const [comments, setComments] = useState([]); // Commentaires de la plante
-  const [users, setUsers] = useState({}); // Cache des utilisateurs
-  const [showCommentForm, setShowCommentForm] = useState(false); // Afficher le formulaire de commentaire
-  const [newComment, setNewComment] = useState(''); // Texte du nouveau commentaire
-  const [loading, setLoading] = useState(false); // État de chargement
-  const [error, setError] = useState(''); // Message d'erreur
+  const [reservations, setReservations] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [users, setUsers] = useState({});
+  const [showCommentForm, setShowCommentForm] = useState(false);
+  const [newComment, setNewComment] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  // Récupérer les réservations, les commentaires et tous les utilisateurs
+  // Fonction pour formater la date
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  };
+
   useEffect(() => {
     if (plante) {
       fetchReservations();
       fetchComments();
-      fetchAllUsers();
     }
   }, [plante]);
 
-  // Récupérer les réservations de la plante
+  useEffect(() => {
+    // Charger les informations des utilisateurs pour les réservations
+    reservations.forEach((reservation) => {
+      fetchUser(reservation.owner_user_id);
+      fetchUser(reservation.gardener_user_id);
+    });
+
+    // Charger les informations des utilisateurs pour les commentaires
+    comments.forEach((comment) => {
+      fetchUser(comment.user_id);
+    });
+  }, [reservations, comments]);
+
   const fetchReservations = async () => {
     try {
       const data = await PlantesService().getReservationsByPlanteId(plante.id);
@@ -31,7 +54,6 @@ const PlanteDialog = ({ plante, onClose }) => {
     }
   };
 
-  // Récupérer les commentaires de la plante
   const fetchComments = async () => {
     try {
       const data = await CommentService().getCommentsByPlant(plante.id, getToken());
@@ -41,33 +63,24 @@ const PlanteDialog = ({ plante, onClose }) => {
     }
   };
 
-  // Récupérer tous les utilisateurs
-  const fetchAllUsers = async () => {
+  const fetchUser = async (userId) => {
+    if (users[userId]) {
+      return users[userId];
+    }
     try {
-      const data = await UserService().getAllUsers(getToken());
-      const usersMap = data.reduce((acc, user) => {
-        acc[user.id] = user;
-        return acc;
-      }, {});
-      setUsers(usersMap);
+      const userData = await UserService().getUser(getToken(), userId);
+      setUsers((prevUsers) => ({ ...prevUsers, [userId]: userData }));
+      return userData;
     } catch (error) {
-      console.error('Erreur lors de la récupération des utilisateurs:', error);
+      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      return null;
     }
   };
 
-  // Récupérer le token depuis le sessionStorage
   const getToken = () => {
     return sessionStorage.getItem('token');
   };
 
-  // Récupérer l'ID de l'utilisateur connecté
-  const getCurrentUserId = () => {
-    const userString = sessionStorage.getItem('user');
-    const user = JSON.parse(userString);
-    return user.id;
-  };
-
-  // Gérer l'ajout d'un commentaire
   const handleAddComment = async (e) => {
     e.preventDefault();
 
@@ -82,14 +95,14 @@ const PlanteDialog = ({ plante, onClose }) => {
     try {
       const commentData = {
         comment: newComment,
-        plant_id: plante.id, // Plante actuelle
+        plant_id: plante.id,
       };
 
       const success = await CommentService().addComment(commentData, getToken());
       if (success) {
-        await fetchComments(); // Recharger les commentaires après l'ajout
-        setNewComment(''); // Réinitialiser le champ de commentaire
-        setShowCommentForm(false); // Masquer le formulaire
+        await fetchComments();
+        setNewComment('');
+        setShowCommentForm(false);
       } else {
         setError('Erreur lors de l\'ajout du commentaire.');
       }
@@ -105,43 +118,58 @@ const PlanteDialog = ({ plante, onClose }) => {
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.dialog} onClick={(e) => e.stopPropagation()}>
         <h2>{plante.name}</h2>
+        <img
+          src="https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"
+          alt={plante.name}
+          style={styles.planteImage}
+        />
         <p><strong>Description:</strong> {plante.description}</p>
 
         {/* Réservations de la plante */}
         <div style={styles.section}>
           <h3>Réservations</h3>
-          {reservations.length > 0 ? (
-            <ul>
-              {reservations.map((reservation) => (
-                <li key={reservation.id} style={styles.reservationItem}>
-                  <p><strong>ID:</strong> {reservation.id}</p>
-                  <p><strong>Propriétaire:</strong> {users[reservation.owner_user_id]?.name || 'Inconnu'}</p>
-                  <p><strong>Jardinier:</strong> {users[reservation.gardener_user_id]?.name || 'Inconnu'}</p>
-                  <p><strong>Date de début:</strong> {reservation.start_date}</p>
-                  <p><strong>Date de fin:</strong> {reservation.end_date}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Aucune réservation pour cette plante.</p>
-          )}
+          <div style={styles.cardContainer}>
+            {reservations.length > 0 ? (
+              reservations.map((reservation) => {
+                const ownerName = users[reservation.owner_user_id]?.name || 'Chargement...';
+                const gardenerName = users[reservation.gardener_user_id]?.name || 'Chargement...';
+
+                return (
+                  <div key={reservation.id} style={styles.card}>
+                    <p><strong>ID:</strong> {reservation.id}</p>
+                    <p><strong>Propriétaire:</strong> {ownerName}</p>
+                    <p><strong>Jardinier:</strong> {gardenerName}</p>
+                    <p><strong>Date de début:</strong> {formatDate(reservation.start_date)}</p>
+                    <p><strong>Date de fin:</strong> {formatDate(reservation.end_date)}</p>
+                  </div>
+                );
+              })
+            ) : (
+              <p>Aucune réservation pour cette plante.</p>
+            )}
+          </div>
         </div>
 
         {/* Commentaires de la plante */}
         <div style={styles.section}>
           <h3>Commentaires</h3>
-          {comments.length > 0 ? (
-            <ul>
-              {comments.map((comment) => (
-                <li key={comment.id} style={styles.commentItem}>
-                  <p><strong>Utilisateur:</strong> {users[comment.user_id]?.name || 'Inconnu'}</p>
-                  <p><strong>Commentaire:</strong> {comment.comment}</p>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>Aucun commentaire pour cette plante.</p>
-          )}
+          <div style={styles.cardContainer}>
+            {comments.length > 0 ? (
+              comments.map((comment) => {
+                const userName = users[comment.user_id]?.name || 'Chargement...';
+
+                return (
+                  <div key={comment.id} style={styles.card}>
+                    <p><strong>Utilisateur:</strong> {userName}</p>
+                    <p><strong>Commentaire:</strong> {comment.comment}</p>
+                    <p><strong>Date:</strong> {formatDate(comment.created_at)}</p>
+                  </div>
+                );
+              })
+            ) : (
+              <p>Aucun commentaire pour cette plante.</p>
+            )}
+          </div>
         </div>
 
         {/* Bouton pour ajouter un commentaire */}
@@ -203,21 +231,31 @@ const styles = {
     backgroundColor: '#fff',
     padding: '20px',
     borderRadius: '10px',
-    width: '600px',
+    width: '800px',
     maxHeight: '80vh',
     overflowY: 'auto',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
   },
+  planteImage: {
+    maxWidth: '100%',
+    maxHeight: '400px',
+    borderRadius: '10px',
+    marginBottom: '20px',
+  },
   section: {
     marginTop: '20px',
   },
-  reservationItem: {
-    borderBottom: '1px solid #ccc',
-    padding: '10px 0',
+  cardContainer: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: '10px',
   },
-  commentItem: {
-    borderBottom: '1px solid #ccc',
-    padding: '10px 0',
+  card: {
+    border: '1px solid #ccc',
+    borderRadius: '10px',
+    padding: '15px',
+    flex: '1 1 calc(50% - 20px)',
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
   },
   addCommentButton: {
     padding: '10px 20px',
