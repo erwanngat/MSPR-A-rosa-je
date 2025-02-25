@@ -21,6 +21,9 @@ jobs:
         run: |
           cd back
           php -r "file_exists('.env') || copy('.env.example', '.env');"
+          # Assurez-vous que .env contient les bonnes configurations SQLite
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=$GITHUB_WORKSPACE/back/database/database.sqlite" >> .env
 
       - name: Generate key
         run: |
@@ -35,6 +38,7 @@ jobs:
       - name: Create Database and set permissions
         run: |
           cd back
+          mkdir -p database
           touch database/database.sqlite
           chmod -R 777 database
           ls -la database/database.sqlite
@@ -51,13 +55,22 @@ jobs:
           ls -la $GITHUB_WORKSPACE/back/database/
           file $GITHUB_WORKSPACE/back/database/database.sqlite || echo "File not found"
 
+      - name: Create migration table manually
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
+        run: |
+          cd back
+          # Créer manuellement la table de migrations si elle n'existe pas
+          php artisan migrate:install
+
       - name: Run migrations (fresh database) and show errors
         env:
           DB_CONNECTION: sqlite
           DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
         run: |
           cd back
-          php artisan migrate:fresh --seed || echo "Migration failed"
+          php artisan migrate:fresh --seed --force
 
       - name: Show existing migrations
         run: |
