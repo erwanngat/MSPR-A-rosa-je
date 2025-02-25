@@ -17,13 +17,13 @@ jobs:
           cd back
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-      - name: Copy .env
+      - name: Copy .env and configure database
         run: |
           cd back
           php -r "file_exists('.env') || copy('.env.example', '.env');"
-          # Assurez-vous que .env contient les bonnes configurations SQLite
-          echo "DB_CONNECTION=sqlite" >> .env
-          echo "DB_DATABASE=$GITHUB_WORKSPACE/back/database/database.sqlite" >> .env
+          # Ajout du chemin de la base de données SQLite au .env
+          sed -i "s/DB_CONNECTION=sqlite/DB_CONNECTION=sqlite\nDB_DATABASE=database\/database.sqlite/" .env
+          cat .env | grep DB_
 
       - name: Generate key
         run: |
@@ -43,34 +43,15 @@ jobs:
           chmod -R 777 database
           ls -la database/database.sqlite
 
-      - name: Check current directory and workspace
-        run: |
-          echo "Current directory: $(pwd)"
-          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-          ls -l
-
-      - name: Check SQLite file existence
-        run: |
-          echo "Checking for SQLite file at $GITHUB_WORKSPACE/back/database/database.sqlite"
-          ls -la $GITHUB_WORKSPACE/back/database/
-          file $GITHUB_WORKSPACE/back/database/database.sqlite || echo "File not found"
-
       - name: Create migration table manually
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
         run: |
           cd back
-          # Créer manuellement la table de migrations si elle n'existe pas
-          php artisan migrate:install
+          php artisan migrate:install --verbose
 
       - name: Run migrations (fresh database) and show errors
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
         run: |
           cd back
-          php artisan migrate:fresh --seed --force
+          php artisan migrate:fresh --seed --force --verbose
 
       - name: Show existing migrations
         run: |
@@ -86,9 +67,6 @@ jobs:
           php artisan view:clear
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
         run: |
           cd back
           php artisan test
