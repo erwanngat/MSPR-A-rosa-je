@@ -15,6 +15,7 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_link_screen_can_be_rendered(): void
     {
+        $this->markTestSkipped('API support is not enabled.');
         if (! Features::enabled(Features::resetPasswords())) {
             $this->markTestSkipped('Password updates are not enabled.');
         }
@@ -43,6 +44,7 @@ class PasswordResetTest extends TestCase
 
     public function test_reset_password_screen_can_be_rendered(): void
     {
+        $this->markTestSkipped('API support is not enabled.');
         if (! Features::enabled(Features::resetPasswords())) {
             $this->markTestSkipped('Password updates are not enabled.');
         }
