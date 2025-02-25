@@ -5,24 +5,39 @@ import { IComment } from "@/types/comment";
 import { useUserStore } from '@/stores/userStore';
 import { useLocalSearchParams } from 'expo-router';
 import { Ionicons } from "@expo/vector-icons";
-import { Link } from 'expo-router';
 import { useRouter } from 'expo-router';
+import plantesService from '@/services/plantesService';
+import UserService from '@/services/userService';
 
 export default function ModalScreen() {
-    const { id } = useLocalSearchParams();
+    const user = useUserStore((state) => state.user);
+    const token = user?.token;
+    const { id } = useLocalSearchParams();  // Déplacer cela en premier
     const [comments, setComments] = useState<IComment[]>([]);
     const [newComment, setNewComment] = useState("");
     const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
     const [editedComment, setEditedComment] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
-    const user = useUserStore().user;
-    const token = user?.token;
     const userRole = user?.role;
     const router = useRouter();
+    const [planteData, setPlanteData] = useState(null);  // Ajout de l'état pour planteData
 
-    const goToProfile = () => {
-        router.push(`/profile/${id}`);
-    }
+    // Récupérer les informations de la plante à l'initialisation
+    useEffect(() => {
+        const fetchPlanteData = async () => {
+            if (id && token) {
+                const service = plantesService(token);
+                try {
+                    const data = await service.getPlantesById(Number(id));
+                    setPlanteData(data);  // Stocker les données de la plante
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des données de la plante", error);
+                }
+            }
+        };
+
+        fetchPlanteData();
+    }, [id, token]);  // Se déclencher si l'id ou le token change
 
     useEffect(() => {
         if (id) {
@@ -48,7 +63,7 @@ export default function ModalScreen() {
         setLoading(true);
         try {
             const success = await CommentService().addComment(
-                 //@ts-ignore
+                //@ts-ignore
                 {
                     comment: newComment,
                     plant_id: Number(id),
@@ -91,6 +106,7 @@ export default function ModalScreen() {
 
         setLoading(true);
         try {
+            //@ts-ignore
             const success = await CommentService().updateComment(editingCommentId!, {
                 comment: editedComment,
                 plant_id: Number(id),
@@ -108,33 +124,48 @@ export default function ModalScreen() {
         }
     };
     
+    const getImageUser = async (idUser: number) => {
+        const userSelected = await UserService().getUser(user?.token, idUser);
+        return userSelected.image;
+    };
+
+    const goToProfile = (idUser: number) => {
+        router.push(`/profile/${idUser}`);
+    };
+
     return (
         <ScrollView style={styles.container}>
             {/* Image du profil avec clic pour accéder au profil */}
-            <TouchableOpacity onPress={goToProfile}>
+            <TouchableOpacity onPress={() => goToProfile(planteData.user_id)}>
                 <Image
-                    source={{ uri: user?.avatarUrl || "https://via.placeholder.com/100" }} // Image par défaut si aucune image
+                    source={{ uri: user?.image || "https://via.placeholder.com/100" }} // Image par défaut si aucune image
                     style={styles.profileImage}
                 />
             </TouchableOpacity>
 
-            <Text style={styles.title}>Titre de la Plante</Text>
+            <Text style={styles.title}>{planteData?.name || 'Titre de la Plante'}</Text>
             <Image
-                source={{ uri: "https://via.placeholder.com/600x400" }}
+                source={{ uri: planteData?.image || "https://via.placeholder.com/600x400" }}
                 style={styles.image}
             />
-            <Text style={styles.description}>Ceci est une description détaillée de la plante...</Text>
+            <Text style={styles.description}>{planteData?.description || 'Ceci est une description détaillée de la plante...'}</Text>
 
             <View style={styles.commentSection}>
                 <Text style={styles.commentTitle}>Commentaires</Text>
                 {loading ? (
-                    <Text>Chargement...</Text> // Message de chargement
+                    <Text style={styles.loadingText}>Chargement...</Text> // Message de chargement
                 ) : (
                     <FlatList
                         data={comments}
                         keyExtractor={(item) => item.id.toString()}
                         renderItem={({ item }) => (
                             <View style={styles.commentContainer}>
+                                <TouchableOpacity onPress={() => goToProfile(item.user_id)}>
+                                <Image
+                                    source={{ uri: getImageUser(item.user_id) || "https://via.placeholder.com/40" }} // Utilisez l'URL de l'image de profil de l'utilisateur
+                                    style={styles.commentProfileImage}
+                                />
+                                </TouchableOpacity>
                                 {editingCommentId === item.id ? (
                                     <View style={styles.editContainer}>
                                         <TextInput
@@ -142,19 +173,19 @@ export default function ModalScreen() {
                                             value={editedComment}
                                             onChangeText={setEditedComment}
                                         />
-                                        <Button title="Mettre à jour" onPress={handleUpdateComment} color="#007bff" />
+                                        <Button title="Mettre à jour" onPress={handleUpdateComment} color="#A8D08D" />
                                     </View>
                                 ) : (
                                     <>
                                         <Text style={styles.commentItem}>{item.comment}</Text>
-                                        {userRole == "botaniste" ? (
+                                        {item.user_id == user?.id ? (
                                             <TouchableOpacity onPress={() => handleDeleteComment(item.id)}>
-                                                <Ionicons name="trash" size={20} color="red" />
+                                                <Ionicons name="trash" size={20} color="#D9534F" />
                                             </TouchableOpacity>
                                         ) : null}
                                         {item.user_id == user?.id ? (
                                             <TouchableOpacity onPress={() => handleEditComment(item.id, item.comment)}>
-                                                <Ionicons name="pencil" size={20} color="#007bff" />
+                                                <Ionicons name="pencil" size={20} color="#A8D08D" />
                                             </TouchableOpacity>
                                         ) : null}
                                     </>
@@ -171,7 +202,7 @@ export default function ModalScreen() {
                             onChangeText={setNewComment}
                             placeholder="Ajouter un commentaire..."
                         />
-                        <Button title="Ajouter" onPress={handleAddComment} color="#007bff" />
+                        <Button title="Ajouter" onPress={handleAddComment} color="#A8D08D" />
                     </>
                 ) : null}
             </View>
@@ -183,30 +214,40 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: "white",
-    },
-    profileImageContainer: {
-        alignItems: "center",
-        marginBottom: 16,
+        backgroundColor: "#F3F6F4",
     },
     profileImage: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
+        width: 80,
+        height: 80,
+        borderRadius: 40,
         borderWidth: 2,
-        borderColor: "#ddd",
+        borderColor: "#A8D08D",
+        marginBottom: 16,
+        alignSelf: "center", // Centrer l'image du profil
     },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
         textAlign: "center",
+        color: "#4C9C6F", // Vert forêt
+    },
+    imageContainer: {
+        width: "100%", // Conteneur de l'image s'adapte à la largeur
+        aspectRatio: 1, // Pour garder un ratio de 1:1 si l'image a un format carré
+        marginBottom: 16, // Espace sous l'image
+        borderRadius: 10, // Border radius pour arrondir les coins si besoin
+        overflow: "hidden", // S'assurer que l'image ne dépasse pas du conteneur
     },
     image: {
-        width: "100%",
-        height: 200,
-        borderRadius: 8,
-        marginBottom: 16,
+        width: "100%", // L'image prendra toute la largeur du conteneur
+        height: "100%", // L'image prendra toute la hauteur du conteneur
+        resizeMode: "contain", // Assure que l'image garde son ratio sans être déformée
+    }, commentProfileImage: {
+        width: 40,  // Taille de l'image de profil
+        height: 40,
+        borderRadius: 20,  // Pour rendre l'image circulaire
+        marginRight: 8,  // Espacement entre l'image et le texte
     },
     description: {
         fontSize: 16,
@@ -223,6 +264,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 8,
         textAlign: "center",
+        color: "#4C9C6F",
     },
     commentContainer: {
         flexDirection: "row",
@@ -230,24 +272,37 @@ const styles = StyleSheet.create({
         alignItems: "center",
         paddingVertical: 8,
         borderBottomWidth: 1,
-        borderBottomColor: "#ddd",
+        borderBottomColor: "#A8D08D",
+        marginHorizontal: 8,  // Pour ne pas toucher les bords
     },
     commentItem: {
         fontSize: 14,
         color: "#333",
         flex: 1,
+        marginRight: 8,
     },
     input: {
         width: "100%",
         padding: 8,
-        borderRadius: 4,
+        borderRadius: 6,
         borderWidth: 1,
-        borderColor: "#ddd",
+        borderColor: "#A8D08D",
         fontSize: 14,
         marginBottom: 8,
+        backgroundColor: "#fff",
     },
     editContainer: {
         width: "100%",
         paddingVertical: 8,
+    },
+    loadingText: {
+        textAlign: "center",
+        fontSize: 16,
+        color: "#A8D08D",
+    },
+    iconContainer: {
+        flexDirection: "row",
+        justifyContent: "center", // Centrer les icônes
+        alignItems: "center",
     },
 });

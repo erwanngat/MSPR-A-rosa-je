@@ -9,7 +9,7 @@ export default function TabTwoScreen() {
     name: user.name,
     phone: user.phone,
     email: user.email,
-    avatarUrl: 'https://example.com/avatar.jpg',
+    avatarUrl: user?.image,
   };
 
   return (
