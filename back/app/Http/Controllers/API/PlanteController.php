@@ -34,6 +34,7 @@ class PlanteController extends Controller
         $path = null;
         if($request->hasFile('image')){
             $path = $request->file('image')->store('plantes', 'public');
+            $path = asset('storage/' . $path);
         }
         $plante = Plante::create([
             'name' => $request->name,
