@@ -12,19 +12,36 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.0'
+    - name: Go to back directory
+      working-directory: ./back
+      run: |
     - name: Copy .env
       working-directory: ./back
       run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-    - name: Install Dependencies
+    - name: Install PHP Dependencies
       working-directory: ./back
       run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-    - name: Generate key
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '16'
+    - name: Install NPM Dependencies
+      working-directory: ./back
+      run: npm install
+    - name: Run Vite in dev mode
+      working-directory: ./back
+      run: npm run dev -- --host
+    - name: Generate Laravel Key
       working-directory: ./back
       run: php artisan key:generate
     - name: Directory Permissions
       working-directory: ./back
       run: chmod -R 777 storage bootstrap/cache
-    - name: Create Database
+    - name: Create SQLite Database
       working-directory: ./back
       run: |
         mkdir -p database
