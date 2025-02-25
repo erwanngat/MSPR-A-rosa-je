@@ -76,7 +76,7 @@ const UserService = () => {
                 phone_number: userData.phone,
             }),
         });
-
+        console.log(response);
     }
 
     return { register, login, getUser, updateUser };

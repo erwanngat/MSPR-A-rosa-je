@@ -1,37 +1,55 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, Button, ScrollView, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import UserService from '../services/userService'; // Assurez-vous que UserService est correctement importé
 import { useUserStore } from '@/stores/userStore';
 
 export default function EditProfileScreen() {
+  const storedUser = useUserStore.getState().user;
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
 
+  // Pré-remplir les champs avec les données actuelles de l'utilisateur
+  useEffect(() => {
+    if (storedUser) {
+      setName(storedUser.name);
+      setPhone(storedUser.phone);
+      setEmail(storedUser.email);
+    }
+  }, [storedUser]);
+
+  // Assurez-vous d'utiliser la méthode correcte pour mettre à jour le store
   const handleSave = async () => {
-    const storedUser = useUserStore.getState().user;
-    const isAuthenticated = useUserStore.getState().isAuthenticated;
-    const userData = {
-      id: storedUser?.id,
-      name: name,
-      phone: phone,
-      email: email,
-      password: password,
-      token: storedUser?.token,
-    };
+    try {
+      const userData = {
+        id: storedUser?.id,
+        name: name,
+        phone: phone,
+        email: email,
+        password: password,
+        token: storedUser?.token,
+      };
+      useUserStore.getState().setUser({
+        id: storedUser?.id,
+        name: name,
+        email: email,
+        password: "data.user.id",
+        role: storedUser?.role,
+        phone: phone,
+        token: storedUser?.token,
+        image: "https://i.ytimg.com/vi/P0EvZl8KvaE/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGEUgWihlMA8=&rs=AOn4CLDEE4iluX-R8mt0njywABDdPaQOVQ",
+      });
+      console.log(useUserStore.getState().user);
+      const success = await UserService().updateUser(userData, storedUser?.token, password, passwordConfirmation);
+    } catch (e) {
 
-    // Appel à la fonction updateUser pour mettre à jour l'utilisateur avec le token
-    const success = await UserService().updateUser(userData, storedUser?.token, password, passwordConfirmation);
-    console.log(success);
+    }
 
-    // if (success) {
-    //   Alert.alert('Succès', 'Profil mis à jour avec succès !');
-    // } else {
-    //   Alert.alert('Erreur', 'Une erreur est survenue lors de la mise à jour.');
-    // }
+
   };
+
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -72,16 +90,19 @@ export default function EditProfileScreen() {
         secureTextEntry
       />
 
-<TextInput
+      {/* Champ de saisie pour le téléphone */}
+      <TextInput
         style={styles.input}
         value={phone}
         onChangeText={setPhone}
-        placeholder="phone"
-        secureTextEntry
+        placeholder="Téléphone"
+        keyboardType="phone-pad"
       />
 
       {/* Bouton pour sauvegarder les modifications */}
-      <Button title="Sauvegarder" onPress={handleSave} />
+      <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
+        <Text style={styles.saveButtonText}>Sauvegarder</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 }
@@ -91,21 +112,42 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     padding: 20,
-    backgroundColor: '#f7f7f7',
+    backgroundColor: '#F3F6F4', // Gris doux pour une ambiance nature
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#4C9C6F', // Vert forêt pour le titre
   },
   input: {
-    height: 40,
-    borderColor: '#ccc',
+    height: 45,
+    borderColor: '#A8D08D', // Vert doux pour les bordures
     borderWidth: 1,
     marginBottom: 15,
-    paddingHorizontal: 10,
-    borderRadius: 5,
+    paddingHorizontal: 15,
+    borderRadius: 8,
     fontSize: 16,
+    backgroundColor: '#fff',
+  },
+  saveButton: {
+    backgroundColor: '#4C9C6F', // Vert forêt pour le bouton
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    elevation: 5, // Ombre pour donner un effet de profondeur
+    shadowColor: '#4C9C6F', // Ombre de couleur verte pour l'effet naturel
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
+  },
+  saveButtonText: {
+    color: '#fff', // Texte blanc pour contraster avec le fond vert
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
