@@ -85,4 +85,30 @@ class UserController extends Controller
         }
         return response()->json($user->plantes, 200);
     }
+
+    public function getUserAdresses(int $id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $plantes = $user->plantes;
+
+        if(!$plantes){
+            return response()->json(['error' => 'Plantes not found'], 404);
+        }
+
+        $addresses = [];
+        foreach($plantes as $plante){
+            if($plante->address){
+                $addresses[$plante->address->id] = $plante->address;
+            }
+        }
+
+        if(!$addresses){
+            return response()->json(['error' => 'Adresses not found'], 404);
+        }
+
+        return response()->json($addresses, 200);
+    }
 }
