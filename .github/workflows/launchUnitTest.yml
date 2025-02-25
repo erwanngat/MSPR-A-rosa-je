@@ -9,65 +9,73 @@ on:
 jobs:
   laravel-tests:
     runs-on: ubuntu-latest
-
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Go to back directory and install dependencies
-      run: |
-        cd back
-        composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+      - name: Go to back directory and install dependencies
+        run: |
+          cd back
+          composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
-    - name: Copy .env
-      run: |
-        cd back
-        php -r "file_exists('.env') || copy('.env.example', '.env');"
+      - name: Copy .env
+        run: |
+          cd back
+          php -r "file_exists('.env') || copy('.env.example', '.env');"
 
-    - name: Generate key
-      run: |
-        cd back
-        php artisan key:generate
+      - name: Generate key
+        run: |
+          cd back
+          php artisan key:generate
 
-    - name: Directory Permissions
-      run: |
-        cd back
-        chmod -R 777 storage bootstrap/cache
+      - name: Directory Permissions
+        run: |
+          cd back
+          chmod -R 777 storage bootstrap/cache
 
-    - name: Create Database directory if it doesn't exist
-      run: |
-        mkdir -p back/database
-        touch back/database/database.sqlite
-        chmod -R 777 back/database
-        ls -l back/database/database.sqlite  # Vérifie si le fichier est créé
+      - name: Create Database and set permissions
+        run: |
+          cd back
+          touch database/database.sqlite
+          chmod -R 777 database
+          ls -la database/database.sqlite
 
-    - name: Check current directory and workspace
-      run: |
-        echo "Current directory: $(pwd)"
-        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-        ls -l
+      - name: Check current directory and workspace
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+          ls -l
 
-    - name: Run migrations (fresh database) and show errors
-      run: |
-        cd back
-        php artisan migrate:fresh --seed || echo "Migration failed"
+      - name: Check SQLite file existence
+        run: |
+          echo "Checking for SQLite file at $GITHUB_WORKSPACE/back/database/database.sqlite"
+          ls -la $GITHUB_WORKSPACE/back/database/
+          file $GITHUB_WORKSPACE/back/database/database.sqlite || echo "File not found"
 
-    - name: Show existing migrations
-      run: |
-        cd back
-        php artisan migrate:status
+      - name: Run migrations (fresh database) and show errors
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
+        run: |
+          cd back
+          php artisan migrate:fresh --seed || echo "Migration failed"
 
-    - name: Clear Laravel cache
-      run: |
-        cd back
-        php artisan config:clear
-        php artisan cache:clear
-        php artisan route:clear
-        php artisan view:clear
+      - name: Show existing migrations
+        run: |
+          cd back
+          php artisan migrate:status
 
-    - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
-      env:
-        DB_CONNECTION: sqlite
-        DB_DATABASE: /home/runner/work/ton-repository/ton-repository/back/database/database.sqlite
-      run: |
-        cd back
-        php artisan test
+      - name: Clear Laravel cache
+        run: |
+          cd back
+          php artisan config:clear
+          php artisan cache:clear
+          php artisan route:clear
+          php artisan view:clear
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
+        run: |
+          cd back
+          php artisan test
