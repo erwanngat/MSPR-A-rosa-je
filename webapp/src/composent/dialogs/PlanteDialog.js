@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import PlantesService from '../../services/PlantesService.ts';
 import UserService from '../../services/userService.ts';
 import CommentService from '../../services/CommentService.ts';
+import { useNavigate } from 'react-router-dom';
 
-const PlanteDialog = ({ plante, onClose }) => {
+
+const PlanteDialog = ({ plante, userPlante, onClose }) => {
   const [reservations, setReservations] = useState([]);
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState({});
@@ -11,6 +13,8 @@ const PlanteDialog = ({ plante, onClose }) => {
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
 
   // Fonction pour formater la date
   const formatDate = (dateString) => {
@@ -31,13 +35,12 @@ const PlanteDialog = ({ plante, onClose }) => {
       fetchComments();
     }
   }, [plante]);
-
   useEffect(() => {
     // Charger les informations des utilisateurs pour les réservations
-    reservations.forEach((reservation) => {
-      fetchUser(reservation.owner_user_id);
-      fetchUser(reservation.gardener_user_id);
-    });
+    // reservations.forEach((reservation) => {
+    //   fetchUser(reservation.owner_user_id);
+    //   fetchUser(reservation.gardener_user_id);
+    // });
 
     // Charger les informations des utilisateurs pour les commentaires
     comments.forEach((comment) => {
@@ -76,7 +79,6 @@ const PlanteDialog = ({ plante, onClose }) => {
       return null;
     }
   };
-
   const getToken = () => {
     return sessionStorage.getItem('token');
   };
@@ -113,20 +115,26 @@ const PlanteDialog = ({ plante, onClose }) => {
       setLoading(false);
     }
   };
+  const handleNavigateToProfil = () => {
+    navigate('/Profil', { state: { user: userPlante } });
+  };
 
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <h2>{plante.name}</h2>
+        <h2>{plante.name} ({userPlante.name})</h2>
         <img
           src="https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"
           alt={plante.name}
           style={styles.planteImage}
         />
         <p><strong>Description:</strong> {plante.description}</p>
+        <button onClick={handleNavigateToProfil}>
+           Get in touch
+        </button>
 
         {/* Réservations de la plante */}
-        <div style={styles.section}>
+        {/* <div style={styles.section}>
           <h3>Reservations</h3>
           <div style={styles.cardContainer}>
             {reservations.length > 0 ? (
@@ -136,7 +144,7 @@ const PlanteDialog = ({ plante, onClose }) => {
 
                 return (
                   <div key={reservation.id} style={styles.card}>
-                    {/* <p><strong>ID:</strong> {reservation.id}</p> */}
+                   <p><strong>ID:</strong> {reservation.id}</p>
                     <p><strong>Owner:</strong> {ownerName}</p>
                     <p><strong>Gardener:</strong> {gardenerName}</p>
                     <p><strong>Start date:</strong> {formatDate(reservation.start_date)}</p>
@@ -148,7 +156,7 @@ const PlanteDialog = ({ plante, onClose }) => {
               <p>No reservation for this plant.</p>
             )}
           </div>
-        </div>
+        </div> */}
 
         {/* Commentaires de la plante */}
         <div style={styles.section}>
@@ -304,6 +312,7 @@ const styles = {
     color: 'red',
     marginBottom: '10px',
   },
+  
 };
 
 export default PlanteDialog;

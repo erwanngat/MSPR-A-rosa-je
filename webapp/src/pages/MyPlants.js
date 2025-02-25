@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import PlantesService from '../services/PlantesService.ts';
+import ReservationService from '../services/reservationService.ts'; // Import du service de réservation
 import AddPlanteDialog from '../composent/dialogs/AddPlanteDialog';
 import EditPlanteDialog from '../composent/dialogs/EditPlanteDialog';
+import AddReservationDialog from '../composent/dialogs/AddReservationDialog'; // Nouvelle boîte de dialogue pour les réservations
 
 const MyPlants = () => {
   const [plantes, setPlantes] = useState([]);
-  const [filteredPlantes, setFilteredPlantes] = useState([]); // Plantes filtrées par user_id
+  const [filteredPlantes, setFilteredPlantes] = useState([]);
   const [selectedPlante, setSelectedPlante] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isReservationDialogOpen, setIsReservationDialogOpen] = useState(false);
+  const [reservations, setReservations] = useState([]); // État pour stocker les réservations
 
   // Récupérer l'ID de l'utilisateur connecté depuis sessionStorage
   const userString = sessionStorage.getItem('user');
   const user = JSON.parse(userString);
   const userId = user.id;
+  const token = user.token; // Récupérer le token pour l'authentification
 
-  // Récupérer les plantes au chargement du composant
+  // Récupérer les plantes et les réservations au chargement du composant
   useEffect(() => {
     fetchPlantes();
+    fetchReservations();
   }, []);
 
   const fetchPlantes = async () => {
@@ -33,57 +39,72 @@ const MyPlants = () => {
     }
   };
 
-  // Ouvrir la boîte de dialogue d'ajout
-  const openAddDialog = () => setIsAddDialogOpen(true);
+  const fetchReservations = async () => {
+    try {
+      const data = await ReservationService().getReservationsByUser(userId, token); // Supposons que cette méthode existe
+      setReservations(data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des réservations:', error);
+    }
+  };
 
-  // Ouvrir la boîte de dialogue de modification
-  const openEditDialog = (plante) => {
+  // Ouvrir la boîte de dialogue d'ajout de réservation
+  const openReservationDialog = (plante) => {
     setSelectedPlante(plante);
-    setIsEditDialogOpen(true);
+    setIsReservationDialogOpen(true);
   };
 
-  // Gérer l'ajout réussi d'une plante
-  const handleAddSuccess = (newPlante) => {
-    setPlantes([...plantes, newPlante]);
-    setFilteredPlantes([...filteredPlantes, newPlante]);
+  // Gérer la création d'une réservation
+  const handleCreateReservation = async (startDate, endDate) => {
+    try {
+      const reservation = {
+        owner_user_id: userId,
+        gardener_user_id: null, // À adapter selon ton modèle
+        plante_id: selectedPlante.id,
+        start_date: startDate,
+        end_date: endDate,
+      };
+
+      const success = await ReservationService().addReservation(reservation, token);
+      if (success) {
+        fetchReservations(); // Rafraîchir la liste des réservations
+        setIsReservationDialogOpen(false);
+      }
+    } catch (error) {
+      console.error('Erreur lors de la création de la réservation:', error);
+    }
   };
 
-  // Gérer la mise à jour réussie d'une plante
-  const handleUpdateSuccess = (updatedPlante) => {
-    const updatedPlantes = plantes.map((p) => (p.id === updatedPlante.id ? updatedPlante : p));
-    setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
-  };
-
-  // Gérer la suppression réussie d'une plante
-  const handleDeleteSuccess = (planteId) => {
-    const updatedPlantes = plantes.filter((p) => p.id !== planteId);
-    setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
+  // Vérifier si une réservation existe pour une plante donnée
+  const hasReservation = (planteId) => {
+    return reservations.some((reservation) => reservation.plante_id === planteId);
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>My plants</h1>
-      <button onClick={openAddDialog} style={styles.addButton}>
+    <div className="my-plants-container">
+      <h1 className="my-plants-title">My plants</h1>
+      <button onClick={openAddDialog} className="my-plants-add-button">
         Add new Plant
       </button>
 
       {/* Grille des plantes */}
-      <div style={styles.plantesGrid}>
+      <div className="my-plants-plantes-grid">
         {filteredPlantes.map((plante) => (
-          <div
-            key={plante.id}
-            style={styles.planteCard}
-            onClick={() => openEditDialog(plante)}
-          >
+          <div key={plante.id} className="my-plants-plante-card">
             <img
               src="https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"
               alt={plante.name}
-              style={styles.planteImage}
+              className="my-plants-plante-image"
             />
-            <p style={styles.planteName}>{plante.name}</p>
-            <p >{plante.description}</p>
+            <p className="my-plants-plante-name">{plante.name}</p>
+            <p>{plante.description}</p>
+            <button
+              onClick={() => openReservationDialog(plante)}
+              disabled={hasReservation(plante.id)}
+              className="reservation-button"
+            >
+              {hasReservation(plante.id) ? 'Keep' : 'To Keep'}
+            </button>
           </div>
         ))}
       </div>
@@ -101,58 +122,13 @@ const MyPlants = () => {
         onUpdateSuccess={handleUpdateSuccess}
         onDeleteSuccess={handleDeleteSuccess}
       />
+      <AddReservationDialog
+        isOpen={isReservationDialogOpen}
+        onClose={() => setIsReservationDialogOpen(false)}
+        onCreateReservation={handleCreateReservation}
+      />
     </div>
   );
-};
-
-// Styles CSS en ligne
-const styles = {
-  container: {
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: '20px',
-  },
-  addButton: {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    cursor: 'pointer',
-    marginBottom: '20px',
-  },
-  plantesGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '20px',
-    justifyContent: 'center',
-  },
-  planteCard: {
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    padding: '10px',
-    width: '150px',
-    textAlign: 'center',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    transition: 'transform 0.2s',
-    cursor: 'pointer',
-    ':hover': {
-      transform: 'scale(1.05)',
-    },
-  },
-  planteImage: {
-    width: '100px',
-    height: '100px',
-    borderRadius: '10px',
-    marginBottom: '10px',
-  },
-  planteName: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
 };
 
 export default MyPlants;

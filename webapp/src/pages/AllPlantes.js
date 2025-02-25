@@ -5,7 +5,10 @@ import PlanteDialog from '../composent/dialogs/PlanteDialog'; // Boîte de dialo
 
 const AllPlantes = () => {
   const [plantes, setPlantes] = useState([]); // Liste de toutes les plantes
+  const [filteredPlantes, setFilteredPlantes] = useState([]); // Liste des plantes filtrées
+  const [searchTerm, setSearchTerm] = useState(''); // Terme de recherche
   const [selectedPlante, setSelectedPlante] = useState(null); // Plante sélectionnée
+  const [selectedUserPlante, setselectedUserPlante] = useState(null); 
   const [isDialogOpen, setIsDialogOpen] = useState(false); // État pour ouvrir/fermer la boîte de dialogue
   const [users, setUsers] = useState({}); // Cache des utilisateurs pour éviter de les récupérer plusieurs fois
 
@@ -19,6 +22,7 @@ const AllPlantes = () => {
     try {
       const data = await PlantesService().getPlantes();
       setPlantes(data);
+      setFilteredPlantes(data); // Initialiser les plantes filtrées avec toutes les plantes
     } catch (error) {
       console.error('Erreur lors de la récupération des plantes:', error);
     }
@@ -44,8 +48,9 @@ const AllPlantes = () => {
   };
 
   // Ouvrir la boîte de dialogue avec les détails de la plante
-  const openDialog = async (plante) => {
+  const openDialog = async (plante, user) => {
     setSelectedPlante(plante);
+    setselectedUserPlante(user);
     setIsDialogOpen(true);
   };
 
@@ -55,13 +60,30 @@ const AllPlantes = () => {
     setSelectedPlante(null);
   };
 
+  // Filtrer les plantes en fonction du terme de recherche
+  useEffect(() => {
+    const filtered = plantes.filter((plante) =>
+      plante.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredPlantes(filtered);
+  }, [searchTerm, plantes]);
+
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>All plants</h1>
+    <div className="all-plantes-container">
+      {/* Barre de recherche */}
+      <div className="all-plantes-search-container">
+        <input
+          type="text"
+          placeholder="Rechercher une plante..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="all-plantes-search-bar"
+        />
+      </div>
 
       {/* Grille des plantes */}
-      <div style={styles.plantesGrid}>
-        {plantes.map((plante) => {
+      <div className="all-plantes-plantes-grid">
+        {filteredPlantes.map((plante) => {
           const user = users[plante.user_id]; 
           if (!user) {
             fetchUser(plante.user_id);
@@ -70,15 +92,15 @@ const AllPlantes = () => {
           return (
             <div
               key={plante.id}
-              style={styles.planteCard}
-              onClick={() => openDialog(plante)}
+              className="all-plantes-plante-card"
+              onClick={() => openDialog(plante, user)}
             >
               <img
                 src="https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"
                 alt={plante.name}
-                style={styles.planteImage}
+                className="all-plantes-plante-image"
               />
-              <p style={styles.planteName}>{plante.name}</p>
+              <p className="all-plantes-plante-name">{plante.name}</p>
               <p>{plante.description}</p>
               <p>
                 <strong>User:</strong> {user ? user.name : 'Chargement...'}
@@ -92,52 +114,12 @@ const AllPlantes = () => {
       {isDialogOpen && (
         <PlanteDialog
           plante={selectedPlante}
+          userPlante={selectedUserPlante}
           onClose={closeDialog}
         />
       )}
     </div>
   );
-};
-
-// Styles CSS en ligne
-const styles = {
-  container: {
-    padding: '20px',
-    fontFamily: 'Arial, sans-serif',
-  },
-  title: {
-    textAlign: 'center',
-    marginBottom: '20px',
-  },
-  plantesGrid: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '20px',
-    justifyContent: 'center',
-  },
-  planteCard: {
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    padding: '15px',
-    width: '200px',
-    textAlign: 'center',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-    transition: 'transform 0.2s',
-    cursor: 'pointer',
-    ':hover': {
-      transform: 'scale(1.05)',
-    },
-  },
-  planteImage: {
-    width: '100px',
-    height: '100px',
-    borderRadius: '10px',
-    marginBottom: '10px',
-  },
-  planteName: {
-    fontSize: '16px',
-    fontWeight: 'bold',
-  },
 };
 
 export default AllPlantes;
