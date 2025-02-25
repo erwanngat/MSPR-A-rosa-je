@@ -38,17 +38,23 @@ jobs:
         mkdir -p back/database
         touch back/database/database.sqlite
         chmod -R 777 back/database
-        ls -l back/database/database.sqlite   # Vérifie si le fichier est créé
+        ls -l back/database/database.sqlite  # Vérifie si le fichier est créé
+
+    - name: Check current directory and workspace
+      run: |
+        echo "Current directory: $(pwd)"
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        ls -l
 
     - name: Run migrations (fresh database) and show errors
       run: |
         cd back
         php artisan migrate:fresh --seed || echo "Migration failed"
 
-    - name: Check if database file exists
+    - name: Show existing migrations
       run: |
-        echo "Checking if database file exists at $GITHUB_WORKSPACE/back/database/database.sqlite"
-        ls -l $GITHUB_WORKSPACE/back/database/database.sqlite
+        cd back
+        php artisan migrate:status
 
     - name: Clear Laravel cache
       run: |
@@ -61,8 +67,7 @@ jobs:
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
+        DB_DATABASE: /home/runner/work/ton-repository/ton-repository/back/database/database.sqlite
       run: |
         cd back
         php artisan test
-
