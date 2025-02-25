@@ -39,6 +39,11 @@ jobs:
         mkdir -p database
         touch database/database.sqlite
 
+    - name: Run migrations (fresh database)
+      run: |
+        cd back
+        php artisan migrate:fresh --seed  # Tu peux ajouter --seed si tu veux également peupler ta base de données avec des données de test
+
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
