@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePlanteRequest;
 use App\Http\Requests\UpdatePlanteRequest;
 use App\Models\Plante;
+use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -110,5 +111,22 @@ class PlanteController extends Controller
         }
 
         return response()->json($plante->reservations, 200);
+    }
+
+    public function getAllPlantesWithoutGardener(){
+        $reservations = Reservation::all();
+
+        $plantes = [];
+        foreach ($reservations as $reservation) {
+            if ($reservation->gardener_user_id == null) {
+                $plantes[] = $reservation->plante;
+            }
+        }
+
+        if (!$plantes) {
+            return response()->json(['error' => 'Reservation not found with empty gardener'], 404);
+        }
+
+        return response()->json($plantes, 200);
     }
 }
