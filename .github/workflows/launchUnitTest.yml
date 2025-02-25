@@ -33,21 +33,21 @@ jobs:
         cd back
         chmod -R 777 storage bootstrap/cache
 
-    - name: Create Database
+    - name: Create Database directory if it doesn't exist
       run: |
-        cd back
-        mkdir -p database
-        touch database/database.sqlite
+        mkdir -p back/database
+        touch back/database/database.sqlite
+        chmod -R 777 back/database
 
     - name: Run migrations (fresh database)
       run: |
         cd back
-        php artisan migrate:fresh --seed  # Tu peux ajouter --seed si tu veux également peupler ta base de données avec des données de test
+        php artisan migrate:fresh --seed
 
     - name: Execute tests (Unit and Feature tests) via PHPUnit/Pest
       env:
         DB_CONNECTION: sqlite
-        DB_DATABASE: back/database/database.sqlite
+        DB_DATABASE: $GITHUB_WORKSPACE/back/database/database.sqlite
       run: |
         cd back
         php artisan test
