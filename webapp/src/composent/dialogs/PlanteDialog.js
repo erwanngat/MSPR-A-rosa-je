@@ -181,7 +181,7 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
         </div>
 
         {/* Bouton pour ajouter un commentaire */}
-        { sessionStorage.getItem('roles') == "botaniste" &&(
+        { sessionStorage.getItem('role') == "botaniste" &&(
         <button
           onClick={() => setShowCommentForm(true)}
           style={styles.addCommentButton}

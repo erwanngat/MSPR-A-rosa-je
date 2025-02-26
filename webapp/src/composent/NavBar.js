@@ -11,7 +11,7 @@ const NavBar = () => {
         const currentUrl = location.pathname;
         if (sessionStorage.getItem('user') == null && 
             !(currentUrl === '/' || currentUrl === '/Login' || currentUrl === '/Register')) {
-            navigate("/login");
+            navigate("/Login");
         }
     }, [navigate, location]);
 
