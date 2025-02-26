@@ -39,11 +39,14 @@ class PlanteController extends Controller
         }
         $plante = Plante::create([
             'name' => $request->name,
-            'description' => $request->description,
             'image' => $path,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id
         ]);
+
+        if($request->description){
+            $plante->description = $request->description;
+        }
 
         return response()->json($plante, 201);
     }
@@ -77,10 +80,13 @@ class PlanteController extends Controller
         }
         $plante->update([
             'name' => $request->name,
-            'description' => $request->description,
             'user_id' => auth()->id(),
             'address_id' => $request->address_id,
         ]);
+
+        if($request->description){
+            $plante->description = $request->description;
+        }
 
         return response()->json($plante, 200);
     }
