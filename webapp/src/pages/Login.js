@@ -21,7 +21,7 @@ const Login = () => {
         // Si la connexion est réussie, stocker le token et rediriger
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('user', JSON.stringify(response.user));
-        sessionStorage.setItem('roles', response.roles);
+        sessionStorage.setItem('role', response.role);
 
         console.log(sessionStorage.getItem("user"));
         navigate('/');  // Rediriger vers la page d'accueil
