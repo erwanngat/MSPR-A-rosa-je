@@ -82,28 +82,43 @@ const PlantesService = () => {
   
     // Mettre à jour une plante existante
     const updatePlante = async (id, planteData) => {
+        console.log(planteData);
+
         try {
-            const token = getToken();
-            const response = await fetch(`${baseUrl}/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(planteData),
-            });
-    
-            if (!response.ok) {
-                throw new Error(`Erreur lors de la mise à jour de la plante: ${response.statusText}`);
+          const token = getToken();
+          const formData = new FormData(); // Utiliser FormData pour gérer les fichiers
+      
+          // Ajouter les champs de la plante à FormData
+          for (const key in planteData) {
+            if (planteData[key] !== undefined) {
+              formData.append(key, planteData[key]);
             }
-    
-            const data = await response.json();
-            return data;
+          }
+      
+          // Si une image est incluse, l'ajouter à FormData
+          if (planteData.image) {
+            formData.append('image', planteData.image); // 'image' doit correspondre au nom attendu par votre API
+          }
+      
+          const response = await fetch(`${baseUrl}/${id}`, {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${token}`, // Pas besoin de 'Content-Type' pour FormData
+            },
+            body: formData, // Utiliser FormData comme corps de la requête
+          });
+      
+          if (!response.ok) {
+            throw new Error(`Erreur lors de la mise à jour de la plante: ${response.statusText}`);
+          }
+      
+          const data = await response.json();
+          return data;
         } catch (error) {
-            console.error('Erreur dans updatePlante:', error);
-            throw error;
+          console.error('Erreur dans updatePlante:', error);
+          throw error;
         }
-    };
+      };
   
     // Supprimer une plante
     const deletePlante = async (id) => {
