@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {View, TextInput, Button, StyleSheet, Alert, Image, Platform} from 'react-native';
+import { View, TextInput, Button, StyleSheet, Alert, Image, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from '@/stores/userStore'; // Assurez-vous que cela fonctionne dans votre projet
 import { useRouter } from 'expo-router';
@@ -48,14 +48,10 @@ export default function AddPlanteScreen() {
     // Créer un objet FormData pour l'envoi de l'image
     const formData = new FormData();
 
-    // Pour une image en base64
     if (imageUri.startsWith('data:')) {
-      // Extraction de la partie base64 (après la virgule)
       const base64Data = imageUri.split(',')[1];
-      // Extraction du type MIME
       const mimeType = imageUri.split(';')[0].split(':')[1];
 
-      // Conversion en Blob
       const byteCharacters = atob(base64Data);
       const byteArrays = [];
 
@@ -73,13 +69,10 @@ export default function AddPlanteScreen() {
 
       const blob = new Blob(byteArrays, { type: mimeType });
 
-      // Créer un nom de fichier avec extension
       const fileName = `image_${Date.now()}.${mimeType.split('/')[1]}`;
 
-      // Ajouter le blob comme fichier au FormData
       formData.append('image', blob, fileName);
     } else {
-      // Pour une URI de fichier normale (non base64)
       const filename = imageUri.split('/').pop();
       const match = /\.(\w+)$/.exec(filename || '');
       const type = match ? `image/${match[1]}` : 'image/jpeg';
@@ -94,7 +87,6 @@ export default function AddPlanteScreen() {
     formData.append('name', name);
     formData.append('description', description);
     formData.append('address_id', addressId);
-    // 'user_id' n'est pas nécessaire car vous utilisez auth()->id() côté backend
 
     try {
       const response = await service.addPlante(formData);
@@ -109,55 +101,81 @@ export default function AddPlanteScreen() {
   };
 
   return (
-      <View style={styles.container}>
-        <TextInput
-            style={styles.input}
-            placeholder="Nom de la plante"
-            value={name}
-            onChangeText={setName}
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="Description"
-            value={description}
-            onChangeText={setDescription}
-            multiline
-        />
-        <TextInput
-            style={styles.input}
-            placeholder="ID de l'adresse"
-            value={addressId}
-            onChangeText={setAddressId}
-        />
-        <Button title="Sélectionner une image" onPress={handleImagePicker} />
-        {imageUri ? (
-            <Image source={{ uri: imageUri }} style={styles.imagePreview} />
-        ) : null}
-        <Button title="Ajouter la plante" onPress={handleSave} />
-      </View>
+    <View style={styles.container}>
+      <TextInput
+        style={styles.input}
+        placeholder="Nom de la plante"
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Description"
+        value={description}
+        onChangeText={setDescription}
+        multiline
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="ID de l'adresse"
+        value={addressId}
+        onChangeText={setAddressId}
+      />
+      <Button title="Sélectionner une image" onPress={handleImagePicker} color="#4C9C6F"/>
+      <View style={styles.saveButton}></View>
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={styles.imagePreview} />
+      ) : null}
+      <Button title="Ajouter la plante" onPress={handleSave} color="#4C9C6F" />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     justifyContent: 'center',
-    backgroundColor: '#fff',
+    padding: 20,
+    backgroundColor: '#F3F6F4', // Gris doux pour l'arrière-plan de la page
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 20,
+    textAlign: 'center',
+    color: '#4C9C6F', // Vert forêt pour le titre
   },
   input: {
     height: 50,
-    borderColor: '#ccc',
+    borderColor: '#A8D08D', // Vert doux pour les bordures
     borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    marginBottom: 15,
+    paddingHorizontal: 15,
     borderRadius: 8,
     fontSize: 16,
+    backgroundColor: '#fff', // Fond blanc pour l'input
+  },
+  saveButton: {
+    marginBottom: 15,
+  },
+  saveButtonText: {
+    color: '#fff', // Texte blanc pour contraster avec le fond vert
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   imagePreview: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
-    marginBottom: 10,
+    width: 150,
+    height: 150,
+    borderRadius: 10, // Pour rendre l'image arrondie
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: '#A8D08D', // Bordure verte douce autour de l'image
+    elevation: 4, // Ombre pour l'effet de profondeur
+    shadowColor: '#A8D08D',
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 4 },
   },
 });
+
+

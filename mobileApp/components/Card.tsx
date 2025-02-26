@@ -8,31 +8,29 @@ interface CardProps {
   title: string;
   description: string;
   imageUrl: string;
+  isMyPlants: boolean;
 }
 
-const Card: React.FC<CardProps> = ({id, avatarUrl, title, description, imageUrl }) => {
+const Card: React.FC<CardProps> = ({ id, avatarUrl, title, description, imageUrl, isMyPlants }) => {
   const router = useRouter();
 
   const handlePress = () => {
-    router.push(`/modal/${id}`);
+    if (isMyPlants) router.push(`/editPlant/${id}`);
+    else router.push(`/modal/${id}`);
   };
 
   return (
     <Pressable onPress={handlePress}>
       <View style={styles.card}>
         <View style={styles.leftSide}>
-          {/* Avatar */}
           <Image source={{ uri: avatarUrl }} style={styles.avatar} />
         </View>
 
         <View style={styles.rightSide}>
-          {/* Title */}
           <Text style={styles.title}>{title}</Text>
-          {/* Description */}
           <Text style={styles.description}>{description}</Text>
         </View>
 
-        {/* Image on the right */}
         <Image source={{ uri: imageUrl }} style={styles.image} />
       </View>
     </Pressable>
@@ -43,39 +41,46 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 10,
-    margin: 10,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    elevation: 3, // Shadow for Android
-    shadowColor: '#000', // Shadow for iOS
-    shadowOffset: { width: 0, height: 2 },
+    padding: 15,
+    marginVertical: 10,
+    marginHorizontal: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
-    shadowRadius: 2,
+    shadowRadius: 6,
   },
   leftSide: {
-    marginRight: 10,
+    marginRight: 15,
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    borderWidth: 2,
+    borderColor: '#4CAF50',
   },
   rightSide: {
     flex: 1,
+    justifyContent: 'space-between',
   },
   title: {
-    fontSize: 16,
-    fontWeight: 'bold',
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
   },
   description: {
     fontSize: 14,
-    color: '#555',
+    color: '#777',
+    marginTop: 5,
+    lineHeight: 20,
   },
   image: {
-    width: 60,
-    height: 60,
-    borderRadius: 8,
+    width: 70,
+    height: 70,
+    borderRadius: 10,
   },
 });
 

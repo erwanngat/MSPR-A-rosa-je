@@ -24,5 +24,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('addresses', AddressController::class);
     Route::get('plantes/{id}/comments', [PlanteController::class, 'getPlanteComments']);
     Route::get('plantes/{id}/reservations', [PlanteController::class, 'getPlanteReservation']);
+    Route::get('withoutgardener/plantes/reservations', [PlanteController::class, 'getAllPlantesWithoutGardener']);
     Route::get('users/{id}/plantes', [UserController::class, 'getUserPlantes']);
+    Route::get('users/{id}/addresses', [UserController::class, 'getUserAdresses']);
 });

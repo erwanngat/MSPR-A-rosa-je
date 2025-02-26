@@ -18,6 +18,7 @@ const LoginScreen = () => {
     setError('');
     try {
       const data = await userService().login(email, password);
+      console.log(data);
       login({
         id: data.user.id,
         name: data.user.name,
@@ -26,6 +27,7 @@ const LoginScreen = () => {
         role: data.user.roles[0].name,
         phone:data.user.phone_number,
         token: data.token,
+        image:"https://i.ytimg.com/vi/P0EvZl8KvaE/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGEUgWihlMA8=&rs=AOn4CLDEE4iluX-R8mt0njywABDdPaQOVQ",
       });
       router.replace('/');
     } catch (err) {

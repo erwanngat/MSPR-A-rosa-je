@@ -11,8 +11,9 @@ export default function TabOneScreen() {
   const isAuthenticated = useUserStore((state) => state.isAuthenticated);
   const [isReady, setIsReady] = useState(false);
   const [plantes, setPlantes] = useState([]);
+  const user = useUserStore().user;
   const token = useUserStore().user?.token;
-  console.log(useUserStore().user)
+
   useEffect(() => {
     setIsReady(true);
   }, []);
@@ -44,14 +45,16 @@ export default function TabOneScreen() {
 
   return (
     <View style={styles.container}>
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
         {plantes.map((plante) => (
           <Card
+            key={plante.id}
             id={plante.id}
-            avatarUrl="https://example.com/avatar.jpg"
+            avatarUrl={user.image}
             title={plante.name}
             description={plante.description}
             imageUrl={plante.image}
+            isMyPlants={false}
           />
         ))}
       </ScrollView>
@@ -62,16 +65,51 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f4f9f4',  // Couleur de fond clair, légèrement verte
+    paddingHorizontal: 20,
+    justifyContent: 'flex-start',
+  },
+  scrollContainer: {
+    paddingBottom: 20,
+    paddingTop: 20,
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
+    color: '#4CAF50',  // Vert nature
+    marginVertical: 10,
   },
   separator: {
     marginVertical: 30,
     height: 1,
     width: '80%',
+    backgroundColor: '#ddd',  // Légère séparation grise
+  },
+  card: {
+    backgroundColor: '#ffffff',
+    borderRadius: 12,
+    marginBottom: 20,
+    padding: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 5,
+  },
+  cardImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 12,
+    marginBottom: 10,
+  },
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#333',
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginVertical: 10,
   },
 });

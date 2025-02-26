@@ -5,6 +5,7 @@ export type IUser = {
     password: string;
     phone: string;
     token: string?;
+    image: string;
     role: string;
   };
   

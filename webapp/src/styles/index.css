@@ -132,3 +132,38 @@ button:disabled {
   background-color: #ccc;
   cursor: not-allowed;
 }
+
+.whatAboutUs {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.whatAboutUs h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.whatAboutUs p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Styling for the bullet points */
+.whatAboutUs ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.whatAboutUs li {
+  margin-bottom: 12px;
+}
+

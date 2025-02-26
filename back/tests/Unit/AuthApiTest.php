@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 class AuthApiTest extends TestCase
@@ -13,6 +14,8 @@ class AuthApiTest extends TestCase
 
     public function test_user_can_register()
     {
+        Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
+        Role::create(['name' => 'user', 'guard_name' => 'web']);
         $userData = [
             'name' => 'John Doe',
             'email' => 'johndoe@example.com',
@@ -28,6 +31,7 @@ class AuthApiTest extends TestCase
             'message',
             'user' => ['id', 'name', 'email', 'phone_number'],
             'token',
+            'role',
         ]);
 
         $this->assertDatabaseHas('users', [
@@ -53,10 +57,14 @@ class AuthApiTest extends TestCase
 
     public function test_user_can_login()
     {
+        Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
+        Role::create(['name' => 'user', 'guard_name' => 'web']);
         $user = User::factory()->create([
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
+
+        $user->assignRole('user');
 
         $loginData = [
             'email' => 'johndoe@example.com',
@@ -70,6 +78,7 @@ class AuthApiTest extends TestCase
             'message',
             'user',
             'token',
+            'role',
         ]);
     }
 
