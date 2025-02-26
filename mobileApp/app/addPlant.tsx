@@ -4,13 +4,16 @@ import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from '@/stores/userStore'; // Assurez-vous que cela fonctionne dans votre projet
 import { useRouter } from 'expo-router';
 import plantesService from '@/services/plantesService';
+import reservationService from '@/services/reservationService';
 import { IPlante } from '@/types/plantes';
+import ReservationService from '@/services/reservationService';
 
 export default function AddPlanteScreen() {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const token = user?.token;
   const service = plantesService(token || ''); // Assurez-vous que le token est bien transmis
+  const reservationService = ReservationService();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -90,6 +93,15 @@ export default function AddPlanteScreen() {
 
     try {
       const response = await service.addPlante(formData);
+      const plante = await service.getPlantesByUserId(user.id);
+      console.log("id" + plante.id);
+      //@ts-ignore
+      const responseReservation = await reservationService.addReservation({
+        plante_id: plante.id,
+        owner_user_id: plante?.user_id,
+        start_date: new Date(),
+        end_date: new Date(),
+    }, token);
 
       const data = await response.json();
       Alert.alert('Succès', 'Plante ajoutée avec succès !');

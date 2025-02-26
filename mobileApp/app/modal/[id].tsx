@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from 'expo-router';
 import plantesService from '@/services/plantesService';
 import UserService from '@/services/userService';
+import ReservationService from '@/services/reservationService';
+
 
 export default function ModalScreen() {
     const user = useUserStore((state) => state.user);
@@ -20,7 +22,8 @@ export default function ModalScreen() {
     const [loading, setLoading] = useState<boolean>(false);
     const userRole = user?.role;
     const router = useRouter();
-    const [planteData, setPlanteData] = useState(null);  // Ajout de l'état pour planteData
+    const [planteData, setPlanteData] = useState(null);
+    const [isReserved, setIsReserved] = useState(false);  // Ajout de l'état pour la réservation
 
     // Récupérer les informations de la plante à l'initialisation
     useEffect(() => {
@@ -30,6 +33,9 @@ export default function ModalScreen() {
                 try {
                     const data = await service.getPlantesById(Number(id));
                     setPlanteData(data);  // Stocker les données de la plante
+                    // Vérifier si la plante est déjà réservée
+                    const reservation = await ReservationService().getReservationByPlanteId(Number(id), token);
+                    setIsReserved(reservation != null);  // Si une réservation existe, la plante est réservée
                 } catch (error) {
                     console.error("Erreur lors de la récupération des données de la plante", error);
                 }
@@ -133,12 +139,33 @@ export default function ModalScreen() {
         router.push(`/profile/${idUser}`);
     };
 
+    const onReservation = async () => {
+        console.log("id: " + id);
+        const reservation = await ReservationService().getReservationsByPlant(id, token);
+        console.log(reservation);
+        // if (reservation[0].gardener_user_id == null) {
+        //     console.log("null");
+        //     reservation.gardener_user_id = user?.id;
+        //     const reservationSuccess = await ReservationService().updateReservation(reservation.id, reservation, token);
+        //     if (reservationSuccess) {
+        //         setIsReserved(true);  // Mettre à jour l'état de la réservation
+        //     }
+        // } else {
+        //     console.log("not null");
+        //     // Annuler la réservation
+        //     reservation.gardener_user_id == null;
+        //     const cancelSuccess = await ReservationService().updateReservation(reservation.id, reservation, token);
+        //     if (cancelSuccess) {
+        //         setIsReserved(false);  // Mettre à jour l'état de la réservation
+        //     }
+        // }
+    };
+
     return (
         <ScrollView style={styles.container}>
-            {/* Image du profil avec clic pour accéder au profil */}
             <TouchableOpacity onPress={() => goToProfile(planteData.user_id)}>
                 <Image
-                    source={{ uri: user?.image || "https://via.placeholder.com/100" }} // Image par défaut si aucune image
+                    source={{ uri: user?.image || "https://via.placeholder.com/100" }}
                     style={styles.profileImage}
                 />
             </TouchableOpacity>
@@ -149,11 +176,17 @@ export default function ModalScreen() {
                 style={styles.image}
             />
             <Text style={styles.description}>{planteData?.description || 'Ceci est une description détaillée de la plante...'}</Text>
+            
+            <Button
+                title={isReserved ? "Annuler la réservation" : "Réserver"}
+                onPress={onReservation}
+                color={isReserved ? "#D9534F" : "#4C9C6F"}  // Change color based on reservation state
+            />
 
             <View style={styles.commentSection}>
                 <Text style={styles.commentTitle}>Commentaires</Text>
                 {loading ? (
-                    <Text style={styles.loadingText}>Chargement...</Text> // Message de chargement
+                    <Text style={styles.loadingText}>Chargement...</Text>
                 ) : (
                     <FlatList
                         data={comments}
@@ -161,10 +194,10 @@ export default function ModalScreen() {
                         renderItem={({ item }) => (
                             <View style={styles.commentContainer}>
                                 <TouchableOpacity onPress={() => goToProfile(item.user_id)}>
-                                <Image
-                                    source={{ uri: getImageUser(item.user_id) || "https://via.placeholder.com/40" }} // Utilisez l'URL de l'image de profil de l'utilisateur
-                                    style={styles.commentProfileImage}
-                                />
+                                    <Image
+                                        source={{ uri: getImageUser(item.user_id) || "https://via.placeholder.com/40" }}
+                                        style={styles.commentProfileImage}
+                                    />
                                 </TouchableOpacity>
                                 {editingCommentId === item.id ? (
                                     <View style={styles.editContainer}>
@@ -223,31 +256,20 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: "#A8D08D",
         marginBottom: 16,
-        alignSelf: "center", // Centrer l'image du profil
+        alignSelf: "center",
     },
     title: {
         fontSize: 24,
         fontWeight: "bold",
         marginBottom: 16,
         textAlign: "center",
-        color: "#4C9C6F", // Vert forêt
-    },
-    imageContainer: {
-        width: "100%", // Conteneur de l'image s'adapte à la largeur
-        aspectRatio: 1, // Pour garder un ratio de 1:1 si l'image a un format carré
-        marginBottom: 16, // Espace sous l'image
-        borderRadius: 10, // Border radius pour arrondir les coins si besoin
-        overflow: "hidden", // S'assurer que l'image ne dépasse pas du conteneur
+        color: "#4C9C6F",
     },
     image: {
-        width: "100%", // L'image prendra toute la largeur du conteneur
-        height: "100%", // L'image prendra toute la hauteur du conteneur
-        resizeMode: "contain", // Assure que l'image garde son ratio sans être déformée
-    }, commentProfileImage: {
-        width: 40,  // Taille de l'image de profil
-        height: 40,
-        borderRadius: 20,  // Pour rendre l'image circulaire
-        marginRight: 8,  // Espacement entre l'image et le texte
+        width: "100%",
+        height: 200,
+        resizeMode: "contain",
+        borderRadius: 10,
     },
     description: {
         fontSize: 16,
@@ -273,7 +295,6 @@ const styles = StyleSheet.create({
         paddingVertical: 8,
         borderBottomWidth: 1,
         borderBottomColor: "#A8D08D",
-        marginHorizontal: 8,  // Pour ne pas toucher les bords
     },
     commentItem: {
         fontSize: 14,
@@ -291,18 +312,9 @@ const styles = StyleSheet.create({
         marginBottom: 8,
         backgroundColor: "#fff",
     },
-    editContainer: {
-        width: "100%",
-        paddingVertical: 8,
-    },
     loadingText: {
         textAlign: "center",
         fontSize: 16,
         color: "#A8D08D",
-    },
-    iconContainer: {
-        flexDirection: "row",
-        justifyContent: "center", // Centrer les icônes
-        alignItems: "center",
     },
 });
