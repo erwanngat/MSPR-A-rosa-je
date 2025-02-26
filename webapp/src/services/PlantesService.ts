@@ -31,6 +31,29 @@ const PlantesService = () => {
       throw error;
     }
   };
+  // Récupérer toutes les plantes
+  const getPlantesById = async (id: number) => {
+    try {
+      const token = getToken();
+      const response = await fetch(`${baseUrl}/${id}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Erreur lors de la récupération des plantes');
+      }
+
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error('Erreur dans getPlantes:', error);
+      throw error;
+    }
+  };
 
   // Ajouter une nouvelle plante
   const addPlante = async (planteData: IPlante) => {
@@ -44,6 +67,7 @@ const PlantesService = () => {
         },
         body: JSON.stringify(planteData),
       });
+      console.log(response);
 
       if (!response.ok) {
         throw new Error(`Erreur lors de l'ajout de la plante: ${response.statusText}`);
@@ -105,61 +129,13 @@ const PlantesService = () => {
     }
   };
 
-  // Récupérer les réservations d'une plante
-  const getReservationsByPlanteId = async (id: number) => {
-    try {
-      const token = getToken();
-      const response = await fetch(`${baseUrl}/${id}/reservations`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la récupération des réservations: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Erreur dans getReservationsByPlanteId:', error);
-      throw error;
-    }
-  };
-
-  // Récupérer les commentaires d'une plante
-  const getCommentsByPlanteId = async (id: number) => {
-    try {
-      const token = getToken();
-      const response = await fetch(`${baseUrl}/${id}/comments`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Erreur lors de la récupération des commentaires: ${response.statusText}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('Erreur dans getCommentsByPlanteId:', error);
-      throw error;
-    }
-  };
 
   return {
     getPlantes,
     addPlante,
     updatePlante,
     deletePlante,
-    getReservationsByPlanteId,
-    getCommentsByPlanteId,
+    getPlantesById,
   };
 };
 

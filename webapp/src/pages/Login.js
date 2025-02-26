@@ -15,11 +15,14 @@ const Login = () => {
 
     try {
       const response = await UserService().login(email, password);
-
+      console.log("REPONSE : ");
+      console.log(response);
       if (response.token) {
         // Si la connexion est réussie, stocker le token et rediriger
         sessionStorage.setItem('token', response.token);
         sessionStorage.setItem('user', JSON.stringify(response.user));
+        sessionStorage.setItem('roles', response.roles);
+
         console.log(sessionStorage.getItem("user"));
         navigate('/');  // Rediriger vers la page d'accueil
       } else {

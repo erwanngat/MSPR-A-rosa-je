@@ -61,8 +61,8 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setAddressId(createdAddress.id); // Mettre à jour l'ID de l'adresse
       setShowAddressForm(false); // Masquer le formulaire d'adresse
     } catch (error) {
-      // console.error('Erreur lors de la création de l\'adresse:', error);
-      // setError('Erreur lors de la création de l\'adresse.');
+      console.error('Erreur lors de la création de l\'adresse:', error);
+      setError('Erreur lors de la création de l\'adresse.');
     }
   };
 
@@ -109,176 +109,106 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div style={styles.overlay} onClick={handleOverlayClick}>
-      <div style={styles.dialog}>
-        <h2>Ajouter une plante</h2>
-        {error && <div style={styles.error}>{error}</div>}
+    <div className="add-plante-dialog-overlay" onClick={handleOverlayClick}>
+      <div className="add-plante-dialog-dialog">
+        <h2>Add plant</h2>
+        {error && <div className="add-plante-dialog-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Nom de la plante"
+            placeholder="Plant name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            style={styles.input}
+            className="add-plante-dialog-input"
           />
-          <div style={styles.addressSection}>
+          <div className="add-plante-dialog-address-section">
             <Select
-              placeholder="Sélectionner une adresse"
+              placeholder="Select adress"
               options={addressOptions}
               value={selectedAddress}
               onChange={handleAddressChange}
               isSearchable // Activer la recherche
-              noOptionsMessage={() => "Aucune adresse trouvée"} // Message si aucune option
+              noOptionsMessage={() => "No address found"} // Message si aucune option
               styles={customStyles} // Styles personnalisés
             />
             <button
               type="button"
               onClick={() => setShowAddressForm(!showAddressForm)}
-              style={styles.createButton}
+              className="add-plante-dialog-create-button"
             >
-              Créer
+              Create
             </button>
           </div>
           {/* Formulaire de création d'adresse */}
           {showAddressForm && (
-            <div style={styles.addressForm}>
+            <div className="add-plante-dialog-address-form">
               <input
                 type="text"
                 name="country"
-                placeholder="Pays"
+                placeholder="country"
                 value={newAddress.country}
                 onChange={handleAddressInputChange}
-                style={styles.input}
+                className="add-plante-dialog-input"
               />
               <input
                 type="text"
                 name="city"
-                placeholder="Ville"
+                placeholder="city"
                 value={newAddress.city}
                 onChange={handleAddressInputChange}
-                style={styles.input}
+                className="add-plante-dialog-input"
               />
               <input
                 type="text"
                 name="zip_code"
-                placeholder="Code postal"
+                placeholder="Post code"
                 value={newAddress.zip_code}
                 onChange={handleAddressInputChange}
-                style={styles.input}
+                className="add-plante-dialog-input"
               />
               <input
                 type="text"
                 name="street"
-                placeholder="Rue"
+                placeholder="street"
                 value={newAddress.street}
                 onChange={handleAddressInputChange}
-                style={styles.input}
+                className="add-plante-dialog-input"
               />
               <input
                 type="text"
                 name="additional_address_details"
-                placeholder="Détails supplémentaires"
+                placeholder="Further details"
                 value={newAddress.additional_address_details}
                 onChange={handleAddressInputChange}
-                style={styles.input}
+                className="add-plante-dialog-input"
               />
               <button
                 type="button"
                 onClick={handleCreateAddress}
-                style={styles.createAddressButton}
+                className="add-plante-dialog-create-address-button"
               >
-                Créer l'adresse
+                Create adress
               </button>
             </div>
           )}
           <textarea
-            placeholder="Description de la plante"
+            placeholder="Description of the plant"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            style={styles.textarea}
+            className="add-plante-dialog-textarea"
           />
-          <div style={styles.buttons}>
+          <div className="add-plante-dialog-buttons">
             <button type="submit" disabled={loading}>
-              {loading ? 'En cours...' : 'Ajouter'}
+              {loading ? 'In progress...' : 'Add'}
             </button>
             <button type="button" onClick={onClose}>
-              Annuler
+              Cancel
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-};
-
-// Styles CSS en ligne
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dialog: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '400px', // Ajustez la largeur si nécessaire
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  },
-  input: {
-    width: '100%',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-  },
-  textarea: {
-    width: '100%',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
-    resize: 'vertical',
-  },
-  buttons: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    gap: '10px',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '10px',
-  },
-  addressSection: {
-    display: 'flex',
-    gap: '10px',
-    marginBottom: '10px',
-  },
-  createButton: {
-    padding: '10px 20px',
-    borderRadius: '4px',
-    border: 'none',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    cursor: 'pointer',
-  },
-  addressForm: {
-    marginBottom: '10px',
-  },
-  createAddressButton: {
-    padding: '10px 20px',
-    borderRadius: '4px',
-    border: 'none',
-    backgroundColor: '#007bff',
-    color: '#fff',
-    cursor: 'pointer',
-  },
 };
 
 // Styles personnalisés pour react-select

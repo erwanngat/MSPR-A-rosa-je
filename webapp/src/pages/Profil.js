@@ -1,23 +1,28 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-// import './styles.css'; // Assurez-vous d'importer le fichier CSS
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Profil = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // Récupérer les informations de l'utilisateur depuis sessionStorage
-  const userString = sessionStorage.getItem('user');
-  const user = JSON.parse(userString); // Convertir la chaîne JSON en objet
+  // Récupérer l'utilisateur depuis l'état de la route ou la session
+  const user = location.state?.user || JSON.parse(sessionStorage.getItem('user'));
+
+  // Vérifier si l'utilisateur provient de location.state (appelé avec props)
+  const isCalledWithProps = !!location.state?.user;
 
   const handleEdit = () => {
     alert("Fonction d'édition à implémenter");
-    // Logique d'édition à ajouter ici
   };
 
   const handleLogout = () => {
     sessionStorage.clear(); // Supprimer toutes les données de session
     navigate('/login'); // Rediriger vers la page de connexion
   };
+
+  if (!user) {
+    return <div>Utilisateur non trouvé</div>;
+  }
 
   return (
     <div className="profile-container bg-profil">
@@ -30,20 +35,25 @@ const Profil = () => {
           />
           <h2>{user.name}</h2>
           <p>Email: {user.email}</p>
-          <p>Téléphone: {user.phone_number || 'N/A'}</p>
-          <p>ID: {user.id}</p>
-          <p>Créé le: {new Date(user.created_at).toLocaleDateString()}</p>
-          <p>Mis à jour le: {new Date(user.updated_at).toLocaleDateString()}</p>
+          <p>Phone: {user.phone_number || 'N/A'}</p>
+
+          {/* Afficher les dates uniquement si la page n'est pas appelée avec props */}
+          {!isCalledWithProps && (
+            <>
+              <p>Date Creat: {new Date(user.created_at).toLocaleDateString()}</p>
+              <p>Updated at: {new Date(user.updated_at).toLocaleDateString()}</p>
+            </>
+          )}
         </div>
 
-        <div className="profile-actions">
-          <button onClick={handleEdit} className="profile-btn">
-            Edit Profile
-          </button>
-          <button onClick={handleLogout} className="profile-btn logout-btn">
-            Log Out
-          </button>
-        </div>
+        {/* Afficher le bouton "Log Out" uniquement si la page n'est pas appelée avec props */}
+        {!isCalledWithProps && (
+          <div className="profile-actions">
+            <button onClick={handleLogout} className="profile-btn logout-btn">
+              Log Out
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

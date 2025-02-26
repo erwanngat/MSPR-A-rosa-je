@@ -17,7 +17,7 @@ const NavBar = () => {
 
     const handleLogout = () => {
         sessionStorage.clear();
-        navigate('/login');
+        navigate('/Login');
     };
 
     const userString = sessionStorage.getItem('user');
@@ -54,7 +54,7 @@ const NavBar = () => {
                             {showOptions && (
                                 <div className="navbar-options">
                                     <Link to="/Profil">Profile</Link>
-                                    <button onClick={handleLogout} className="profile-btn logout-btn">
+                                    <button onClick={handleLogout} className="logout-btn">
                                         Log Out
                                     </button>
                                 </div>

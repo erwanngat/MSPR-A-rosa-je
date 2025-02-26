@@ -16,7 +16,6 @@ import AllPlantes from './pages/AllPlantes'
 
 
 function App() {
-  //sessionStorage.setItem('email', "");
 
   return (
     <Router>
