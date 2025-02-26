@@ -37,7 +37,7 @@ export const Profile = ({ profile, edit }: { profile: { name: string, phone: str
           <View style={styles.contactIconContainer}>
             <FontAwesome name="phone" size={14} color="#4a7c59" />
           </View>
-          <Text style={styles.contactLabel}>Téléphone :</Text>
+          <Text style={styles.contactLabel}>Phone :</Text>
           <Text style={styles.contactValue}>{profile.phone}</Text>
         </View>
         

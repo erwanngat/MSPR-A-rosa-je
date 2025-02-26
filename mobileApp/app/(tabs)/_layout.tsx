@@ -32,7 +32,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Accueil',
+          title: 'Home',
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
           headerRight: () => (
             <Pressable onPress={handleLogout} style={{ marginRight: 15 }}>
@@ -51,7 +51,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="two"
         options={{
-          title: 'Tab Two',
+          title: 'Profile',
+          tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="myPlants"
+        options={{
+          title: 'My Plants',
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

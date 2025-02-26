@@ -63,6 +63,11 @@ function RootLayoutNav() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="inscription" options={{ headerShown: false }} />
+        <Stack.Screen name="addPlant" options={{ headerShown: true, title: 'Add Plant' }} />
+        <Stack.Screen name="editProfile" options={{ headerShown: true, title: 'Edit Profile' }} />
+        <Stack.Screen name="profile/[id]" options={{ headerShown: true, title: 'Profile' }} />
+        <Stack.Screen name="modal/[id]" options={{ headerShown: true, title: 'Comment' }} />
+        <Stack.Screen name="editPlant/[id]" options={{ headerShown: true, title: 'Edit Plant' }} />
       </Stack>
     </ThemeProvider>
   );

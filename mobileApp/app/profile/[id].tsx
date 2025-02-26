@@ -18,11 +18,12 @@ export default function ProfileScreen () {
         try {
           // Appel au service pour récupérer les données
           const userProfile = await UserService().getUser(userStored?.token, id);
+          console.log(userProfile);
           
           // Formatage des données du profil
           setProfile({
             name: userProfile.name,
-            phone: userProfile.phone,
+            phone: userProfile.phone_number,
             email: userProfile.email,
             avatarUrl: userProfile.avatarUrl || 'https://via.placeholder.com/100', // Utilisation d'une image par défaut si aucune image
           });
@@ -47,7 +48,7 @@ export default function ProfileScreen () {
       {profile ? (
         <Profile edit={false} profile={profile} />
       ) : (
-        <Text>Profil non trouvé.</Text>
+        <Text>Profil not found.</Text>
       )}
     </View>
   );

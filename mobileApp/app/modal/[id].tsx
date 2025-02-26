@@ -177,16 +177,16 @@ export default function ModalScreen() {
             />
             <Text style={styles.description}>{planteData?.description || 'Ceci est une description détaillée de la plante...'}</Text>
             
-            <Button
+            {/* <Button
                 title={isReserved ? "Annuler la réservation" : "Réserver"}
                 onPress={onReservation}
                 color={isReserved ? "#D9534F" : "#4C9C6F"}  // Change color based on reservation state
-            />
+            /> */}
 
             <View style={styles.commentSection}>
-                <Text style={styles.commentTitle}>Commentaires</Text>
+                <Text style={styles.commentTitle}>Comment</Text>
                 {loading ? (
-                    <Text style={styles.loadingText}>Chargement...</Text>
+                    <Text style={styles.loadingText}>Loading...</Text>
                 ) : (
                     <FlatList
                         data={comments}
@@ -206,7 +206,7 @@ export default function ModalScreen() {
                                             value={editedComment}
                                             onChangeText={setEditedComment}
                                         />
-                                        <Button title="Mettre à jour" onPress={handleUpdateComment} color="#A8D08D" />
+                                        <Button title="Update" onPress={handleUpdateComment} color="#A8D08D" />
                                     </View>
                                 ) : (
                                     <>
@@ -233,9 +233,9 @@ export default function ModalScreen() {
                             style={styles.input}
                             value={newComment}
                             onChangeText={setNewComment}
-                            placeholder="Ajouter un commentaire..."
+                            placeholder="Add comment..."
                         />
-                        <Button title="Ajouter" onPress={handleAddComment} color="#A8D08D" />
+                        <Button title="Add" onPress={handleAddComment} color="#A8D08D" />
                     </>
                 ) : null}
             </View>

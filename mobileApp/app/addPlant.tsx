@@ -18,7 +18,7 @@ export default function AddPlanteScreen() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUri, setImageUri] = useState('');
-  const [addressId, setAddressId] = useState('');
+  const [addressId, setAddressId] = useState(1);
 
   const handleImagePicker = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -116,7 +116,7 @@ export default function AddPlanteScreen() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Nom de la plante"
+        placeholder="Name"
         value={name}
         onChangeText={setName}
       />
@@ -127,18 +127,18 @@ export default function AddPlanteScreen() {
         onChangeText={setDescription}
         multiline
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
-        placeholder="ID de l'adresse"
+        placeholder=""
         value={addressId}
         onChangeText={setAddressId}
-      />
-      <Button title="Sélectionner une image" onPress={handleImagePicker} color="#4C9C6F"/>
+      /> */}
+      <Button title="Select an image" onPress={handleImagePicker} color="#4C9C6F"/>
       <View style={styles.saveButton}></View>
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.imagePreview} />
       ) : null}
-      <Button title="Ajouter la plante" onPress={handleSave} color="#4C9C6F" />
+      <Button title="Add Plant" onPress={handleSave} color="#4C9C6F" />
     </View>
   );
 }
