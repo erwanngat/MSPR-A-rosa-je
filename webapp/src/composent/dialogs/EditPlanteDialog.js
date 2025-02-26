@@ -88,7 +88,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !addressId || !description) {
+    if (!name || !addressId) {
       setError('Veuillez remplir tous les champs.');
       return;
     }
