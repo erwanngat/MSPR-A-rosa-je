@@ -12,7 +12,7 @@ const ReservationService = () => {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    owner_user_id: reservation.owner_user_id,
+                    //owner_user_id: reservation.owner_user_id,
                     gardener_user_id: reservation.gardener_user_id,
                     plante_id: reservation.plante_id,
                     start_date: reservation.start_date,
@@ -25,6 +25,23 @@ const ReservationService = () => {
             return false;
         }
     };
+    const getAllReservations = async (token: string) => {
+        try {
+          const response = await fetch(`${baseUrl}/reservations`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+    
+          if (!response.ok) throw new Error('Failed to fetch reservations');
+    
+          return await response.json();
+        } catch (error) {
+          console.error('Erreur lors de la récupération des réservations:', error);
+        }
+      };
 
     const getReservationsByPlant = async (plant_id: number, token: string): Promise<IReservation[]> => {
         try {
@@ -85,7 +102,7 @@ const ReservationService = () => {
         }
     };
 
-    return { addReservation, getReservationsByPlant, deleteReservation, updateReservation };
+    return { addReservation, getReservationsByPlant, deleteReservation, updateReservation, getAllReservations };
 };
 
 export default ReservationService;

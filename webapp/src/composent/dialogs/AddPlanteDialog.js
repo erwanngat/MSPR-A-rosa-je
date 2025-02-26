@@ -70,7 +70,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!name || !addressId || !description) {
+    if (!name || !addressId) {
       setError('Veuillez remplir tous les champs.');
       return;
     }

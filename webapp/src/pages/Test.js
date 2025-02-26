@@ -68,7 +68,7 @@ const Test = () => {
 
   // Gérer la création d'une réservation
   const handleCreateReservation = async () => {
-    if (!newReservation.owner_user_id || !newReservation.plante_id || !newReservation.start_date || !newReservation.end_date) {
+    if (!newReservation.plante_id || !newReservation.start_date || !newReservation.end_date) {
       alert('Veuillez remplir tous les champs.');
       return;
     }
