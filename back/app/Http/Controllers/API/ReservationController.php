@@ -32,11 +32,15 @@ class ReservationController extends Controller
     {
         $reservation = Reservation::create([
             'plante_id' => $request->plante_id,
-            'owner_user_id' => $request->owner_user_id,
-            'gardener_user_id' => $request->gardener_user_id,
+            'owner_user_id' => auth()->id(),
+            'gardener_user_id' => null,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date
         ]);
+
+        if($request->gardener_user_id){
+            $reservation->gardener_user_id = $request->gardener_user_id;
+        }
 
         return response()->json($reservation, 201);
     }
@@ -62,11 +66,15 @@ class ReservationController extends Controller
     {
         $reservation->update([
             'plante_id' => $request->plante_id,
-            'owner_user_id' => $request->owner_user_id,
-            'gardener_user_id' => $request->gardener_user_id,
+            'owner_user_id' => auth()->id(),
+            'gardener_user_id' => null,
             'start_date' => $request->start_date,
             'end_date' => $request->end_date
         ]);
+
+        if($request->gardener_user_id){
+            $reservation->gardener_user_id = $request->gardener_user_id;
+        }
 
         return response()->json($reservation, 200);
     }
