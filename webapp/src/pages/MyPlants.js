@@ -102,7 +102,7 @@ const MyPlants = () => {
     try {
       const success = await ReservationService().addReservation(reservation, token);
       if (success) {
-        alert('Réservation créée avec succès !');
+        alert('Réservation créé avec succès !');
         // Recharger les réservations pour cette plante
         await fetchReservationsForPlant(currentPlanteId);
         closeReservationDialog();
@@ -137,7 +137,6 @@ const MyPlants = () => {
 
   return (
     <div className="my-plants-container">
-      <h1 className="my-plants-title">My plants</h1>
       <button onClick={openAddDialog} className="my-plants-add-button">
         Add new Plant
       </button>
