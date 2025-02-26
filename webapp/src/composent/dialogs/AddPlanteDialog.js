@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import PlantesService from '../../services/PlantesService.ts';
-import AddressesService from '../../services/AddressesService.ts'; // Importation du service des adresses
-import Select from 'react-select'; // Importation de react-select
+import PlantesService from '../../services/PlantesService';
+import AddressesService from '../../services/AddressesService.ts';
+import Select from 'react-select';
 
 const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const [name, setName] = useState('');
   const [addressId, setAddressId] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState(null); // État pour l'image
+  const [previewImage, setPreviewImage] = useState(null); // État pour l'URL de prévisualisation
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [addresses, setAddresses] = useState([]); // Liste des adresses
@@ -19,6 +21,15 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     street: '',
     additional_address_details: '',
   });
+
+  // Effet pour nettoyer l'URL de prévisualisation
+  useEffect(() => {
+    return () => {
+      if (previewImage) {
+        URL.revokeObjectURL(previewImage); // Libérer la mémoire
+      }
+    };
+  }, [previewImage]);
 
   // Récupérer toutes les adresses au chargement du composant
   useEffect(() => {
@@ -66,7 +77,16 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     }
   };
 
-  // Gérer la soumission du formulaire de création de plante
+  // Gérer la sélection d'une image
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file); // Stocker le fichier image
+      setPreviewImage(URL.createObjectURL(file)); // Créer une URL de prévisualisation
+    }
+  };
+
+  // Gérer la soumission du formulaire
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -79,18 +99,20 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     setError('');
 
     try {
-      // Appel API pour ajouter une plante
-      const newPlante = await PlantesService().addPlante({
-        name,
-        address_id: addressId,
-        description,
-      });
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('address_id', addressId);
+      formData.append('description', description);
+      if (image) {
+        formData.append('image', image);
+      }
 
-      // Notifier le parent (MyPlants) que l'ajout a réussi
+      const newPlante = await PlantesService().addPlante(formData);
       onAddSuccess(newPlante);
-
-      // Fermer la boîte de dialogue
       onClose();
+      setName('');
+      setDescription('');
+      setImage(null);
     } catch (err) {
       setError('Erreur lors de l\'ajout de la plante.');
       console.error(err);
@@ -127,9 +149,9 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               options={addressOptions}
               value={selectedAddress}
               onChange={handleAddressChange}
-              isSearchable // Activer la recherche
-              noOptionsMessage={() => "No address found"} // Message si aucune option
-              styles={customStyles} // Styles personnalisés
+              isSearchable
+              noOptionsMessage={() => "No address found"}
+              styles={customStyles}
             />
             <button
               type="button"
@@ -139,7 +161,6 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
               Create
             </button>
           </div>
-          {/* Formulaire de création d'adresse */}
           {showAddressForm && (
             <div className="add-plante-dialog-address-form">
               <input
@@ -197,6 +218,23 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="add-plante-dialog-textarea"
           />
+          {/* Champ de téléchargement d'image */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            //className="add-plante-dialog-input"
+          />
+          {/* Prévisualisation de l'image */}
+          {previewImage && (
+            <div className="add-plante-dialog-image-preview">
+              <img
+                src={previewImage}
+                alt="Preview"
+                className="img-preview"
+              />
+            </div>
+          )}
           <div className="add-plante-dialog-buttons">
             <button type="submit" disabled={loading}>
               {loading ? 'In progress...' : 'Add'}

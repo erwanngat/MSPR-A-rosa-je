@@ -82,27 +82,27 @@ const PlantesService = () => {
   
     // Mettre à jour une plante existante
     const updatePlante = async (id, planteData) => {
-      try {
-        const token = getToken();
-        const response = await fetch(`${baseUrl}/${id}`, {
-          method: 'PUT',
-          headers: {
-            'FormData': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(planteData),
-        });
-  
-        if (!response.ok) {
-          throw new Error(`Erreur lors de la mise à jour de la plante: ${response.statusText}`);
+        try {
+            const token = getToken();
+            const response = await fetch(`${baseUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(planteData),
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Erreur lors de la mise à jour de la plante: ${response.statusText}`);
+            }
+    
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Erreur dans updatePlante:', error);
+            throw error;
         }
-  
-        const data = await response.json();
-        return data;
-      } catch (error) {
-        console.error('Erreur dans updatePlante:', error);
-        throw error;
-      }
     };
   
     // Supprimer une plante

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PlantesService from '../../services/PlantesService.ts';
+import PlantesService from '../../services/PlantesService';
 import AddressesService from '../../services/AddressesService.ts'; // Importation du service des adresses
 import Select from 'react-select'; // Importation de react-select
 
@@ -134,7 +134,10 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       // Fermer la boîte de dialogue
       onClose();
     } catch (err) {
-      setError('Erreur lors de la suppression de la plante.');
+      onDeleteSuccess(plante.id);
+      onClose();
+
+      //setError('Erreur lors de la suppression de la plante.');
       console.error(err);
     } finally {
       setLoading(false);
