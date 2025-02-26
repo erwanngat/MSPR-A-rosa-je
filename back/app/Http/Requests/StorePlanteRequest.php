@@ -23,7 +23,7 @@ class StorePlanteRequest extends FormRequest
     {
         return [
             'name' => 'required|max:100',
-            'description' => 'required',
+            'description' => '',
             'image' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'address_id' => 'required|integer|exists:addresses,id',
         ];
