@@ -8,6 +8,7 @@ use App\Models\Plante;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+use Spatie\Permission\Models\Role;
 
 class CommentApiTest extends TestCase
 {
@@ -104,6 +105,7 @@ class CommentApiTest extends TestCase
     public function test_user_can_create_comment()
     {
         $user = User::factory()->create();
+        Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
         $user->AssignRole('botaniste');
         $address = Address::create([
             'country' => 'France',
@@ -132,6 +134,7 @@ class CommentApiTest extends TestCase
     public function test_user_can_update_comment()
     {
         $user = User::factory()->create();
+        Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
         $user->AssignRole('botaniste');
         $address = Address::create([
             'country' => 'France',
