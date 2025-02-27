@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PlantesService from '../../services/PlantesService.ts';
+import PlantesService from '../../services/PlantesService';
 import UserService from '../../services/userService.ts';
 import CommentService from '../../services/CommentService.ts';
 import { useNavigate } from 'react-router-dom';

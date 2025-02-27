@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PlantesService from '../../services/PlantesService.ts';
+import PlantesService from '../../services/PlantesService';
 import AddressesService from '../../services/AddressesService.ts'; // Importation du service des adresses
 import Select from 'react-select'; // Importation de react-select
 
@@ -19,6 +19,15 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
     street: '',
     additional_address_details: '',
   });
+  const [image, setImage] = useState(null); // Nouvel état pour l'image
+
+  // Gérer la sélection d'une nouvelle image
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
 
   // Récupérer toutes les adresses au chargement du composant
   useEffect(() => {
@@ -87,26 +96,31 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   // Gérer la soumission du formulaire de mise à jour de la plante
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!name || !addressId || !description) {
+  
+    if (!name || !addressId) {
       setError('Veuillez remplir tous les champs.');
       return;
     }
-
+  
     setLoading(true);
     setError('');
-
+  
     try {
-      // Appel API pour mettre à jour la plante
-      const updatedPlante = await PlantesService().updatePlante(plante.id, {
+      // Préparer les données de la plante, y compris l'image
+      const planteData = {
         name,
         address_id: addressId,
         description,
-      });
-
+        image, // Ajouter l'image aux données
+      };
+      console.log(planteData);
+  
+      // Appel API pour mettre à jour la plante
+      const updatedPlante = await PlantesService().updatePlante(plante.id, planteData);
+  
       // Notifier le parent (MyPlants) que la mise à jour a réussi
       onUpdateSuccess(updatedPlante);
-
+  
       // Fermer la boîte de dialogue
       onClose();
     } catch (err) {
@@ -134,7 +148,10 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       // Fermer la boîte de dialogue
       onClose();
     } catch (err) {
-      setError('Erreur lors de la suppression de la plante.');
+      onDeleteSuccess(plante.id);
+      onClose();
+
+      //setError('Erreur lors de la suppression de la plante.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -239,6 +256,12 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
             onChange={(e) => setDescription(e.target.value)}
             style={styles.textarea}
           />
+          <input
+              type="file"
+              accept="image/*" // Accepter uniquement les fichiers image
+              onChange={handleImageChange}
+              style={styles.input}
+            />
           <div style={styles.buttons}>
             <button type="submit" disabled={loading}>
               {loading ? 'En cours...' : 'Modifier'}
