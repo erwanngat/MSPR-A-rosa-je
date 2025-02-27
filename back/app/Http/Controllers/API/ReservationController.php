@@ -74,6 +74,7 @@ class ReservationController extends Controller
 
         if($request->gardener_user_id){
             $reservation->gardener_user_id = $request->gardener_user_id;
+            $reservation->save();
         }
 
         return response()->json($reservation, 200);
