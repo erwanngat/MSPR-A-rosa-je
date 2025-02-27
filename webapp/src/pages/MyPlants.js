@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PlantesService from '../services/PlantesService';
-import ReservationService from '../services/ReservationService.ts'; // Importer le service de réservation
+import ReservationService from '../services/ReservationService'; // Importer le service de réservation
 import AddPlanteDialog from '../composent/dialogs/AddPlanteDialog';
 import EditPlanteDialog from '../composent/dialogs/EditPlanteDialog';
 

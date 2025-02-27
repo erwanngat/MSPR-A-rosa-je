@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ReservationService from '../services/ReservationService'; // Importer le service de réservation
 
 const Profil = () => {
   const navigate = useNavigate();
@@ -7,6 +8,7 @@ const Profil = () => {
 
   // Récupérer l'utilisateur depuis l'état de la route ou la session
   const user = location.state?.user || JSON.parse(sessionStorage.getItem('user'));
+  const reservation = location.state?.reservation || null;
 
   // Vérifier si l'utilisateur provient de location.state (appelé avec props)
   const isCalledWithProps = !!location.state?.user;
@@ -18,6 +20,39 @@ const Profil = () => {
   const handleLogout = () => {
     sessionStorage.clear(); // Supprimer toutes les données de session
     navigate('/login'); // Rediriger vers la page de connexion
+  };
+
+  // Fonction pour mettre à jour la réservation
+  const updateReservation = async () => {
+    if (!reservation) return;
+
+    try {
+      const token = sessionStorage.getItem('token');
+      const tmpUser = JSON.parse(sessionStorage.getItem('user'));
+      const updatedReservation = {
+        ...reservation,
+        gardener_user_id: tmpUser.id, // Ajouter 1 à gardener_user_id
+      };
+
+
+      const success = await ReservationService().updateReservation(
+        reservation.id,
+        updatedReservation,
+      );
+      console.log(success);
+
+      if (success) {
+
+        //alert('Réservation mise à jour avec succès !');
+        // Mettre à jour l'affichage en rechargeant la réservation
+        //navigate(0); // Recharger la page pour refléter les changements
+      } else {
+        alert('Échec de la mise à jour de la réservation.');
+      }
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de la réservation:', error);
+      alert('Une erreur est survenue lors de la mise à jour de la réservation.');
+    }
   };
 
   if (!user) {
@@ -45,6 +80,22 @@ const Profil = () => {
             </>
           )}
         </div>
+
+        {/* Afficher les informations de la réservation si l'utilisateur est passé en props */}
+        {isCalledWithProps && reservation && (
+          <div className="reservation-details">
+            <h3>Réservation</h3>
+            <p><strong>Plante ID:</strong> {reservation.plante_id}</p>
+            <p><strong>Début:</strong> {new Date(reservation.start_date).toLocaleDateString()}</p>
+            <p><strong>Fin:</strong> {new Date(reservation.end_date).toLocaleDateString()}</p>
+            <p><strong>Jardinier:</strong> {reservation.gardener_user_id}</p>
+
+            {/* Bouton pour mettre à jour la réservation */}
+            <button onClick={updateReservation} className="update-reservation-btn">
+              Mettre à jour le jardinier
+            </button>
+          </div>
+        )}
 
         {/* Afficher le bouton "Log Out" uniquement si la page n'est pas appelée avec props */}
         {!isCalledWithProps && (

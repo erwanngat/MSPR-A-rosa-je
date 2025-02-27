@@ -5,8 +5,8 @@ import CommentService from '../../services/CommentService.ts';
 import { useNavigate } from 'react-router-dom';
 
 
-const PlanteDialog = ({ plante, userPlante, onClose }) => {
-  const [reservations, setReservations] = useState([]);
+const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
+  //const [reservations, setReservations] = useState([]);
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState({});
   const [showCommentForm, setShowCommentForm] = useState(false);
@@ -31,7 +31,7 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
 
   useEffect(() => {
     if (plante) {
-      fetchReservations();
+      //fetchReservations();
       fetchComments();
     }
   }, [plante]);
@@ -46,16 +46,16 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
     comments.forEach((comment) => {
       fetchUser(comment.user_id);
     });
-  }, [reservations, comments]);
+  }, [comments]); //[reservations, comments]);
 
-  const fetchReservations = async () => {
-    try {
-      const data = await PlantesService().getReservationsByPlanteId(plante.id);
-      setReservations(data);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
-    }
-  };
+  // const fetchReservations = async () => {
+  //   try {
+  //     const data = await PlantesService().getReservationsByPlanteId(plante.id);
+  //     setReservations(data);
+  //   } catch (error) {
+  //     console.error('Erreur lors de la récupération des réservations:', error);
+  //   }
+  // };
 
   const fetchComments = async () => {
     try {
@@ -116,7 +116,7 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
     }
   };
   const handleNavigateToProfil = () => {
-    navigate('/Profil', { state: { user: userPlante } });
+    navigate('/Profil', { state: { user: userPlante, reservation : reservation } });
   };
 
   return (

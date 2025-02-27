@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PlantesService from '../services/PlantesService';
 import UserService from '../services/userService.ts'; // Pour récupérer les informations des utilisateurs
+import ReservationService from '../services/ReservationService'; // Importer le service de réservation
 import PlanteDialog from '../composent/dialogs/PlanteDialog'; // Boîte de dialogue pour afficher les détails de la plante
 
 const AllPlantes = () => {
@@ -11,10 +12,14 @@ const AllPlantes = () => {
   const [selectedUserPlante, setselectedUserPlante] = useState(null); 
   const [isDialogOpen, setIsDialogOpen] = useState(false); // État pour ouvrir/fermer la boîte de dialogue
   const [users, setUsers] = useState({}); // Cache des utilisateurs pour éviter de les récupérer plusieurs fois
+  const [reservations, setReservations] = useState([]); // État pour stocker les réservations
+  const [showReservedPlantes, setShowReservedPlantes] = useState(false); // État pour basculer entre les modes d'affichage
+  const [selectedReservation, setSelectedReservation] = useState(null); // Réservation associée à la plante sélectionnée
 
-  // Récupérer toutes les plantes au chargement de la page
+  // Récupérer toutes les plantes et les réservations au chargement de la page
   useEffect(() => {
     fetchPlantes();
+    fetchReservations();
   }, []);
 
   // Fonction pour récupérer toutes les plantes
@@ -25,6 +30,17 @@ const AllPlantes = () => {
       setFilteredPlantes(data); // Initialiser les plantes filtrées avec toutes les plantes
     } catch (error) {
       console.error('Erreur lors de la récupération des plantes:', error);
+    }
+  };
+
+  // Fonction pour récupérer toutes les réservations
+  const fetchReservations = async () => {
+    try {
+      const token = getToken();
+      const data = await ReservationService().getAllReservations(token);
+      setReservations(data);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des réservations:', error);
     }
   };
 
@@ -51,6 +67,11 @@ const AllPlantes = () => {
   const openDialog = async (plante, user) => {
     setSelectedPlante(plante);
     setselectedUserPlante(user);
+
+    // Trouver la réservation associée à la plante
+    const reservation = reservations.find((res) => res.plante_id === plante.id);
+    setSelectedReservation(reservation || null); // Si aucune réservation n'est trouvée, définir à null
+
     setIsDialogOpen(true);
   };
 
@@ -58,15 +79,28 @@ const AllPlantes = () => {
   const closeDialog = () => {
     setIsDialogOpen(false);
     setSelectedPlante(null);
+    setSelectedReservation(null); // Réinitialiser la réservation sélectionnée
   };
 
   // Filtrer les plantes en fonction du terme de recherche
   useEffect(() => {
-    const filtered = plantes.filter((plante) =>
-      plante.name.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    let filtered = plantes;
+
+    // Appliquer le filtre de recherche
+    if (searchTerm) {
+      filtered = filtered.filter((plante) =>
+        plante.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    // Appliquer le filtre des plantes réservées si le mode est activé
+    if (showReservedPlantes) {
+      const reservedPlanteIds = reservations.map((res) => res.plante_id);
+      filtered = filtered.filter((plante) => reservedPlanteIds.includes(plante.id));
+    }
+
     setFilteredPlantes(filtered);
-  }, [searchTerm, plantes]);
+  }, [searchTerm, plantes, reservations, showReservedPlantes]);
 
   return (
     <div className="all-plantes-container">
@@ -79,6 +113,16 @@ const AllPlantes = () => {
           onChange={(e) => setSearchTerm(e.target.value)}
           className="all-plantes-search-bar"
         />
+      </div>
+
+      {/* Bouton pour basculer entre les modes d'affichage */}
+      <div className="toggle-reserved-plantes">
+        <button
+          onClick={() => setShowReservedPlantes(!showReservedPlantes)}
+          className={`toggle-button ${showReservedPlantes ? 'active' : ''}`}
+        >
+          {showReservedPlantes ? 'Afficher toutes les plantes' : 'Afficher les plantes réservées'}
+        </button>
       </div>
 
       {/* Grille des plantes */}
@@ -110,11 +154,31 @@ const AllPlantes = () => {
         })}
       </div>
 
+      {/* Section pour afficher les réservations */}
+      <div className="reservations-container">
+        <h2>Réservations</h2>
+        {reservations.length > 0 ? (
+          <ul>
+            {reservations.map((reservation) => (
+              <li key={reservation.id}>
+                <p><strong>Plante ID:</strong> {reservation.plante_id}</p>
+                <p><strong>Début:</strong> {new Date(reservation.start_date).toLocaleDateString()}</p>
+                <p><strong>Fin:</strong> {new Date(reservation.end_date).toLocaleDateString()}</p>
+                <p><strong>Jardinier:</strong> {reservation.gardener_user_id}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>Aucune réservation trouvée.</p>
+        )}
+      </div>
+
       {/* Boîte de dialogue pour afficher les détails de la plante */}
       {isDialogOpen && (
         <PlanteDialog
           plante={selectedPlante}
           userPlante={selectedUserPlante}
+          reservation={selectedReservation} // Passer la réservation associée
           onClose={closeDialog}
         />
       )}
