@@ -104,6 +104,7 @@ class CommentApiTest extends TestCase
     public function test_user_can_create_comment()
     {
         $user = User::factory()->create();
+        $user->AssignRole('botaniste');
         $address = Address::create([
             'country' => 'France',
             'city' => 'Lyon',
@@ -131,6 +132,7 @@ class CommentApiTest extends TestCase
     public function test_user_can_update_comment()
     {
         $user = User::factory()->create();
+        $user->AssignRole('botaniste');
         $address = Address::create([
             'country' => 'France',
             'city' => 'Lyon',
