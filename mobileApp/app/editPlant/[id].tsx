@@ -144,7 +144,7 @@ export default function EditPlanteScreen() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Nom de la plante"
+        placeholder="Name"
         value={name}
         onChangeText={setName}
       />
@@ -155,17 +155,17 @@ export default function EditPlanteScreen() {
         onChangeText={setDescription}
         multiline
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholder="ID de l'adresse"
         value={addressId}
         onChangeText={setAddressId}
-      />
-      <Button title="Sélectionner une image" onPress={handleImagePicker} />
+      /> */}
+      <Button title="Select an image" onPress={handleImagePicker} />
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.imagePreview} />
       ) : null}
-      <Button title="Ajouter la plante" onPress={handleSave} />
+      <Button title="Add Plant" onPress={handleSave} />
     </View>
   );
 }

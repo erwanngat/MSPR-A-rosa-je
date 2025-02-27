@@ -53,14 +53,14 @@ export default function EditProfileScreen() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Modifier le Profil</Text>
+      <Text style={styles.title}>Modify Profile</Text>
 
       {/* Champ de saisie pour le nom */}
       <TextInput
         style={styles.input}
         value={name}
         onChangeText={setName}
-        placeholder="Nom"
+        placeholder="Name"
       />
 
       {/* Champ de saisie pour l'email */}
@@ -77,7 +77,7 @@ export default function EditProfileScreen() {
         style={styles.input}
         value={password}
         onChangeText={setPassword}
-        placeholder="Mot de passe"
+        placeholder="Password"
         secureTextEntry
       />
 
@@ -86,7 +86,7 @@ export default function EditProfileScreen() {
         style={styles.input}
         value={passwordConfirmation}
         onChangeText={setPasswordConfirmation}
-        placeholder="Confirmer le mot de passe"
+        placeholder="Confirm password"
         secureTextEntry
       />
 
@@ -95,13 +95,13 @@ export default function EditProfileScreen() {
         style={styles.input}
         value={phone}
         onChangeText={setPhone}
-        placeholder="Téléphone"
+        placeholder="Phone"
         keyboardType="phone-pad"
       />
 
       {/* Bouton pour sauvegarder les modifications */}
       <TouchableOpacity style={styles.saveButton} onPress={handleSave}>
-        <Text style={styles.saveButtonText}>Sauvegarder</Text>
+        <Text style={styles.saveButtonText}>Save</Text>
       </TouchableOpacity>
     </ScrollView>
   );

@@ -4,18 +4,21 @@ import * as ImagePicker from 'expo-image-picker';
 import { useUserStore } from '@/stores/userStore'; // Assurez-vous que cela fonctionne dans votre projet
 import { useRouter } from 'expo-router';
 import plantesService from '@/services/plantesService';
+import reservationService from '@/services/reservationService';
 import { IPlante } from '@/types/plantes';
+import ReservationService from '@/services/reservationService';
 
 export default function AddPlanteScreen() {
   const router = useRouter();
   const user = useUserStore((state) => state.user);
   const token = user?.token;
   const service = plantesService(token || ''); // Assurez-vous que le token est bien transmis
+  const reservationService = ReservationService();
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUri, setImageUri] = useState('');
-  const [addressId, setAddressId] = useState('');
+  const [addressId, setAddressId] = useState(1);
 
   const handleImagePicker = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -90,6 +93,15 @@ export default function AddPlanteScreen() {
 
     try {
       const response = await service.addPlante(formData);
+      const plante = await service.getPlantesByUserId(user.id);
+      console.log("id" + plante.id);
+      //@ts-ignore
+      const responseReservation = await reservationService.addReservation({
+        plante_id: plante.id,
+        owner_user_id: plante?.user_id,
+        start_date: new Date(),
+        end_date: new Date(),
+    }, token);
 
       const data = await response.json();
       Alert.alert('Succès', 'Plante ajoutée avec succès !');
@@ -104,7 +116,7 @@ export default function AddPlanteScreen() {
     <View style={styles.container}>
       <TextInput
         style={styles.input}
-        placeholder="Nom de la plante"
+        placeholder="Name"
         value={name}
         onChangeText={setName}
       />
@@ -115,18 +127,18 @@ export default function AddPlanteScreen() {
         onChangeText={setDescription}
         multiline
       />
-      <TextInput
+      {/* <TextInput
         style={styles.input}
-        placeholder="ID de l'adresse"
+        placeholder=""
         value={addressId}
         onChangeText={setAddressId}
-      />
-      <Button title="Sélectionner une image" onPress={handleImagePicker} color="#4C9C6F"/>
+      /> */}
+      <Button title="Select an image" onPress={handleImagePicker} color="#4C9C6F"/>
       <View style={styles.saveButton}></View>
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.imagePreview} />
       ) : null}
-      <Button title="Ajouter la plante" onPress={handleSave} color="#4C9C6F" />
+      <Button title="Add Plant" onPress={handleSave} color="#4C9C6F" />
     </View>
   );
 }

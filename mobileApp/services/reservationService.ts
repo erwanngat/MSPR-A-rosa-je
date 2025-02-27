@@ -31,6 +31,7 @@ const ReservationService = () => {
             const response = await fetch(`${baseUrl}/plantes/${plant_id}/reservations`, {
                 method: 'GET',
                 headers: {
+                    'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
@@ -67,6 +68,7 @@ const ReservationService = () => {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
