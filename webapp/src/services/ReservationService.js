@@ -82,7 +82,12 @@ const ReservationService = () => {
     };
 
     const updateReservation = async (reservationId, updatedReservation) => {
+        console.log("Update Reservation");
         console.log(updatedReservation);
+        // console.log(updatedReservation.gardener_user_id);
+        // console.log(updatedReservation.plante_id);
+        // console.log(updatedReservation.start_date);
+        // console.log(updatedReservation.end_date);
         try {
             const token = getToken();
             const response = await fetch(`${baseUrl}/reservations/${reservationId}`, {
@@ -92,7 +97,7 @@ const ReservationService = () => {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    owner_user_id: updatedReservation.owner_user_id,
+                    //owner_user_id: updatedReservation.owner_user_id,
                     gardener_user_id: updatedReservation.gardener_user_id,
                     plante_id: updatedReservation.plante_id,
                     start_date: updatedReservation.start_date,
@@ -101,6 +106,12 @@ const ReservationService = () => {
             });
             console.log("aaaaaaa");
             console.log(response);
+            console.log("Objet reservation en BDD");
+            console.log(updatedReservation.gardener_user_id);
+            console.log(updatedReservation.plante_id);
+            console.log(updatedReservation.start_date);
+            console.log(updatedReservation.end_date);
+
             return response.ok;
         } catch (err) {
             console.error(err);

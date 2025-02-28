@@ -119,11 +119,13 @@ const AllPlantes = () => {
       <div className="toggle-reserved-plantes">
         <button
           onClick={() => setShowReservedPlantes(!showReservedPlantes)}
-          className={`toggle-button ${showReservedPlantes ? 'active' : ''}`}
+          //className={`toggle-button ${showReservedPlantes ? 'active' : ''}`}
+          className='btn'
         >
           {showReservedPlantes ? 'Afficher toutes les plantes' : 'Afficher les plantes réservées'}
         </button>
       </div>
+      <br/>
 
       {/* Grille des plantes */}
       <div className="all-plantes-plantes-grid">
@@ -140,7 +142,8 @@ const AllPlantes = () => {
               onClick={() => openDialog(plante, user)}
             >
               <img
-                src={plante.image != null ? plante.image : "https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"}
+                //src={plante.image != null ? plante.image : "https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"}
+                src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
                 alt={plante.name}
                 className="all-plantes-plante-image"
               />
@@ -155,7 +158,7 @@ const AllPlantes = () => {
       </div>
 
       {/* Section pour afficher les réservations */}
-      <div className="reservations-container">
+      {/* <div className="reservations-container">
         <h2>Réservations</h2>
         {reservations.length > 0 ? (
           <ul>
@@ -171,7 +174,7 @@ const AllPlantes = () => {
         ) : (
           <p>Aucune réservation trouvée.</p>
         )}
-      </div>
+      </div> */}
 
       {/* Boîte de dialogue pour afficher les détails de la plante */}
       {isDialogOpen && (

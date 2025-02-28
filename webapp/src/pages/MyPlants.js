@@ -11,7 +11,6 @@ const MyPlants = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isReservationDialogOpen, setIsReservationDialogOpen] = useState(false);
-  const [currentPlanteId, setCurrentPlanteId] = useState(null);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [reservationsByPlant, setReservationsByPlant] = useState({}); // Stocker les réservations par plante
@@ -68,8 +67,8 @@ const MyPlants = () => {
   };
 
   // Ouvrir la boîte de dialogue de réservation
-  const openReservationDialog = (planteId) => {
-    setCurrentPlanteId(planteId);
+  const openReservationDialog = (plante) => {
+    setSelectedPlante(plante);
     setIsReservationDialogOpen(true);
   };
 
@@ -82,14 +81,14 @@ const MyPlants = () => {
 
   // Gérer la création d'une réservation
   const handleCreateReservation = async () => {
-    if (!currentPlanteId || !startDate || !endDate) {
+    if (!selectedPlante || !startDate || !endDate) {
       alert('Veuillez remplir toutes les dates.');
       return;
     }
 
     const reservation = {
       //gardener_user_id: null, // À définir selon la logique de l'application
-      plante_id: currentPlanteId,
+      plante_id: selectedPlante.id,
       start_date: startDate,
       end_date: endDate,
     };
@@ -99,7 +98,7 @@ const MyPlants = () => {
       if (success) {
         alert('Réservation créé avec succès !');
         // Recharger les réservations pour cette plante
-        await fetchReservationsForPlant(currentPlanteId);
+        await fetchReservationsForPlant(selectedPlante.id);
         closeReservationDialog();
       } else {
         alert('Erreur lors de la création de la réservation.');
@@ -150,7 +149,7 @@ const MyPlants = () => {
               <p>{plante.description}</p>
             </div>
             <button
-              onClick={() => openReservationDialog(plante.id)}
+              onClick={() => openReservationDialog(plante)}
               className="my-plants-info-button"
               disabled={reservationsByPlant[plante.id]?.length > 0} // Désactiver le bouton si déjà réservé
             >
@@ -178,9 +177,9 @@ const MyPlants = () => {
       {isReservationDialogOpen && (
         <div className="my-plants-reservation-dialog">
           <div className="my-plants-reservation-dialog-content">
-            <h2>Créer une réservation pour la plante ID: {currentPlanteId}</h2>
+            <h2>Creat reservation for: {selectedPlante.name}</h2>
             <div>
-              <label>Date de début:</label>
+              <label>Start date:</label>
               <input
                 type="date"
                 value={startDate}
@@ -188,7 +187,7 @@ const MyPlants = () => {
               />
             </div>
             <div>
-              <label>Date de fin:</label>
+              <label>End date:</label>
               <input
                 type="date"
                 value={endDate}

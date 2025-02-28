@@ -19,7 +19,7 @@ const Profil = () => {
 
   const handleLogout = () => {
     sessionStorage.clear(); // Supprimer toutes les données de session
-    navigate('/login'); // Rediriger vers la page de connexion
+    navigate('/Login'); // Rediriger vers la page de connexion
   };
 
   // Fonction pour mettre à jour la réservation
@@ -33,7 +33,9 @@ const Profil = () => {
         ...reservation,
         gardener_user_id: tmpUser.id, // Ajouter 1 à gardener_user_id
       };
-
+      console.log("Reservation :")
+      console.log(updateReservation);
+      //console.log(reservation);
 
       const success = await ReservationService().updateReservation(
         reservation.id,
@@ -64,7 +66,7 @@ const Profil = () => {
       <div className="profile-card">
         <div className="profile-header">
           <img
-            src={user.profile_photo_url || 'https://via.placeholder.com/150'}
+            src={user.profile_photo_url}
             alt="Avatar"
             className="profile-avatar"
           />
@@ -84,16 +86,18 @@ const Profil = () => {
         {/* Afficher les informations de la réservation si l'utilisateur est passé en props */}
         {isCalledWithProps && reservation && (
           <div className="reservation-details">
-            <h3>Réservation</h3>
-            <p><strong>Plante ID:</strong> {reservation.plante_id}</p>
-            <p><strong>Début:</strong> {new Date(reservation.start_date).toLocaleDateString()}</p>
-            <p><strong>Fin:</strong> {new Date(reservation.end_date).toLocaleDateString()}</p>
-            <p><strong>Jardinier:</strong> {reservation.gardener_user_id}</p>
+            <h3>Reservation</h3>
+            {/* <p><strong>Plante ID:</strong> {reservation.plante_id}</p> */}
+            <p><strong>Start:</strong> {new Date(reservation.start_date).toLocaleDateString()}</p>
+            <p><strong>End:</strong> {new Date(reservation.end_date).toLocaleDateString()}</p>
+            <p><strong>Gardener:</strong> {reservation.gardener_user_id}</p>
 
             {/* Bouton pour mettre à jour la réservation */}
-            <button onClick={updateReservation} className="update-reservation-btn">
-              Mettre à jour le jardinier
+            {/* {reservation.gardener_user_id == null && (
+              <button onClick={updateReservation} className="btn">
+              Keep plant
             </button>
+            )} */}
           </div>
         )}
 
