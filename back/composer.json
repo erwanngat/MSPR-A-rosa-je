@@ -11,7 +11,9 @@
         "laravel/jetstream": "^5.3",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "livewire/livewire": "^3.0"
+        "livewire/livewire": "^3.0",
+        "propaganistas/laravel-phone": "^5.3",
+        "spatie/laravel-permission": "^6.15"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
@@ -20,7 +22,8 @@
         "laravel/sail": "^1.26",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.1",
-        "phpunit/phpunit": "^11.0.1"
+        "phpunit/phpunit": "^11.0.1",
+        "rakutentech/laravel-request-docs": "^2.41"
     },
     "autoload": {
         "psr-4": {

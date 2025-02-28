@@ -2,16 +2,12 @@
 <module type="WEB_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/Back/app" isTestSource="false" packagePrefix="App\" />
-      <sourceFolder url="file://$MODULE_DIR$/Back/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
-      <sourceFolder url="file://$MODULE_DIR$/Back/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
-      <sourceFolder url="file://$MODULE_DIR$/Back/tests" isTestSource="true" packagePrefix="Tests\" />
-      <sourceFolder url="file://$MODULE_DIR$/Back/tests/Feature" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/Back/tests/Unit" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/back/app" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/back/database/factories" isTestSource="false" packagePrefix="Database\Factories\" />
       <sourceFolder url="file://$MODULE_DIR$/back/database/seeders" isTestSource="false" packagePrefix="Database\Seeders\" />
       <sourceFolder url="file://$MODULE_DIR$/back/tests" isTestSource="true" packagePrefix="Tests\" />
+      <sourceFolder url="file://$MODULE_DIR$/back/tests/Feature" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/back/tests/Unit" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/carbonphp/carbon-doctrine-types" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/composer" />
@@ -116,6 +112,12 @@
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/mobiledetect/mobiledetectlib" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/paragonie/constant_time_encoding" />
       <excludeFolder url="file://$MODULE_DIR$/Back/vendor/pragmarx/google2fa" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/giggsey/libphonenumber-for-php-lite" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/propaganistas/laravel-phone" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/kitloong/laravel-app-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/rakutentech/laravel-request-docs" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-http-logger" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-package-tools" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

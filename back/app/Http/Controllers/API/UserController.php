@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -15,23 +18,22 @@ class UserController extends Controller
     {
         $users = User::all();
 
-        return response()->json($users);
+        if(!$users){
+            return response()->json([['error' => 'No users found'], 404]);
+        }
+
+        return response()->json($users, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $this->validate($request, [
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8'
-        ]);
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone_number' => $request->phone_number,
             'password' => bcrypt($request->password)
         ]);
 
@@ -41,38 +43,72 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(int $id)
     {
+        $user = User::find($id);
+
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
         return response()->json($user);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $this->validate($request, [
-            'name' => 'required|max:100',
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-        ]);
-
         $user->update([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" => bcrypt($request->password)
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'password' => bcrypt($request->password)
         ]);
 
-        return response()->json();
+        return response()->json($user, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(int $id)
     {
-        $user->delete();
+        User::destroy($id);
+        return response()->json(null, 204);
+    }
 
-        return response()->json();
+    public function getUserPlantes(int $id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+        return response()->json($user->plantes, 200);
+    }
+
+    public function getUserAdresses(int $id){
+        $user = User::find($id);
+        if(!$user){
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
+        $plantes = $user->plantes;
+
+        if(!$plantes){
+            return response()->json(['error' => 'Plantes not found'], 404);
+        }
+
+        $addresses = [];
+        foreach($plantes as $plante){
+            if($plante->address){
+                $addresses[$plante->address->id] = $plante->address;
+            }
+        }
+
+        if(!$addresses){
+            return response()->json(['error' => 'Adresses not found'], 404);
+        }
+
+        return response()->json($addresses, 200);
     }
 }

@@ -9,11 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-
+use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     use HasApiTokens;
-
+    use HasRoles;
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
     use HasProfilePhoto;
@@ -29,6 +29,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_number'
     ];
 
     /**
@@ -63,5 +64,21 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function plantes(){
+        return $this->hasMany(Plante::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
+    }
+
+    public function ownerReservations(){
+        return $this->hasMany(Reservation::class, 'owner_user_id');
+    }
+
+    public function gardenerReservations(){
+        return $this->hasMany(Reservation::class, 'gardener_user_id');
     }
 }

@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React  from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';  
+/*ALL PAGE */
+import Home from './pages/Home';  
+import Login from './pages/Login';
+import Profil from './pages/Profil';
+import Register from './pages/Register';
+import NavBar from './composent/NavBar'
+import Test from './pages/Test'
+
+import MyPlants from './pages/MyPlants'
+import AllPlantes from './pages/AllPlantes'
+
+
+/*END */
+
 
 function App() {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path="/" element={ <><NavBar /> <Home /></> } />
+          <Route path="/Login" element={<><NavBar /><Login /></>} />
+          <Route path="/register" element={<><NavBar  /><Register /></>} />
+          <Route path="/Profil" element={<> <NavBar />  <Profil /> </>} />
+          <Route path="/test" element={<> <NavBar />  <Test /> </>} />
+          <Route path="/MyPlants" element={<> <NavBar />  <MyPlants /> </>} />
+          <Route path="/AllPlantes" element={<> <NavBar />  <AllPlantes /> </>} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

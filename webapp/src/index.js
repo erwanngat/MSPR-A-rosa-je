@@ -1,6 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+//import './styles/login.css';
+//import './styles/profil.css';
+//import './styles/index.css';
+import './importStyles'; // Importez tous les fichiers CSS du dossier styles
+
+
+
+
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
