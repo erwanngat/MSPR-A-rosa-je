@@ -170,7 +170,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   return (
     <div style={styles.overlay} onClick={handleOverlayClick}>
       <div style={styles.dialog}>
-        <h2>Modifier la plante</h2>
+        <h2>Edit plant</h2>
         {error && <div style={styles.error}>{error}</div>}
         <form onSubmit={handleSubmit}>
           <input
@@ -195,7 +195,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
               onClick={() => setShowAddressForm(!showAddressForm)}
               style={styles.createButton}
             >
-              Créer
+              Create
             </button>
           </div>
           {/* Formulaire de création d'adresse */}
@@ -246,12 +246,12 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
                 onClick={handleCreateAddress}
                 style={styles.createAddressButton}
               >
-                Créer l'adresse
+                Creat adress
               </button>
             </div>
           )}
           <textarea
-            placeholder="Description de la plante"
+            placeholder="Plant description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             style={styles.textarea}
@@ -263,14 +263,14 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
               style={styles.input}
             />
           <div style={styles.buttons}>
-            <button type="submit" disabled={loading}>
-              {loading ? 'En cours...' : 'Modifier'}
+            <button type="submit" disabled={loading} className='btn'>
+              {loading ? 'Loading...' : 'Update'}
             </button>
-            <button type="button" onClick={handleDelete} disabled={loading}>
-              {loading ? 'En cours...' : 'Supprimer'}
+            <button type="button" onClick={handleDelete} disabled={loading} className='btn'>
+              {loading ? 'Loading...' : 'Delete'}
             </button>
-            <button type="button" onClick={onClose}>
-              Annuler
+            <button type="button" onClick={onClose} className='btn'>
+              Cancel
             </button>
           </div>
         </form>

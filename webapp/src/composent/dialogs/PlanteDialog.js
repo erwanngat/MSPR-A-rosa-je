@@ -5,8 +5,8 @@ import CommentService from '../../services/CommentService.ts';
 import { useNavigate } from 'react-router-dom';
 
 
-const PlanteDialog = ({ plante, userPlante, onClose }) => {
-  const [reservations, setReservations] = useState([]);
+const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
+  //const [reservations, setReservations] = useState([]);
   const [comments, setComments] = useState([]);
   const [users, setUsers] = useState({});
   const [showCommentForm, setShowCommentForm] = useState(false);
@@ -31,7 +31,7 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
 
   useEffect(() => {
     if (plante) {
-      fetchReservations();
+      //fetchReservations();
       fetchComments();
     }
   }, [plante]);
@@ -46,16 +46,16 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
     comments.forEach((comment) => {
       fetchUser(comment.user_id);
     });
-  }, [reservations, comments]);
+  }, [comments]); //[reservations, comments]);
 
-  const fetchReservations = async () => {
-    try {
-      const data = await PlantesService().getReservationsByPlanteId(plante.id);
-      setReservations(data);
-    } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
-    }
-  };
+  // const fetchReservations = async () => {
+  //   try {
+  //     const data = await PlantesService().getReservationsByPlanteId(plante.id);
+  //     setReservations(data);
+  //   } catch (error) {
+  //     console.error('Erreur lors de la récupération des réservations:', error);
+  //   }
+  // };
 
   const fetchComments = async () => {
     try {
@@ -116,20 +116,22 @@ const PlanteDialog = ({ plante, userPlante, onClose }) => {
     }
   };
   const handleNavigateToProfil = () => {
-    navigate('/Profil', { state: { user: userPlante } });
+    navigate('/Profil', { state: { user: userPlante, reservation : reservation } });
   };
 
   return (
     <div style={styles.overlay} onClick={onClose}>
       <div style={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <h2>{plante.name} ({userPlante.name})</h2>
+        <h2>{plante.name} </h2>  
+        {/* ({userPlante.name}) */}
         <img
-          src="https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"
-          alt={plante.name}
+          src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
+          
+          //alt={plante.name}
           style={styles.planteImage}
         />
         <p><strong>Description:</strong> {plante.description}</p>
-        <button onClick={handleNavigateToProfil}>
+        <button onClick={handleNavigateToProfil} className='btn'>
            Get in touch
         </button>
 

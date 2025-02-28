@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReservationService from '../services/ReservationService.ts';
+import ReservationService from '../services/ReservationService';
 
 const Test = () => {
   const [reservations, setReservations] = useState([]);
