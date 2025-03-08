@@ -17,11 +17,6 @@ class UserController extends Controller
     public function index()
     {
         $users = User::all();
-
-        if(!$users){
-            return response()->json([['error' => 'No users found'], 404]);
-        }
-
         return response()->json($users, 200);
     }
 
@@ -83,6 +78,9 @@ class UserController extends Controller
         if(!$user){
             return response()->json(['error' => 'User not found'], 404);
         }
+        if($user->plantes->isEmpty()){
+            return response()->json(['error' => 'No plantes found for this user'], 404);
+        }
         return response()->json($user->plantes, 200);
     }
 
@@ -94,8 +92,8 @@ class UserController extends Controller
 
         $plantes = $user->plantes;
 
-        if(!$plantes){
-            return response()->json(['error' => 'Plantes not found'], 404);
+        if($plantes->isEmpty()){
+            return response()->json(['error' => 'No plantes found for this user'], 404);
         }
 
         $addresses = [];
@@ -103,10 +101,6 @@ class UserController extends Controller
             if($plante->address){
                 $addresses[$plante->address->id] = $plante->address;
             }
-        }
-
-        if(!$addresses){
-            return response()->json(['error' => 'Adresses not found'], 404);
         }
 
         return response()->json($addresses, 200);

@@ -8,7 +8,7 @@ class Reservation extends Model
 {
     protected $fillable = ['plante_id', 'owner_user_id', 'gardener_user_id', 'start_date', 'end_date'];
     public function owner(){
-        return $this->belongsTo(User::class, 'onwer_user_id');
+        return $this->belongsTo(User::class, 'owner_user_id');
     }
 
     public function gardener(){

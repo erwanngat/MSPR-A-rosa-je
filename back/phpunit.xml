@@ -16,6 +16,13 @@
         <include>
             <directory>app</directory>
         </include>
+        <exclude>
+            <file>app/View/Components/AppLayout.php</file>
+            <file>app/View/Components/GuestLayout.php</file>
+            <file>app/Actions/Fortify/CreateNewUser.php</file>
+            <file>app/Actions/Fortify/UpdateUserProfileInformation.php</file>
+            <file>app/Providers/FortifyServiceProvider.php</file>
+        </exclude>
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>

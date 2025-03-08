@@ -60,8 +60,10 @@ class ReservationApiTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->getJson('/api/reservations');
-        $response->assertStatus(200);
-        $response->assertJson([]);
+        $response->assertStatus(404);
+        $response->assertJson([
+            'error' => 'No reservations found',
+        ]);
     }
 
     public function test_user_can_view_a_single_reservation()
@@ -210,5 +212,57 @@ class ReservationApiTest extends TestCase
         $this->assertDatabaseMissing('reservations', [
             'id' => $reservation->id,
         ]);
+    }
+
+    public function test_reservation_belongs_to_owner(){
+        $user = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
+
+        $reservation = Reservation::create([
+            'plante_id' => $plante->id,
+            'owner_user_id' => $user->id,
+            'start_date' => '2025-09-01',
+            'end_date' => '2025-09-10'
+        ]);
+        $this->assertEquals($user->id, $reservation->owner->id);
+    }
+
+    public function test_reservation_belongs_to_gardener(){
+        $user = User::factory()->create();
+        $gardener = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
+
+        $reservation = Reservation::create([
+            'plante_id' => $plante->id,
+            'owner_user_id' => $user->id,
+            'gardener_user_id' => $gardener->id,
+            'start_date' => '2025-09-01',
+            'end_date' => '2025-09-10'
+        ]);
+        $this->assertEquals($gardener->id, $reservation->gardener->id);
     }
 }

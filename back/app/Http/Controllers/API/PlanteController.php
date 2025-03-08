@@ -104,6 +104,9 @@ class PlanteController extends Controller
         if (!$plante) {
             return response()->json(['error' => 'Plante not found'], 404);
         }
+        if($plante->comments->isEmpty()){
+            return response()->json(['error' => 'No comments found for this plante'], 404);
+        }
 
         return response()->json($plante->comments, 200);
     }
@@ -112,6 +115,9 @@ class PlanteController extends Controller
         $plante = Plante::find($id);
         if (!$plante) {
             return response()->json(['error' => 'Plante not found'], 404);
+        }
+        if($plante->reservations->isEmpty()){
+            return response()->json(['error' => 'No reservations found for this plante'], 404);
         }
 
         return response()->json($plante->reservations, 200);
@@ -128,7 +134,7 @@ class PlanteController extends Controller
         }
 
         if (!$plantes) {
-            return response()->json(['error' => 'Reservation not found with empty gardener'], 404);
+            return response()->json(['error' => 'Reservation with empty gardener not found'], 404);
         }
 
         return response()->json($plantes, 200);

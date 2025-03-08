@@ -118,6 +118,11 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/rakutentech/laravel-request-docs" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-http-logger" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-package-tools" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/league/uri" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/psr/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-permission" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/staabm/side-effects-detector" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
