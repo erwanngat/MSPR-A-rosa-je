@@ -23,9 +23,7 @@ class AuthApiTest extends TestCase
             'password' => 'password123',
             'password_confirmation' => 'password123',
         ];
-
         $response = $this->postJson('/api/register', $userData);
-
         $response->assertStatus(201);
         $response->assertJsonStructure([
             'message',
@@ -33,10 +31,7 @@ class AuthApiTest extends TestCase
             'token',
             'role',
         ]);
-
-        $this->assertDatabaseHas('users', [
-            'email' => 'johndoe@example.com',
-        ]);
+        $this->assertDatabaseHas('users', ['email' => 'johndoe@example.com']);
     }
 
     public function test_registration_fails_with_invalid_data()
@@ -48,11 +43,8 @@ class AuthApiTest extends TestCase
             'password' => '123',
             'password_confirmation' => '456',
         ];
-
         $response = $this->postJson('/api/register', $userData);
-
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors(['name', 'email', 'phone_number', 'password']);
+        $response->assertStatus(422)->assertJsonValidationErrors(['name', 'email', 'phone_number', 'password']);
     }
 
     public function test_user_can_login()
@@ -63,16 +55,12 @@ class AuthApiTest extends TestCase
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
-
         $user->assignRole('user');
-
         $loginData = [
             'email' => 'johndoe@example.com',
             'password' => 'password123',
         ];
-
         $response = $this->postJson('/api/login', $loginData);
-
         $response->assertStatus(200);
         $response->assertJsonStructure([
             'message',
@@ -88,17 +76,11 @@ class AuthApiTest extends TestCase
             'email' => 'johndoe@example.com',
             'password' => Hash::make('password123'),
         ]);
-
         $loginData = [
             'email' => 'johndoe@example.com',
             'password' => 'wrongpassword',
         ];
-
         $response = $this->postJson('/api/login', $loginData);
-
-        $response->assertStatus(401);
-        $response->assertJson([
-            'message' => 'Invalid credentials',
-        ]);
+        $response->assertStatus(401)->assertJson(['message' => 'Invalid credentials']);
     }
 }

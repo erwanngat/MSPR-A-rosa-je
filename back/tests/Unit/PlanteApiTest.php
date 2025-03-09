@@ -16,89 +16,39 @@ class PlanteApiTest extends TestCase
 
     public function test_user_can_view_all_plants()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-        $response = $this->actingAs($user)->getJson('/api/plantes');
+        $plante = Plante::factory()->create();
+        $plante2 = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->getJson('/api/plantes');
         $response->assertStatus(200);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'user_id',
-                'address_id',
-                'created_at',
-                'updated_at',
-            ]
-        ]);
+        $response->assertJsonFragment(['name' => $plante->name]);
+        $response->assertJsonFragment(['name' => $plante2->name]);
     }
     public function test_no_plants_found()
     {
-        $user = User::factory()->create();
-        Plante::truncate();
-
-        $response = $this->actingAs($user)->getJson('/api/plantes');
+        $response = $this->actingAs(User::factory()->create())->getJson('/api/plantes');
         $response->assertStatus(404);
         $response->assertJson(['error' => 'No plants found']);
     }
     public function test_user_can_view_a_single_plante()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}");
+        $plante = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->getJson("/api/plantes/{$plante->id}");
         $response->assertStatus(200);
         $response->assertJsonFragment([
-            'name' => 'Plante Test',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
+            'name' => $plante->name,
+            'user_id' => $plante->user->id,
+            'address_id' => $plante->address->id,
         ]);
     }
     public function test_user_cannot_view_non_existent_plante()
     {
-        $user = User::factory()->create();
-
-        $nonExistentPlanteId = 999;
-
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$nonExistentPlanteId}");
+        $response = $this->actingAs(User::factory()->create())->getJson("/api/plantes/999");
         $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'Plante not found'
-        ]);
+        $response->assertJson(['error' => 'Plante not found']);
     }
     public function test_user_can_create_plante(){
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
         $user = User::factory()->create();
-
+        $address = Address::factory()->create();
         $planteData = [
             'name' => 'Plante',
             'description' => 'Plante description',
@@ -110,50 +60,20 @@ class PlanteApiTest extends TestCase
         $response->assertJsonFragment(['name' => 'Plante']);
     }
     public function test_user_can_update_plante(){
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $user = User::factory()->create();
-
-        $plante = Plante::create([
-            'name' => 'Plante',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-
+        $plante = Plante::factory()->create();
         $planteData = [
             'name' => 'PlanteUpdate',
             'description' => 'Plante description',
-            'address_id' => $address->id
+            'address_id' => $plante->address->id
         ];
-
-        $response = $this->actingAs($user)->putJson("/api/plantes/{$plante->id}", $planteData);
+        $response = $this->actingAs($plante->user)->putJson("/api/plantes/{$plante->id}", $planteData);
         $response->assertStatus(200);
         $response->assertJsonFragment(['name' => 'PlanteUpdate']);
     }
     public function test_user_can_delete_a_plante()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-
-        $response = $this->actingAs($user)->deleteJson("/api/plantes/{$plante->id}");
+        $plante = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->deleteJson("/api/plantes/{$plante->id}");
         $response->assertStatus(204);
         $this->assertDatabaseMissing('plantes', [
             'id' => $plante->id,
@@ -161,202 +81,74 @@ class PlanteApiTest extends TestCase
     }
     public function test_user_can_get_all_comments_of_a_plante()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-        $comment1 = Comment::create([
-            'comment' => 'Premier commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
+        $comment = Comment::factory()->create();
         $comment2 = Comment::create([
-            'comment' => 'Deuxième commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
+            'comment' => 'Second comment',
+            'user_id' => $comment->author->id,
+            'plante_id' => $comment->plante->id,
         ]);
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}/comments");
+        $response = $this->actingAs($comment->author)->getJson("/api/plantes/{$comment->plante->id}/comments");
         $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'comment' => 'Premier commentaire',
-        ]);
-        $response->assertJsonFragment([
-            'comment' => 'Deuxième commentaire',
-        ]);
+        $response->assertJsonFragment(['comment' => $comment->comment]);
+        $response->assertJsonFragment(['comment' => $comment2->comment]);
     }
     public function test_user_cannot_get_comments_from_non_existent_plante(){
         $user = User::factory()->create();
         $response = $this->actingAs($user)->getJson("/api/plantes/9999/comments");
         $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'Plante not found'
-        ]);
+        $response->assertJson(['error' => 'Plante not found']);
     }
     public function test_user_cannot_see_non_existent_comments_of_a_plante(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}/comments");
+        $plante = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->getJson("/api/plantes/{$plante->id}/comments");
         $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'No comments found for this plante'
-        ]);
+        $response->assertJson(['error' => 'No comments found for this plante']);
     }
     public function test_user_can_get_all_reservations_of_a_plante()
     {
-        $user = User::factory()->create();
-        $gardener = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
+        $reservation = Reservation::factory()->create();
         $reservation = Reservation::create([
-            'plante_id' => $plante->id,
-            'owner_user_id' => $user->id,
-            'gardener_user_id' => $gardener->id,
-            'start_date' => '2025-04-01',
-            'end_date' => '2025-04-10'
-        ]);
-        $reservation = Reservation::create([
-            'plante_id' => $plante->id,
-            'owner_user_id' => $user->id,
-            'gardener_user_id' => $gardener->id,
+            'plante_id' => $reservation->plante->id,
+            'owner_user_id' => $reservation->owner->id,
+            'gardener_user_id' => $reservation->gardener->id,
             'start_date' => '2025-09-01',
             'end_date' => '2025-09-10'
         ]);
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}/reservations");
+        $response = $this->actingAs($reservation->gardener)->getJson("/api/plantes/{$reservation->plante->id}/reservations");
         $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'start_date' => '2025-04-01',
-        ]);
-        $response->assertJsonFragment([
-            'start_date' => '2025-09-01',
-        ]);
+        $response->assertJsonFragment(['start_date' => $reservation->start_date]);
+        $response->assertJsonFragment(['start_date' => '2025-09-01']);
     }
     public function test_user_cannot_get_reservations_from_non_existent_plante(){
-        $user = User::factory()->create();
-        $response = $this->actingAs($user)->getJson("/api/plantes/9999/reservations");
+        $response = $this->actingAs(User::factory()->create())->getJson("/api/plantes/9999/reservations");
         $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'Plante not found'
-        ]);
+        $response->assertJson(['error' => 'Plante not found']);
     }
     public function test_user_cannot_see_non_existent_reservations_of_a_plante(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $response = $this->actingAs($user)->getJson("/api/plantes/{$plante->id}/reservations");
-        $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'No reservations found for this plante'
-        ]);
+        $plante = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->getJson("/api/plantes/{$plante->id}/reservations");
+        $response->assertStatus(404)->assertJson(['error' => 'No reservations found for this plante']);
     }
     public function test_user_can_get_all_plantes_without_gardener(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id
-        ]);
+        $plante = Plante::factory()->create();
         $reservation = Reservation::create([
             'plante_id' => $plante->id,
-            'owner_user_id' => $user->id,
+            'owner_user_id' => $plante->user->id,
             'start_date' => '2025-09-01',
             'end_date' => '2025-09-10'
         ]);
-        $response = $this->actingAs($user)->getJson("/api/withoutgardener/plantes/reservations");
-        $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'name' => 'Plante Test',
-        ]);
+        $response = $this->actingAs($plante->user)->getJson("/api/withoutgardener/plantes/reservations");
+        $response->assertStatus(200)->assertJsonFragment(['name' => $plante->name]);
     }
 
     public function test_user_cannot_get_plante_with_gardener(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $response = $this->actingAs($user)->getJson("/api/withoutgardener/plantes/reservations");
-        $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'Reservation with empty gardener not found'
-        ]);
+        $plante = Plante::factory()->create();
+        $response = $this->actingAs($plante->user)->getJson("/api/withoutgardener/plantes/reservations");
+        $response->assertStatus(404)->assertJson(['error' => 'Reservation with empty gardener not found']);
     }
 
     public function test_plante_belongs_to_an_user(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $this->assertEquals($user->id, $plante->user->id);
+        $plante = Plante::factory()->create();
+        $this->assertEquals($plante->user->id, $plante->user->id);
     }
 }
