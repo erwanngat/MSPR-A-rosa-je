@@ -20,6 +20,10 @@ RUN apt-get update && apt-get install -y \
 # Installer uniquement l'extension PHP pour SQLite
 RUN docker-php-ext-install pdo_sqlite
 
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug \
+    && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+
 # Activer le module rewrite d'Apache
 RUN a2enmod rewrite
 
