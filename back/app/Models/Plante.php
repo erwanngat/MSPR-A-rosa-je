@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use function Livewire\store;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Plante extends Model
 {
+    use HasFactory;
     protected $fillable = ['name', 'description', 'image', 'user_id', 'address_id'];
     public function user(){
         return $this->belongsTo(User::class);

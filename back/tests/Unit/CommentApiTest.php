@@ -16,227 +16,80 @@ class CommentApiTest extends TestCase
 
     public function test_user_can_view_all_comments()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-
-        $comment1 = Comment::create([
-            'comment' => 'Premier commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
+        $comment = Comment::factory()->create();
         $comment2 = Comment::create([
             'comment' => 'Deuxième commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
+            'user_id' => $comment->author->id,
+            'plante_id' => $comment->plante->id,
         ]);
-
-        $response = $this->actingAs($user)->getJson('/api/comments');
-        $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'comment' => 'Premier commentaire',
-        ]);
-        $response->assertJsonFragment([
-            'comment' => 'Deuxième commentaire',
-        ]);
+        $response = $this->actingAs($comment->author)->getJson('/api/comments');
+        $response->assertStatus(200)->assertJsonFragment(['comment' => $comment->comment]);
+        $response->assertJsonFragment(['comment' => 'Deuxième commentaire']);
     }
 
     public function test_no_comments_found()
     {
-        $user = User::factory()->create();
         Comment::truncate();
-
-        $response = $this->actingAs($user)->getJson('/api/comments');
-        $response->assertStatus(404);
-        $response->assertJson([]);
+        $response = $this->actingAs(User::factory()->create())->getJson('/api/comments');
+        $response->assertStatus(404)->assertJson(['error' => 'No comments found']);
     }
 
     public function test_user_can_view_a_single_comment()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $comment = Comment::create([
-            'comment' => 'Test comment',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
-
-        $response = $this->actingAs($user)->getJson("/api/comments/{$comment->id}");
-        $response->assertStatus(200);
-        $response->assertJsonFragment([
-            'comment' => 'Test comment',
-        ]);
+        $comment = Comment::factory()->create();
+        $response = $this->actingAs($comment->author)->getJson("/api/comments/{$comment->id}");
+        $response->assertStatus(200)->assertJsonFragment(['comment' => $comment->comment]);
     }
 
     public function test_user_cannot_view_non_existent_comment()
     {
-        $user = User::factory()->create();
-
-        $response = $this->actingAs($user)->getJson('/api/comments/999');
-        $response->assertStatus(404);
-        $response->assertJson([
-            'error' => 'Comment not found'
-        ]);
+        $response = $this->actingAs(User::factory()->create())->getJson('/api/comments/999');
+        $response->assertStatus(404)->assertJson(['error' => 'Comment not found']);
     }
 
     public function test_user_can_create_comment()
     {
-        $user = User::factory()->create();
         Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
-        $user->AssignRole('botaniste');
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-
+        $plante = Plante::factory()->create();
+        $plante->user->AssignRole('botaniste');
         $commentData = [
             'comment' => 'Nouveau commentaire',
             'plante_id' => $plante->id,
         ];
-
-        $response = $this->actingAs($user)->postJson('/api/comments', $commentData);
-        $response->assertStatus(201);
-        $response->assertJsonFragment(['comment' => 'Nouveau commentaire']);
+        $response = $this->actingAs( $plante->user)->postJson('/api/comments', $commentData);
+        $response->assertStatus(201)->assertJsonFragment(['comment' => 'Nouveau commentaire']);
     }
 
     public function test_user_can_update_comment()
     {
-        $user = User::factory()->create();
+        $comment = Comment::factory()->create();
         Role::create(['name' => 'botaniste', 'guard_name' => 'web']);
-        $user->AssignRole('botaniste');
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $comment = Comment::create([
-            'comment' => 'Ancien commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
-
+        $comment->author->AssignRole('botaniste');
         $commentData = [
             'comment' => 'Commentaire mis à jour',
-            'plante_id' => $plante->id,
+            'plante_id' => $comment->plante->id,
         ];
-
-        $response = $this->actingAs($user)->putJson("/api/comments/{$comment->id}", $commentData);
-        $response->assertStatus(200);
-        $response->assertJsonFragment(['comment' => 'Commentaire mis à jour']);
+        $response = $this->actingAs($comment->author)->putJson("/api/comments/{$comment->id}", $commentData);
+        $response->assertStatus(200)->assertJsonFragment(['comment' => 'Commentaire mis à jour']);
     }
 
     public function test_user_can_delete_a_comment()
     {
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $comment = Comment::create([
-            'comment' => 'Commentaire à supprimer',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
-
-        $response = $this->actingAs($user)->deleteJson("/api/comments/{$comment->id}");
+        $comment = Comment::factory()->create();
+        $response = $this->actingAs($comment->author)->deleteJson("/api/comments/{$comment->id}");
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('comments', [
-            'id' => $comment->id,
-        ]);
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
 
     public function test_comment_belongs_to_an_author(){
         $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $comment = Comment::create([
-            'comment' => 'Commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
+        $comment = Comment::factory()->create(['user_id' => $user->id]);
         $this->assertEquals($user->id, $comment->author->id);
     }
 
     public function test_comment_belongs_to_a_plante(){
-        $user = User::factory()->create();
-        $address = Address::create([
-            'country' => 'France',
-            'city' => 'Lyon',
-            'zip_code' => '69000',
-            'street' => 'rue 1',
-            'additional_address_details' => 'Bat E'
-        ]);
-        $plante = Plante::create([
-            'name' => 'Plante Test',
-            'description' => 'Plante description',
-            'user_id' => $user->id,
-            'address_id' => $address->id,
-        ]);
-        $comment = Comment::create([
-            'comment' => 'Commentaire',
-            'user_id' => $user->id,
-            'plante_id' => $plante->id,
-        ]);
+        $plante = Plante::factory()->create();
+        $comment = Comment::factory()->create(['plante_id' => $plante->id]);
         $this->assertEquals($plante->id, $comment->plante->id);
     }
 }
