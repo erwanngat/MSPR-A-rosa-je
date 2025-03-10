@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Address;
+use App\Models\Plante;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -42,8 +43,10 @@ class AddressApiTest extends TestCase
         $user = User::factory()->create();
 
         $response = $this->actingAs($user)->getJson('/api/addresses');
-        $response->assertStatus(200);
-        $response->assertJson([]);
+        $response->assertStatus(404);
+        $response->assertJson([
+            'error' => 'No addresses found'
+        ]);
     }
 
     public function test_user_can_view_a_single_address()
@@ -134,5 +137,34 @@ class AddressApiTest extends TestCase
         $this->assertDatabaseMissing('addresses', [
             'id' => $address->id,
         ]);
+    }
+
+    public function test_user_cannot_destroy_non_existent_address(){
+        $user = User::factory()->create();
+        $response = $this->actingAs($user)->deleteJson("/api/addresses/999");
+        $response->assertStatus(404);
+        $response->assertJson([
+            'error' => 'Address not found'
+        ]);
+    }
+
+    public function test_address_has_many_plantes()
+    {
+        $user = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Strasbourg',
+            'zip_code' => '67000',
+            'street' => 'Rue de Strasbourg',
+            'additional_address_details' => 'Quartier historique'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id
+        ]);
+
+        $this->assertTrue($address->plante->contains($plante));
     }
 }

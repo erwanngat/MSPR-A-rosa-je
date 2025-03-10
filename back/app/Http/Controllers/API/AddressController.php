@@ -18,8 +18,8 @@ class AddressController extends Controller
     {
         $addresses = Address::all();
 
-        if(!$addresses){
-            return response()->json([['error' => 'No addresses found'], 404]);
+        if($addresses->isEmpty()){
+            return response()->json(['error' => 'No addresses found'], 404);
         }
 
         return response()->json($addresses, 200);
@@ -76,6 +76,10 @@ class AddressController extends Controller
      */
     public function destroy(int $id)
     {
+        $address = Address::find($id);
+        if(!$address) {
+            return response()->json(['error' => 'Address not found'], 404);
+        }
         Address::destroy($id);
         return response()->json(null, 204);
     }

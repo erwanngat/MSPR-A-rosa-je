@@ -193,4 +193,50 @@ class CommentApiTest extends TestCase
             'id' => $comment->id,
         ]);
     }
+
+    public function test_comment_belongs_to_an_author(){
+        $user = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante Test',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id,
+        ]);
+        $comment = Comment::create([
+            'comment' => 'Commentaire',
+            'user_id' => $user->id,
+            'plante_id' => $plante->id,
+        ]);
+        $this->assertEquals($user->id, $comment->author->id);
+    }
+
+    public function test_comment_belongs_to_a_plante(){
+        $user = User::factory()->create();
+        $address = Address::create([
+            'country' => 'France',
+            'city' => 'Lyon',
+            'zip_code' => '69000',
+            'street' => 'rue 1',
+            'additional_address_details' => 'Bat E'
+        ]);
+        $plante = Plante::create([
+            'name' => 'Plante Test',
+            'description' => 'Plante description',
+            'user_id' => $user->id,
+            'address_id' => $address->id,
+        ]);
+        $comment = Comment::create([
+            'comment' => 'Commentaire',
+            'user_id' => $user->id,
+            'plante_id' => $plante->id,
+        ]);
+        $this->assertEquals($plante->id, $comment->plante->id);
+    }
 }

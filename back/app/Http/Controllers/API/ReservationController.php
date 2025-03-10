@@ -17,9 +17,8 @@ class ReservationController extends Controller
     public function index()
     {
         $reservations = Reservation::all();
-
-        if(!$reservations){
-            return response()->json([['error' => 'No users found'], 404]);
+        if($reservations->isEmpty()){
+            return response()->json(['error' => 'No reservations found'], 404);
         }
 
         return response()->json($reservations, 200);

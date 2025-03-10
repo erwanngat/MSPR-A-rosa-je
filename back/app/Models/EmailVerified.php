@@ -10,8 +10,5 @@ class EmailVerified extends Model
     use HasFactory;
 
     protected $table = 'email_verified';
-
     protected $fillable = ['end_email'];
-
-
 }
