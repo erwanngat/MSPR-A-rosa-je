@@ -8,6 +8,7 @@ use App\Models\Plante;
 use App\Models\Reservation;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Tests\TestCase;
 
 class PlanteApiTest extends TestCase
@@ -52,6 +53,7 @@ class PlanteApiTest extends TestCase
         $planteData = [
             'name' => 'Plante',
             'description' => 'Plante description',
+            'image' => UploadedFile::fake()->image('plante.jpg'),
             'address_id' => $address->id
         ];
 
@@ -64,6 +66,7 @@ class PlanteApiTest extends TestCase
         $planteData = [
             'name' => 'PlanteUpdate',
             'description' => 'Plante description',
+            'image' => UploadedFile::fake()->image('plante.jpg'),
             'address_id' => $plante->address->id
         ];
         $response = $this->actingAs($plante->user)->putJson("/api/plantes/{$plante->id}", $planteData);

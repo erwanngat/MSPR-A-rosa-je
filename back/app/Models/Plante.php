@@ -25,8 +25,4 @@ class Plante extends Model
     public function reservations(){
         return $this->hasMany(Reservation::class);
     }
-
-    public function getImageUrlAttribute(){
-        return $this->image ? env('APP_URL') . Storage::url($this->image) : null;
-    }
 }
