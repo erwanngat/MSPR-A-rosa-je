@@ -21,6 +21,7 @@ class PlanteFactory extends Factory
         return [
             'name' => fake()->word(),
             'description' => fake()->sentence(10),
+            'image' => fake()->imageUrl(640, 480, 'plant', true),
             'user_id' => User::factory(),
             'address_id' => Address::factory(),
         ];
