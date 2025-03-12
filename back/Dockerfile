@@ -24,6 +24,10 @@ RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
 
+RUN apt-get update && apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libpng-dev
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
+
 # Activer le module rewrite d'Apache
 RUN a2enmod rewrite
 
