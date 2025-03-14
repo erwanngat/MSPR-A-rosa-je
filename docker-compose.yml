@@ -1,0 +1,18 @@
+services:
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    container_name: back-container
+    ports:
+      - "8000:80"
+
+  frontend:
+    build:
+      context: ./webapp
+      dockerfile: Dockerfile
+    container_name: webapp-container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
