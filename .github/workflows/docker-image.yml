@@ -24,7 +24,7 @@ jobs:
       - name: Build and push Backend image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./back
           file: ./back/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
@@ -33,7 +33,7 @@ jobs:
       - name: Build and push Frontend image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./webapp
           file: ./webapp/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
@@ -42,7 +42,7 @@ jobs:
       - name: Build and push Mobile image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ./mobileApp
           file: ./mobileApp/Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/mobile:latest
