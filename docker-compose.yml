@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: back-container
     ports:
-      - "8000:80"
+      - "8080:80"
 
   frontend:
     build:
@@ -14,5 +14,20 @@ services:
     container_name: webapp-container
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+  mobileApp:
+    build:
+      context: ./mobileApp
+      dockerfile: Dockerfile
+    container_name: mobile-app-container
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+      - "19002:19002"
+    volumes:
+      - ./mobileApp:/app
+    stdin_open: true
+    tty: true
     depends_on:
       - backend
