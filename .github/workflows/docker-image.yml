@@ -27,7 +27,7 @@ jobs:
           context: ./back
           file: ./back/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr-a-rosa-je:backend
 
       # Build and push frontend image
       - name: Build and push Frontend image
@@ -36,7 +36,7 @@ jobs:
           context: ./webapp
           file: ./webapp/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr-a-rosa-je:frontend
 
       # Build and push mobile image
       - name: Build and push Mobile image
@@ -45,4 +45,4 @@ jobs:
           context: ./mobileApp
           file: ./mobileApp/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mobile:latest
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/mspr-a-rosa-je:mobile
