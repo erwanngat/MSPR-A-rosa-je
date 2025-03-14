@@ -10,4 +10,5 @@ RUN npm install
 
 EXPOSE 19000 19001 19002
 
+
 CMD ["expo", "start", "--tunnel"]
