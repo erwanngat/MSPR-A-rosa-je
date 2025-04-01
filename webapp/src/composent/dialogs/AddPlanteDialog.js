@@ -7,14 +7,14 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const [name, setName] = useState('');
   const [addressId, setAddressId] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null); // État pour l'image
-  const [previewImage, setPreviewImage] = useState(null); // État pour l'URL de prévisualisation
+  const [image, setImage] = useState(null); 
+  const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [addresses, setAddresses] = useState([]); // Liste des adresses
-  const [selectedAddress, setSelectedAddress] = useState(null); // Adresse sélectionnée
-  const [showAddressForm, setShowAddressForm] = useState(false); // Afficher le formulaire d'adresse
-  const [newAddress, setNewAddress] = useState({ // Données de la nouvelle adresse
+  const [addresses, setAddresses] = useState([]); 
+  const [selectedAddress, setSelectedAddress] = useState(null); 
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [newAddress, setNewAddress] = useState({ 
     country: '',
     city: '',
     zip_code: '',
@@ -31,7 +31,6 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     };
   }, [previewImage]);
 
-  // Récupérer toutes les adresses au chargement du composant
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
@@ -45,48 +44,54 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     fetchAddresses();
   }, []);
 
-  // Options pour le dropdown (format attendu par react-select)
+  //Adress show
   const addressOptions = addresses.map((address) => ({
-    value: address.id, // ID de l'adresse
-    label: `${address.street}, ${address.city}, ${address.country}`, // Affichage dans le dropdown
+    value: address.id, 
+    label: `${address.street}, ${address.city}, ${address.country}`,
   }));
 
-  // Gérer la sélection d'une adresse
   const handleAddressChange = (selectedOption) => {
     setSelectedAddress(selectedOption);
-    setAddressId(selectedOption ? selectedOption.value : ''); // Mettre à jour l'ID de l'adresse
+    setAddressId(selectedOption ? selectedOption.value : ''); 
   };
 
-  // Gérer les changements dans le formulaire de création d'adresse
   const handleAddressInputChange = (e) => {
     const { name, value } = e.target;
     setNewAddress({ ...newAddress, [name]: value });
   };
 
-  // Créer une nouvelle adresse
   const handleCreateAddress = async () => {
     try {
       const createdAddress = await AddressesService().createAddress(newAddress);
-      setAddresses([...addresses, createdAddress]); // Ajouter la nouvelle adresse à la liste
-      setSelectedAddress({ value: createdAddress.id, label: `${createdAddress.street}, ${createdAddress.city}, ${createdAddress.country}` }); // Sélectionner la nouvelle adresse
-      setAddressId(createdAddress.id); // Mettre à jour l'ID de l'adresse
-      setShowAddressForm(false); // Masquer le formulaire d'adresse
+      setAddresses([...addresses, createdAddress]);
+      setSelectedAddress({ value: createdAddress.id, label: `${createdAddress.street}, ${createdAddress.city}, ${createdAddress.country}` });
+      setAddressId(createdAddress.id); 
+      setShowAddressForm(false); 
     } catch (error) {
       console.error('Erreur lors de la création de l\'adresse:', error);
       setError('Erreur lors de la création de l\'adresse.');
     }
   };
 
-  // Gérer la sélection d'une image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file); // Stocker le fichier image
-      setPreviewImage(URL.createObjectURL(file)); // Créer une URL de prévisualisation
+      setImage(file); 
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
-  // Gérer la soumission du formulaire
+  const resetImage = () => {
+      setImage(null);
+      setPreviewImage(null);
+  }
+  const resetAll = () => {
+      setName('');
+      setDescription('');
+      setImage(null);
+      setPreviewImage(null);
+      setError('');
+}
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -103,9 +108,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       formData.append('name', name);
       formData.append('address_id', addressId);
       formData.append('description', description);
-      if (image) {
-        formData.append('image', image);
-      }
+      if (image) formData.append('image', image);
 
       const newPlante = await PlantesService().addPlante(formData);
       onAddSuccess(newPlante);
@@ -113,6 +116,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setName('');
       setDescription('');
       setImage(null);
+      setPreviewImage(null);
     } catch (err) {
       setError('Erreur lors de l\'ajout de la plante.');
       console.error(err);
@@ -121,10 +125,10 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     }
   };
 
-  // Fermer la boîte de dialogue si l'utilisateur clique sur l'overlay
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+      setError('');
     }
   };
 
@@ -218,14 +222,11 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="add-plante-dialog-textarea"
           />
-          {/* Champ de téléchargement d'image */}
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            //className="add-plante-dialog-input"
           />
-          {/* Prévisualisation de l'image */}
           {previewImage && (
             <div className="add-plante-dialog-image-preview">
               <img
@@ -233,12 +234,20 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 alt="Preview"
                 className="img-preview"
               />
+              <button onClick={resetImage}>delete img</button>
             </div>
           )}
+          
           <div className="add-plante-dialog-buttons">
+          {(name || description ||image ||previewImage)&& (
+              <button  onClick={resetAll}>
+              reset
+            </button>
+            )}
             <button type="submit" disabled={loading}>
               {loading ? 'In progress...' : 'Add'}
             </button>
+            
             <button type="button" onClick={onClose}>
               Cancel
             </button>
@@ -249,7 +258,6 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   );
 };
 
-// Styles personnalisés pour react-select
 const customStyles = {
   control: (provided) => ({
     ...provided,

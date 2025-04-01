@@ -141,7 +141,7 @@ const MyPlants = () => {
           <div key={plante.id} className="my-plants-item">
             <div className="my-plants-plante-card" onClick={() => openEditDialog(plante)}>
               <img
-                src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
+                src={plante.image != null ? plante.image : "./../img/default-plant.png" }
                 alt={plante.name}
                 className="my-plants-plante-image"
               />
