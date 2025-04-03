@@ -6,7 +6,6 @@ import EditPlanteDialog from '../composent/dialogs/EditPlanteDialog';
 
 const MyPlants = () => {
   const [plantes, setPlantes] = useState([]);
-  const [filteredPlantes, setFilteredPlantes] = useState([]); // Plantes filtrées par user_id
   const [selectedPlante, setSelectedPlante] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -25,20 +24,19 @@ const MyPlants = () => {
     fetchPlantes();
   }, []);
   useEffect(() => {
-    if (filteredPlantes.length > 0) {
-      filteredPlantes.forEach((plante) => {
+    if (plantes.length > 0) {
+      plantes.forEach((plante) => {
         fetchReservationsForPlant(plante.id);
       });
     }
-  }, [filteredPlantes]);
+  }, [plantes]);
 
   const fetchPlantes = async () => {
     try {
-      const data = await PlantesService().getPlantes();
+      const data = await PlantesService().getPlantesByUserId(userId);
       setPlantes(data);
 
       const userPlantes = data.filter((plante) => plante.user_id === userId);
-      setFilteredPlantes(userPlantes);
     } catch (error) {
       console.error('Erreur lors de la récupération des plantes:', error);
     }
@@ -112,21 +110,18 @@ const MyPlants = () => {
   // Gérer l'ajout réussi d'une plante
   const handleAddSuccess = (newPlante) => {
     setPlantes([...plantes, newPlante]);
-    setFilteredPlantes([...filteredPlantes, newPlante]);
   };
 
   // Gérer la mise à jour réussie d'une plante
   const handleUpdateSuccess = (updatedPlante) => {
     const updatedPlantes = plantes.map((p) => (p.id === updatedPlante.id ? updatedPlante : p));
     setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
   };
 
   // Gérer la suppression réussie d'une plante
   const handleDeleteSuccess = (planteId) => {
     const updatedPlantes = plantes.filter((p) => p.id !== planteId);
     setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
   };
 
   return (
@@ -137,7 +132,7 @@ const MyPlants = () => {
 
       {/* Conteneur pour les plantes et les boutons */}
       <div className="my-plants-list">
-        {filteredPlantes.map((plante) => (
+        {plantes.map((plante) => (
           <div key={plante.id} className="my-plants-item">
             <div className="my-plants-plante-card" onClick={() => openEditDialog(plante)}>
               <img

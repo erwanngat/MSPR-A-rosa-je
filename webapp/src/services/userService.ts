@@ -4,6 +4,10 @@ import { IUser } from '../types/user';
 const UserService = () => {
     const baseUrl: string = 'http://localhost:8080/api';
 
+    const getToken = () => {
+        return sessionStorage.getItem('token');
+    };
+
     const register = async (user: IUser, password_confirmation: string): Promise<boolean> => {
         try {
             const response = await fetch(`${baseUrl}/register`, {
@@ -50,7 +54,8 @@ const UserService = () => {
         return data;
     }
 
-    const getUser = async (token: string, id: number) => {
+    const getUser = async (id: number) => {
+        const token = getToken();
         const response = await fetch(`${baseUrl}/users/${id}`, {
             method: 'GET',
             headers: {
@@ -62,7 +67,8 @@ const UserService = () => {
         return data;
     }
 
-    const updateUser = async (userData: IUser, token: string, password: string, password_confirmation: string) => {
+    const updateUser = async (userData: IUser, password: string, password_confirmation: string) => {
+        const token = getToken();
 
         const response = await fetch(`${baseUrl}/users/${userData.id}`, {
             method: 'PUT',

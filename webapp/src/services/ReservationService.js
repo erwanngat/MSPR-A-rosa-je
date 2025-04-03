@@ -5,8 +5,9 @@ const ReservationService = () => {
         return sessionStorage.getItem('token'); // Assurez-vous que le token est stocké ici après la connexion
       };
 
-    const addReservation = async (reservation, token) => {
+    const addReservation = async (reservation) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations`, {
                 method: 'POST',
                 headers: {
@@ -28,8 +29,9 @@ const ReservationService = () => {
         }
     };
 
-    const getAllReservations = async (token) => {
+    const getAllReservations = async () => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations`, {
                 method: 'GET',
                 headers: {
@@ -46,8 +48,9 @@ const ReservationService = () => {
         }
     };
 
-    const getReservationsByPlant = async (plant_id, token) => {
+    const getReservationsByPlant = async (plant_id) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/plantes/${plant_id}/reservations`, {
                 method: 'GET',
                 headers: {
@@ -65,8 +68,9 @@ const ReservationService = () => {
         }
     };
 
-    const deleteReservation = async (reservationId, token) => {
+    const deleteReservation = async (reservationId) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations/${reservationId}`, {
                 method: 'DELETE',
                 headers: {
