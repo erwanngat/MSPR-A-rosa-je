@@ -20,6 +20,12 @@
   border-radius: 60%;
   cursor: pointer;
 }
+.profile-avatar2 {
+  width: 30px;
+  height: 30px;
+  border-radius: 60%;
+  cursor: pointer;
+}
 
 .profile-container {
   display: flex;

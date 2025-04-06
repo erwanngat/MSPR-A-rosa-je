@@ -9,10 +9,10 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   const [description, setDescription] = useState(plante ? plante.description : '');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [addresses, setAddresses] = useState([]); // Liste des adresses
-  const [selectedAddress, setSelectedAddress] = useState(null); // Adresse sélectionnée
-  const [showAddressForm, setShowAddressForm] = useState(false); // Afficher le formulaire d'adresse
-  const [newAddress, setNewAddress] = useState({ // Données de la nouvelle adresse
+  const [addresses, setAddresses] = useState([]); 
+  const [selectedAddress, setSelectedAddress] = useState(null); 
+  const [showAddressForm, setShowAddressForm] = useState(false); 
+  const [newAddress, setNewAddress] = useState({
     country: '',
     city: '',
     zip_code: '',
@@ -93,7 +93,6 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
     }
   };
 
-  // Gérer la soumission du formulaire de mise à jour de la plante
   const handleSubmit = async (e) => {
     e.preventDefault();
   
@@ -106,17 +105,19 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
     setError('');
   
     try {
-      // Préparer les données de la plante, y compris l'image
       const planteData = {
-        name,
+        name : name,
         address_id: addressId,
-        description,
-        image, // Ajouter l'image aux données
+        description: description,
       };
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('address_id', addressId);
+      formData.append('description', description);
       console.log(planteData);
-  
+      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       // Appel API pour mettre à jour la plante
-      const updatedPlante = await PlantesService().updatePlante(plante.id, planteData);
+      const updatedPlante = await PlantesService().updatePlante(plante.id, formData);
   
       // Notifier le parent (MyPlants) que la mise à jour a réussi
       onUpdateSuccess(updatedPlante);
@@ -131,7 +132,6 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
     }
   };
 
-  // Gérer la suppression de la plante
   const handleDelete = async () => {
     if (!plante) return;
 
@@ -139,19 +139,14 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
     setError('');
 
     try {
-      // Appel API pour supprimer la plante
       await PlantesService().deletePlante(plante.id);
 
-      // Notifier le parent (MyPlants) que la suppression a réussi
       onDeleteSuccess(plante.id);
-
-      // Fermer la boîte de dialogue
       onClose();
     } catch (err) {
       onDeleteSuccess(plante.id);
       onClose();
 
-      //setError('Erreur lors de la suppression de la plante.');
       console.error(err);
     } finally {
       setLoading(false);
@@ -162,6 +157,9 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+      setName(plante.name);
+      setDescription(plante.description);
+      setError("");
     }
   };
 

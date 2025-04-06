@@ -3,8 +3,13 @@ import { IComment } from '../types/comment';
 const CommentService = () => {
     const baseUrl: string = 'http://localhost:8080/api';
 
-    const addComment = async (comment: IComment, token: string): Promise<boolean> => {
+    const getToken = () => {
+        return sessionStorage.getItem('token');
+      };
+
+    const addComment = async (comment: IComment): Promise<boolean> => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/comments`, {
                 method: 'POST',
                 headers: {
@@ -21,8 +26,9 @@ const CommentService = () => {
         }
     };
 
-    const getCommentsByPlant = async (plant_id: number, token: string): Promise<IComment[]> => {
+    const getCommentsByPlant = async (plant_id: number): Promise<IComment[]> => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/plantes/${plant_id}/comments`, {
                 method: 'GET',
                 headers: {
@@ -40,8 +46,9 @@ const CommentService = () => {
         }
     };
 
-    const deleteComment = async (commentId: number, token: string): Promise<boolean> => {
+    const deleteComment = async (commentId: number): Promise<boolean> => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/comments/${commentId}`, {
                 method: 'DELETE',
                 headers: {
@@ -56,8 +63,9 @@ const CommentService = () => {
         }
     };
 
-    const updateComment = async (commentId: number, updatedComment: IComment, token: string): Promise<boolean> => {
+    const updateComment = async (commentId: number, updatedComment: IComment): Promise<boolean> => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/comments/${commentId}`, {
                 method: 'PUT',
                 headers: {
