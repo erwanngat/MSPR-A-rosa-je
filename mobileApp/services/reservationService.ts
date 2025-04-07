@@ -1,7 +1,7 @@
 import { IReservation } from '../types/reservation';
 
 const ReservationService = () => {
-    const baseUrl: string = 'http://localhost:8080/api';
+    const baseUrl: string = 'http://localhost:8000/api';
 
     const addReservation = async (reservation: IReservation, token: string): Promise<boolean> => {
         try {
@@ -36,9 +36,6 @@ const ReservationService = () => {
                     'Authorization': `Bearer ${token}`,
                 },
             });
-            
-            if (!response.ok) throw new Error('Failed to fetch reservations');
-            
             return await response.json();
         } catch (err) {
             console.error(err);
@@ -64,6 +61,7 @@ const ReservationService = () => {
 
     const updateReservation = async (reservationId: number, updatedReservation: IReservation, token: string): Promise<boolean> => {
         try {
+            console.log(updatedReservation)
             const response = await fetch(`${baseUrl}/reservations/${reservationId}`, {
                 method: 'PUT',
                 headers: {
@@ -72,7 +70,6 @@ const ReservationService = () => {
                     'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({
-                    owner_user_id: updatedReservation.owner_user_id,
                     gardener_user_id: updatedReservation.gardener_user_id,
                     plante_id: updatedReservation.plante_id,
                     start_date: updatedReservation.start_date,
