@@ -1,8 +1,8 @@
 import { IPlante } from "../types/plantes"; // Assurez-vous d'avoir un type IPlante défini
 
 const plantesService = (token: string) => {
-  const baseUrl = 'http://localhost:8080/api/plantes'; // URL de base de l'API
-  const baseUrlUser = 'http://localhost:8080';
+  const baseUrl = 'http://localhost:8000/api/plantes'; // URL de base de l'API
+  const baseUrlUser = 'http://localhost:8000';
 
   const getPlantesById = async (id: number) => {
     try {
@@ -69,7 +69,7 @@ const plantesService = (token: string) => {
       return data;
     } catch (error) {
       console.error('Erreur dans getPlantes:', error);
-      throw error;
+      return []
     }
   };
 
@@ -142,9 +142,6 @@ const plantesService = (token: string) => {
       if (!response.ok) {
         throw new Error(`Erreur lors de la suppression de la plante: ${response.statusText}`);
       }
-
-      const data = await response.json();
-      return data;
     } catch (error) {
       console.error('Erreur dans deletePlante:', error);
       throw error;
