@@ -1,35 +1,5 @@
-/* Styles pour l'overlay et la boîte de dialogue */
-.plante-dialog-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-}
-
-.plante-dialog {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    width: 800px;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
 /* Styles pour l'image de la plante */
-.plante-image {
-    max-width: 100%;
-    max-height: 400px;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    object-fit: cover;
-}
+
 
 /* Styles pour les sections */
 .dialog-section {
@@ -53,32 +23,6 @@
 }
 
 /* Styles pour les boutons */
-.btn {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary {
-    background-color: #28a745;
-    color: #fff;
-}
-
-.btn-primary:hover {
-    background-color: #218838;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
 
 /* Styles pour le formulaire de commentaire */
 .comment-form {
@@ -102,13 +46,6 @@
 .form-buttons {
     display: flex;
     gap: 10px;
-}
-
-/* Styles pour les messages d'erreur */
-.error-message {
-    color: #dc3545;
-    margin-bottom: 10px;
-    font-size: 0.9em;
 }
 
 /* Styles pour le texte */

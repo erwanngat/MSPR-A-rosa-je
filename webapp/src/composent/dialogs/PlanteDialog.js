@@ -97,8 +97,8 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
   };
 
   return (
-    <div className="plante-dialog-overlay" onClick={onClose}>
-      <div className="plante-dialog" onClick={(e) => e.stopPropagation()}>
+    <div className="dialog-overlay" onClick={onClose}>
+      <div className="dialog-large" onClick={(e) => e.stopPropagation()}>
         <h2 className="dialog-title">{plante.name}</h2>
         
         <img

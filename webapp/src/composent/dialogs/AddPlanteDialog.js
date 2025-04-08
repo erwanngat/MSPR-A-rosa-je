@@ -135,19 +135,19 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="add-plante-dialog-overlay" onClick={handleOverlayClick}>
-      <div className="add-plante-dialog-dialog">
+    <div className="dialog-overlay" onClick={handleOverlayClick}>
+      <div className="dialog-small">
         <h2>Add plant</h2>
-        {error && <div className="add-plante-dialog-error">{error}</div>}
+        {error && <div className="text-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Plant name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="add-plante-dialog-input"
+            className="text-input"
           />
-          <div className="add-plante-dialog-address-section">
+          <div className="button-position">
             <Select
               placeholder="Select adress"
               options={addressOptions}
@@ -160,20 +160,20 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             <button
               type="button"
               onClick={() => setShowAddressForm(!showAddressForm)}
-              className="add-plante-dialog-create-button"
+              className="button-green"
             >
               Create
             </button>
           </div>
           {showAddressForm && (
-            <div className="add-plante-dialog-address-form">
+            <div>
               <input
                 type="text"
                 name="country"
                 placeholder="country"
                 value={newAddress.country}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -181,7 +181,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="city"
                 value={newAddress.city}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -189,7 +189,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="Post code"
                 value={newAddress.zip_code}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -197,7 +197,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="street"
                 value={newAddress.street}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -205,12 +205,12 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="Further details"
                 value={newAddress.additional_address_details}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <button
                 type="button"
                 onClick={handleCreateAddress}
-                className="add-plante-dialog-create-address-button"
+                className="button-blue"
               >
                 Create adress
               </button>
@@ -220,7 +220,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             placeholder="Description of the plant"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="add-plante-dialog-textarea"
+            className="textarea"
           />
           <input
             type="file"
@@ -238,7 +238,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             </div>
           )}
           
-          <div className="add-plante-dialog-buttons">
+          <div className="button-position2">
           {(name || description ||image ||previewImage)&& (
               <button  onClick={resetAll}>
               reset
