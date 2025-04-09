@@ -1,8 +1,8 @@
 import { IPlante } from "../types/plantes"; // Assurez-vous d'avoir un type IPlante défini
 
 const plantesService = (token: string) => {
-  const baseUrl = 'http://localhost:8000/api/plantes'; // URL de base de l'API
-  const baseUrlUser = 'http://localhost:8000';
+  const baseUrl = 'http://localhost:8080/api/plantes'; // URL de base de l'API
+  const baseUrlUser = 'http://localhost:8080';
 
   const getPlantesById = async (id: number) => {
     try {
