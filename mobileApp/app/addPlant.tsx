@@ -18,7 +18,7 @@ export default function AddPlanteScreen() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [imageUri, setImageUri] = useState('');
-  const [addressId, setAddressId] = useState(1);
+  const [addressId, setAddressId] = useState('');
 
   const handleImagePicker = async () => {
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -93,12 +93,14 @@ export default function AddPlanteScreen() {
 
     try {
       const response = await service.addPlante(formData);
-      const plante = await service.getPlantesByUserId(user.id);
-      console.log("id" + plante.id);
+      console.log("id" + user.id);
+      const plantes = await service.getPlantesByUserId(user.id);
+      console.log(plantes);
+      console.log("id" + plantes[plantes.length-1].id);
       //@ts-ignore
       const responseReservation = await reservationService.addReservation({
-        plante_id: plante.id,
-        owner_user_id: plante?.user_id,
+        plante_id: plantes[plantes.length-1].id,
+        owner_user_id: user.id,
         start_date: new Date(),
         end_date: new Date(),
     }, token);
@@ -127,12 +129,12 @@ export default function AddPlanteScreen() {
         onChangeText={setDescription}
         multiline
       />
-      {/* <TextInput
+      {<TextInput
         style={styles.input}
         placeholder=""
         value={addressId}
         onChangeText={setAddressId}
-      /> */}
+      />}
       <Button title="Select an image" onPress={handleImagePicker} color="#4C9C6F"/>
       <View style={styles.saveButton}></View>
       {imageUri ? (

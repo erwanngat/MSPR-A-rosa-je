@@ -2,7 +2,7 @@ import { IUser } from '../types/user';
 
 
 const UserService = () => {
-    const baseUrl: string = 'http://localhost:8080/api';
+    const baseUrl: string = 'http://localhost:8000/api';
 
     const register = async (user: IUser, password_confirmation: string): Promise<boolean> => {
         try {
