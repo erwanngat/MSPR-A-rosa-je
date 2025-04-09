@@ -1,7 +1,7 @@
 import { IReservation } from '../types/reservation';
 
 const ReservationService = () => {
-    const baseUrl: string = 'http://localhost:8000/api';
+    const baseUrl: string = 'http://localhost:8080/api';
 
     const addReservation = async (reservation: IReservation, token: string): Promise<boolean> => {
         try {

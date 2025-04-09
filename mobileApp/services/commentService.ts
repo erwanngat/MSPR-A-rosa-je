@@ -1,7 +1,7 @@
 import { IComment } from '../types/comment';
 
 const CommentService = () => {
-    const baseUrl: string = 'http://localhost:8000/api';
+    const baseUrl: string = 'http://localhost:8080/api';
 
     const addComment = async (comment: IComment, token: string): Promise<boolean> => {
         try {
