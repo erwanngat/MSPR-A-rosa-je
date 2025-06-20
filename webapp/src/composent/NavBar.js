@@ -40,7 +40,7 @@ const NavBar = () => {
                         <Link to="/MyPlants" className={location.pathname === '/MyPlants' ? 'active' : ''}>
                             My plants
                         </Link>
-                        <Link to="/Chat" className={location.pathname === '/Chat' ? 'active' : ''}>
+                        <Link to="/ChatUser" className={location.pathname === '/ChatUser' ? 'active' : ''}>
                             Chat
                         </Link>
                         <div 

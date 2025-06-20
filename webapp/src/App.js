@@ -7,6 +7,7 @@ import Profil from './pages/Profil';
 import Register from './pages/Register';
 import NavBar from './composent/NavBar'
 import Test from './pages/Test'
+import ChatUser from './pages/ChatUser'
 
 import MyPlants from './pages/MyPlants'
 import AllPlantes from './pages/AllPlantes'
@@ -29,7 +30,7 @@ function App() {
           <Route path="/test" element={<> <NavBar />  <Test /> </>} />
           <Route path="/MyPlants" element={<> <NavBar />  <MyPlants /> </>} />
           <Route path="/AllPlantes" element={<> <NavBar />  <AllPlantes /> </>} />
-          <Route path="/Chat" element={<> <NavBar />  <Chat /> </>} />
+          <Route path="/ChatUser" element={<> <NavBar />  <ChatUser /> </>} />
 
         </Routes>
       </div>
