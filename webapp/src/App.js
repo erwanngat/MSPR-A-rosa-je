@@ -10,6 +10,7 @@ import Test from './pages/Test'
 
 import MyPlants from './pages/MyPlants'
 import AllPlantes from './pages/AllPlantes'
+import { Chat } from '@mui/icons-material';
 
 
 /*END */
@@ -28,6 +29,8 @@ function App() {
           <Route path="/test" element={<> <NavBar />  <Test /> </>} />
           <Route path="/MyPlants" element={<> <NavBar />  <MyPlants /> </>} />
           <Route path="/AllPlantes" element={<> <NavBar />  <AllPlantes /> </>} />
+          <Route path="/Chat" element={<> <NavBar />  <Chat /> </>} />
+
         </Routes>
       </div>
     </Router>

@@ -40,6 +40,9 @@ const NavBar = () => {
                         <Link to="/MyPlants" className={location.pathname === '/MyPlants' ? 'active' : ''}>
                             My plants
                         </Link>
+                        <Link to="/Chat" className={location.pathname === '/Chat' ? 'active' : ''}>
+                            Chat
+                        </Link>
                         <div 
                             className="profile-container"
                             onMouseEnter={() => setShowOptions(true)}
