@@ -30,7 +30,7 @@ export default function TabOneScreen() {
         const data = await plantesService(token).getPlantes();
         setPlantes(data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des plantes:', error);
+        // console.error('Erreur lors de la récupération des plantes:', error);
       }
     };
 

@@ -27,7 +27,7 @@ const AllPlantes = () => {
       setPlantes(data);
       setFilteredPlantes(data); // Initialisation
     } catch (error) {
-      console.error('Erreur lors de la récupération des plantes:', error);
+      // console.error('Erreur lors de la récupération des plantes:', error);
     }
   };
 
@@ -36,7 +36,7 @@ const AllPlantes = () => {
       const data = await ReservationService().getAllReservations();
       setReservations(data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
+      // console.error('Erreur lors de la récupération des réservations:', error);
     }
   };
 
@@ -50,7 +50,7 @@ const AllPlantes = () => {
       }));
       return userData;
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      // console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       return null;
     }
   };

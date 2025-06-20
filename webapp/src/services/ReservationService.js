@@ -24,7 +24,7 @@ const ReservationService = () => {
             });
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -40,11 +40,11 @@ const ReservationService = () => {
                 },
             });
 
-            if (!response.ok) throw new Error('Failed to fetch reservations');
+                // if (!response.ok) throw new Error('Failed to fetch reservations');
 
             return await response.json();
         } catch (error) {
-            console.error('Erreur lors de la récupération des réservations:', error);
+            // console.error('Erreur lors de la récupération des réservations:', error);
         }
     };
 
@@ -59,11 +59,11 @@ const ReservationService = () => {
                 },
             });
 
-            if (!response.ok) throw new Error('Failed to fetch reservations');
+            // if (!response.ok) throw new Error('Failed to fetch reservations');
 
             return await response.json();
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return [];
         }
     };
@@ -80,7 +80,7 @@ const ReservationService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -118,7 +118,7 @@ const ReservationService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };

@@ -38,7 +38,7 @@ const MyPlants = () => {
 
       const userPlantes = data.filter((plante) => plante.user_id === userId);
     } catch (error) {
-      console.error('Erreur lors de la récupération des plantes:', error);
+      // console.error('Erreur lors de la récupération des plantes:', error);
     }
   };
 
@@ -50,8 +50,11 @@ const MyPlants = () => {
         ...prev,
         [plantId]: reservations,
       }));
+      if (!reservations.ok){
+        return [];
+      }
     } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
+      // console.error('Erreur lors de la récupération des réservations:', error);
     }
   };
 
@@ -102,7 +105,7 @@ const MyPlants = () => {
         alert('Erreur lors de la création de la réservation.');
       }
     } catch (error) {
-      console.error('Erreur lors de la création de la réservation:', error);
+      // console.error('Erreur lors de la création de la réservation:', error);
       alert('Une erreur est survenue.');
     }
   };

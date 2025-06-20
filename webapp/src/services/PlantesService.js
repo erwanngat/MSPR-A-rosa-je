@@ -25,8 +25,8 @@ const PlantesService = () => {
         console.log(data);
         return data;
       } catch (error) {
-        console.error('Erreur dans getPlantes:', error);
-        throw error;
+        // console.error('Erreur dans getPlantes:', error);
+        // throw error;
       }
     };
   
@@ -49,8 +49,8 @@ const PlantesService = () => {
         const data = await response.json();
         return data;
       } catch (error) {
-        console.error('Erreur dans getPlantesById:', error);
-        throw error;
+        // console.error('Erreur dans getPlantesById:', error);
+        // throw error;
       }
     };
     const getPlantesByUserId = async (id) => {
@@ -71,8 +71,8 @@ const PlantesService = () => {
         const data = await response.json();
         return data;
       } catch (error) {
-        console.error('Erreur dans getPlantesById:', error);
-        throw error;
+        // console.error('Erreur dans getPlantesById:', error);
+        // throw error;
       }
     };
   
@@ -89,15 +89,15 @@ const PlantesService = () => {
       
           if (!response.ok) {
             const errorText = await response.text(); 
-            console.error('Erreur API:', errorText);
-            throw new Error(`Erreur lors de l'ajout de la plante: ${errorText}`);
+            // console.error('Erreur API:', errorText);
+            // throw new Error(`Erreur lors de l'ajout de la plante: ${errorText}`);
           }
       
           const data = await response.json();
           return data;
         } catch (error) {
-          console.error('Erreur dans addPlante:', error);
-          throw error;
+          // console.error('Erreur dans addPlante:', error);
+          // throw error;
         }
       };
   
@@ -126,8 +126,8 @@ const PlantesService = () => {
           console.log(data);
           return data;
         } catch (error) {
-          console.error('Erreur dans updatePlante:', error);
-          throw error;
+          // console.error('Erreur dans updatePlante:', error);
+          // throw error;
         }
       };
   
@@ -150,7 +150,7 @@ const PlantesService = () => {
         return data;
       } catch (error) {
         console.error('Erreur dans deletePlante:', error);
-        throw error;
+        // throw error;
       }
     };
   

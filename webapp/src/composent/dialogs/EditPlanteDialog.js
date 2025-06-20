@@ -36,7 +36,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
         const data = await AddressesService().getAddresses();
         setAddresses(data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des adresses:', error);
+        // console.error('Erreur lors de la récupération des adresses:', error);
       }
     };
 
@@ -88,7 +88,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       setAddressId(createdAddress.id); // Mettre à jour l'ID de l'adresse
       setShowAddressForm(false); // Masquer le formulaire d'adresse
     } catch (error) {
-      console.error('Erreur lors de la création de l\'adresse:', error);
+      // console.error('Erreur lors de la création de l\'adresse:', error);
       setError('Erreur lors de la création de l\'adresse.');
     }
   };
@@ -126,7 +126,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       onClose();
     } catch (err) {
       setError('Erreur lors de la mise à jour de la plante.');
-      console.error(err);
+      // console.error(err);
     } finally {
       setLoading(false);
     }
@@ -147,7 +147,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       onDeleteSuccess(plante.id);
       onClose();
 
-      console.error(err);
+      // console.error(err);
     } finally {
       setLoading(false);
     }

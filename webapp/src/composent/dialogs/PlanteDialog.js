@@ -44,7 +44,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
       const data = await CommentService().getCommentsByPlant(plante.id);
       setComments(data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des commentaires:', error);
+      // console.error('Erreur lors de la récupération des commentaires:', error);
     }
   };
 
@@ -55,7 +55,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
       setUsersCache((prevUsers) => ({ ...prevUsers, [userId]: userData }));
       return userData;
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      // console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       return null;
     }
   };
@@ -86,7 +86,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
         setError('Erreur lors de l\'ajout du commentaire.');
       }
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du commentaire:', error);
+      // console.error('Erreur lors de l\'ajout du commentaire:', error);
       setError('Erreur lors de l\'ajout du commentaire.');
     } finally {
       setLoading(false);

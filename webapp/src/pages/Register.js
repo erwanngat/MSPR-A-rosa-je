@@ -55,7 +55,7 @@ const Register = () => {
       }
     } catch (error) {
       setMessage('Error');
-      console.error('Error', error);
+      // console.error('Error', error);
     } finally {
       setLoading(false);
     }

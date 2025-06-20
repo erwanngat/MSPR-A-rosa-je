@@ -39,7 +39,7 @@ export default function ModalScreen() {
                     setIsReserved(reservation[0].gardener_user_id != null) // Si une réservation existe, la plante est réservée
                     console.log(isReserved)
                 } catch (error) {
-                    console.error("Erreur lors de la récupération des données de la plante", error);
+                    // console.error("Erreur lors de la récupération des données de la plante", error);
                 }
             }
         };
@@ -59,7 +59,7 @@ export default function ModalScreen() {
             const fetchedComments = await CommentService().getCommentsByPlant(plantId, token);
             setComments(fetchedComments);
         } catch (error) {
-            console.error("Erreur lors de la récupération des commentaires", error);
+            // console.error("Erreur lors de la récupération des commentaires", error);
         } finally {
             setLoading(false);
         }
@@ -84,7 +84,7 @@ export default function ModalScreen() {
                 fetchComments(Number(id));
             }
         } catch (error) {
-            console.error("Erreur lors de l'ajout du commentaire", error);
+            // console.error("Erreur lors de l'ajout du commentaire", error);
         } finally {
             setLoading(false);
         }
@@ -98,7 +98,7 @@ export default function ModalScreen() {
                 fetchComments(Number(id)); // Rafraîchir les commentaires
             }
         } catch (error) {
-            console.error("Erreur lors de la suppression du commentaire", error);
+            // console.error("Erreur lors de la suppression du commentaire", error);
         } finally {
             setLoading(false);
         }
@@ -126,7 +126,7 @@ export default function ModalScreen() {
                 fetchComments(Number(id));
             }
         } catch (error) {
-            console.error("Erreur lors de la mise à jour du commentaire", error);
+            // console.error("Erreur lors de la mise à jour du commentaire", error);
         } finally {
             setLoading(false);
         }

@@ -21,7 +21,7 @@ const CommentService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -41,7 +41,7 @@ const CommentService = () => {
             
             return await response.json();
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return [];
         }
     };
@@ -58,7 +58,7 @@ const CommentService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -77,7 +77,7 @@ const CommentService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };

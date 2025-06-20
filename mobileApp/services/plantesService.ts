@@ -16,15 +16,15 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des plantes');
+        //throw new Error('Erreur lors de la récupération des plantes');
       }
 
       const data = await response.json();
       console.log('bedore' + data);
       return data;
     } catch (error) {
-      console.error('Erreur dans getPlantes:', error);
-      throw error;
+      //console.error('Erreur dans getPlantes:', error);
+      //throw error;
     }
   };
 
@@ -39,14 +39,14 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des plantes');
+        //throw new Error('Erreur lors de la récupération des plantes');
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getPlantes:', error);
-      throw error;
+      //console.error('Erreur dans getPlantes:', error);
+      //throw error;
     }
   };
 
@@ -62,13 +62,13 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error('Erreur lors de la récupération des plantes');
+        //throw new Error('Erreur lors de la récupération des plantes');
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getPlantes:', error);
+      //console.error('Erreur dans getPlantes:', error);
       return []
     }
   };
@@ -87,8 +87,8 @@ const plantesService = (token: string) => {
 
       return response;
     } catch (error) {
-      console.error('Erreur dans addPlante:', error);
-      throw error;
+      //console.error('Erreur dans addPlante:', error);
+      //throw error;
     }
   }
 
@@ -116,7 +116,7 @@ const plantesService = (token: string) => {
       
       // Si la réponse n'est pas OK, loggez l'erreur complète
       if (!response.ok) {
-        console.error('Réponse du serveur:', responseText);
+        //console.error('Réponse du serveur:', responseText);
         return { ok: false, text: responseText };
       }
   
@@ -124,8 +124,8 @@ const plantesService = (token: string) => {
       const data = responseText ? JSON.parse(responseText) : {};
       return { ok: true, data };
     } catch (error) {
-      console.error('Erreur dans updatePlante:', error);
-      throw error;
+      //console.error('Erreur dans updatePlante:', error);
+      //throw error;
     }
   };
 
@@ -140,11 +140,11 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de la suppression de la plante: ${response.statusText}`);
+        //throw new Error(`Erreur lors de la suppression de la plante: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('Erreur dans deletePlante:', error);
-      throw error;
+      //console.error('Erreur dans deletePlante:', error);
+      //throw error;
     }
   };
 
@@ -160,14 +160,14 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de la récupération des réservations: ${response.statusText}`);
+        //throw new Error(`Erreur lors de la récupération des réservations: ${response.statusText}`);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getReservationsByPlanteId:', error);
-      throw error;
+      //console.error('Erreur dans getReservationsByPlanteId:', error);
+      //throw error;
     }
   };
 
@@ -183,14 +183,14 @@ const plantesService = (token: string) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de la récupération des commentaires: ${response.statusText}`);
+        //throw new Error(`Erreur lors de la récupération des commentaires: ${response.statusText}`);
       }
 
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getCommentsByPlanteId:', error);
-      throw error;
+      //console.error('Erreur dans getCommentsByPlanteId:', error);
+      //throw error;
     }
   };
 

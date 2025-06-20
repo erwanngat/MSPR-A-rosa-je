@@ -37,7 +37,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
         const data = await AddressesService().getAddresses();
         setAddresses(data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des adresses:', error);
+        // console.error('Erreur lors de la récupération des adresses:', error);
       }
     };
 
@@ -68,7 +68,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setAddressId(createdAddress.id); 
       setShowAddressForm(false); 
     } catch (error) {
-      console.error('Erreur lors de la création de l\'adresse:', error);
+      // console.error('Erreur lors de la création de l\'adresse:', error);
       setError('Erreur lors de la création de l\'adresse.');
     }
   };
@@ -119,7 +119,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setPreviewImage(null);
     } catch (err) {
       setError('Erreur lors de l\'ajout de la plante.');
-      console.error(err);
+      // console.error(err);
     } finally {
       setLoading(false);
     }

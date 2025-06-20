@@ -28,7 +28,7 @@ export default function ProfileScreen () {
             avatarUrl: userProfile.avatarUrl || 'https://via.placeholder.com/100', // Utilisation d'une image par défaut si aucune image
           });
         } catch (error) {
-          console.error('Erreur lors de la récupération du profil:', error);
+          // console.error('Erreur lors de la récupération du profil:', error);
         } finally {
           setLoading(false);  // Une fois les données récupérées, on arrête le chargement
         }
