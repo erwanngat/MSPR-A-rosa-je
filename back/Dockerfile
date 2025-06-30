@@ -27,7 +27,7 @@ RUN docker-php-ext-install gd
 # Installer PDO MySQL
 RUN docker-php-ext-install pdo_mysql
 
-# Installer Xdebug pour les tests et le debug
+# Installer Xdebug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -38,13 +38,13 @@ RUN a2enmod rewrite
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copier les fichiers Laravel
+# Copier les fichiers de l'application
 COPY . .
 
-# Copier le fichier .env.example vers .env
+# Copier le fichier .env.example → .env
 RUN cp .env.example .env
 
-# Configurer MySQL dans le fichier .env
+# Configurer MySQL dans le .env
 RUN echo "DB_CONNECTION=mysql" >> .env && \
     echo "DB_HOST=mysql" >> .env && \
     echo "DB_PORT=3306" >> .env && \
@@ -59,16 +59,18 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Installer les dépendances PHP
+# Installer les dépendances PHP et JS
 RUN composer install
 
 # Installer les dépendances NPM
 RUN npm install
-
-# Générer les assets front-end avec Vite
 RUN npm run build
 
-# Copier la configuration Apache personnalisée
+# Lancer les commandes Laravel
+RUN php artisan key:generate
+RUN php artisan storage:link
+
+# Copier la config Apache personnalisée
 COPY apache-default.conf /etc/apache2/sites-available/000-default.conf
 
 # Copier le script d'initialisation
@@ -78,5 +80,5 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 # Exposer le port HTTP
 EXPOSE 80
 
-# Lancer le script d'initialisation
+# Démarrer via le script d'entrypoint
 ENTRYPOINT ["entrypoint.sh"]
