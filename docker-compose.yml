@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   backend:
     build:
@@ -6,6 +8,20 @@ services:
     container_name: back-container
     ports:
       - "8080:80"
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: arosage
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
 
   frontend:
     build:
@@ -16,6 +32,7 @@ services:
       - "3000:3000"
     depends_on:
       - backend
+
   mobileApp:
     build:
       context: ./mobileApp
@@ -31,3 +48,6 @@ services:
     tty: true
     depends_on:
       - backend
+
+volumes:
+  mysql_data:
