@@ -8,7 +8,10 @@ class Messageries extends Model
 {
     protected $fillable = ['message', 'user_id_sender', 'user_id_receiver'];
 
-    public function user(){
-        return $this->belongsTo(User::class);
+    public function userSender(){
+        return $this->belongsTo(User::class, 'user_id_sender');
+    }
+    public function userReceiver(){
+        return $this->belongsTo(User::class, 'user_id_receiver');
     }
 }

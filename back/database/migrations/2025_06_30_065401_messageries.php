@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('messageries', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
+            $table->longText('message');
             $table->foreignId('user_id_sender')->constrained('users');
             $table->foreignId('user_id_receiver')->constrained('users');
         });
