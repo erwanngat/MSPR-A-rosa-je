@@ -52,7 +52,6 @@ RUN echo "DB_CONNECTION=mysql" >> .env && \
     echo "DB_USERNAME=root" >> .env && \
     echo "DB_PASSWORD=" >> .env
 
-
 # Autoriser Composer en root
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
@@ -60,7 +59,7 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Installer les dépendances Composer
+# Installer les dépendances PHP
 RUN composer install
 
 # Installer les dépendances NPM
@@ -69,20 +68,15 @@ RUN npm install
 # Générer les assets front-end avec Vite
 RUN npm run build
 
-# Générer la clé d'application Laravel
-RUN php artisan key:generate
-
-# Éfectuer les migrations
-RUN php artisan migrate:fresh --seed
-
-# Création d'un lien dans le dossier storage pour gérer les images
-RUN mkdir -p storage/app/public && php artisan storage:link
-
 # Copier la configuration Apache personnalisée
 COPY apache-default.conf /etc/apache2/sites-available/000-default.conf
+
+# Copier le script d'initialisation
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Exposer le port HTTP
 EXPOSE 80
 
-# Lancer Apache
-CMD ["apache2-foreground"]
+# Lancer le script d'initialisation
+ENTRYPOINT ["entrypoint.sh"]
