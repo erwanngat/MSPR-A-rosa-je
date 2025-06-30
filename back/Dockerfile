@@ -3,7 +3,8 @@ FROM php:8.4-apache
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
-# Installer les dépendances système nécessaires
+
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -11,22 +12,25 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     zip \
-    libsqlite3-dev \
     unzip \
     nodejs \
     npm \
-    sqlite3
+    libjpeg62-turbo-dev \
+    libfreetype6-dev \
+    libpng-dev \
+    default-mysql-client
 
-# Installer uniquement l'extension PHP pour SQLite
-RUN docker-php-ext-install pdo_sqlite
+# Activer GD (gestion d'images)
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg
+RUN docker-php-ext-install gd
 
+# Installer PDO MySQL
+RUN docker-php-ext-install pdo_mysql
+
+# Installer Xdebug pour les tests et le debug
 RUN pecl install xdebug \
     && docker-php-ext-enable xdebug \
     && echo "xdebug.mode=coverage" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
-RUN apt-get update && apt-get install -y libjpeg62-turbo-dev libfreetype6-dev libpng-dev
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg
-RUN docker-php-ext-install gd
 
 # Activer le module rewrite d'Apache
 RUN a2enmod rewrite
@@ -34,27 +38,27 @@ RUN a2enmod rewrite
 # Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Copier les fichiers du projet Laravel depuis le dossier back
+# Copier les fichiers Laravel
 COPY . .
 
 # Copier le fichier .env.example vers .env
 RUN cp .env.example .env
 
-# Configurer SQLite dans le fichier .env
-RUN echo "DB_CONNECTION=sqlite" >> .env && \
-    echo "DB_DATABASE=/var/www/html/database/database.sqlite" >> .env
+# Configurer MySQL dans le fichier .env
+RUN echo "DB_CONNECTION=mysql" >> .env && \
+    echo "DB_HOST=mysql" >> .env && \
+    echo "DB_PORT=3306" >> .env && \
+    echo "DB_DATABASE=arosage" >> .env && \
+    echo "DB_USERNAME=root" >> .env && \
+    echo "DB_PASSWORD=" >> .env
 
-# Créer le fichier de base de données SQLite
-RUN touch database/database.sqlite
 
-#Donner les droits de super utilisateur pour installer composer
+# Autoriser Composer en root
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
-# Ajouter les perms sur la bdd et les répertoires nécessaires
-RUN chown -R www-data:www-data /var/www/html/database/database.sqlite
-RUN chmod 664 /var/www/html/database/database.sqlite
-RUN chown -R www-data:www-data /var/www/html/database
-RUN chmod -R 775 /var/www/html/database
+# Donner les permissions à Laravel
+RUN chown -R www-data:www-data /var/www/html
+RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Installer les dépendances Composer
 RUN composer install
@@ -74,15 +78,11 @@ RUN php artisan migrate:fresh --seed
 # Création d'un lien dans le dossier storage pour gérer les images
 RUN mkdir -p storage/app/public && php artisan storage:link
 
-# Donner les permissions appropriées aux répertoires de stockage et de cache Laravel
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
-RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache /var/www/html/database/database.sqlite
-
-# Copier le fichier de configuration Apache
+# Copier la configuration Apache personnalisée
 COPY apache-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Exposer le port 80
+# Exposer le port HTTP
 EXPOSE 80
 
-# Démarrer Apache
+# Lancer Apache
 CMD ["apache2-foreground"]
