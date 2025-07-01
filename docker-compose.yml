@@ -127,7 +127,6 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
-      # - /cgroup:/cgroup:ro # Commenté car ne marche pas sur MacOS
     restart: unless-stopped
     expose:
       - 8080
