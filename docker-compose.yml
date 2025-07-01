@@ -17,7 +17,7 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_DATABASE: arosage
     ports:
-      - "3306:3306"
+      - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
@@ -29,7 +29,7 @@ services:
       dockerfile: Dockerfile
     container_name: back-container
     ports:
-      - "8080:80"
+      - "8080:8081"
     depends_on:
       - mysql
     networks:
@@ -41,7 +41,7 @@ services:
       dockerfile: Dockerfile
     container_name: webapp-container
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - backend
     networks:
