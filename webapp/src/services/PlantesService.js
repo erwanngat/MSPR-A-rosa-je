@@ -1,5 +1,5 @@
 const PlantesService = () => {
-    const baseUrl = 'http://localhost:8080/api/plantes'; // URL de base de l'API
+    const baseUrl = 'http://localhost:8081/api/plantes'; // URL de base de l'API
   
     // Récupérer le token depuis le sessionStorage
     const getToken = () => {
