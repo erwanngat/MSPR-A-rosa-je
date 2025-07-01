@@ -145,6 +145,7 @@
       <path value="$PROJECT_DIR$/back/vendor/spatie/laravel-permission" />
       <path value="$PROJECT_DIR$/back/vendor/staabm/side-effects-detector" />
       <path value="$PROJECT_DIR$/back/vendor/psr/cache" />
+      <path value="$PROJECT_DIR$/back/vendor/laravel/telescope" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.2" />

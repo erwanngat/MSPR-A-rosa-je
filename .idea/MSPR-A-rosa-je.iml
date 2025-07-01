@@ -123,6 +123,7 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/psr/cache" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/spatie/laravel-permission" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/staabm/side-effects-detector" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/laravel/telescope" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
