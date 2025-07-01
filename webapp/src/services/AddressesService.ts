@@ -1,7 +1,7 @@
 import { IAddress } from "../types/IAddress"; // Assurez-vous d'avoir un type IAddress défini
 
 const AddressesService = () => {
-  const baseUrl = 'http://localhost:8080/api/addresses'; // URL de base de l'API
+  const baseUrl = 'http://localhost:8081/api/addresses'; // URL de base de l'API
 
   // Récupérer le token depuis le sessionStorage
   const getToken = () => {
