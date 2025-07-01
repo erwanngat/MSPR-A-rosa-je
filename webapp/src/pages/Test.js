@@ -26,7 +26,7 @@ const Test = () => {
   const fetchAllReservations = async () => {
     try {
       // Supposons que vous avez un endpoint pour récupérer toutes les réservations
-      const response = await fetch('http://localhost:808/api/reservations', {
+      const response = await fetch('http://localhost:8081/api/reservations', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
