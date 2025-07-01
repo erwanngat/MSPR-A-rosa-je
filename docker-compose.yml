@@ -1,12 +1,29 @@
+version: "3.9"
+
 networks:
   monitor-net:
     driver: bridge
 
 volumes:
-  prometheus_data: {}
-  grafana_data: {}
+  mysql_data:
+  prometheus_data:
+  grafana_data:
 
 services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: arosage
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - monitor-net
 
   backend:
     build:
@@ -15,6 +32,8 @@ services:
     container_name: back-container
     ports:
       - "8080:80"
+    depends_on:
+      - mysql
     networks:
       - monitor-net
 
@@ -30,23 +49,23 @@ services:
     networks:
       - monitor-net
 
-  mobileApp:
-    build:
-      context: ./mobileApp
-      dockerfile: Dockerfile
-    container_name: mobile-app-container
-    ports:
-      - "19000:19000"
-      - "19001:19001"
-      - "19002:19002"
-    volumes:
-      - ./mobileApp:/app
-    stdin_open: true
-    tty: true
-    depends_on:
-      - backend
-    networks:
-      - monitor-net
+  # mobileApp:
+  #   build:
+  #     context: ./mobileApp
+  #     dockerfile: Dockerfile
+  #   container_name: mobile-app-container
+  #   ports:
+  #     - "19000:19000"
+  #     - "19001:19001"
+  #     - "19002:19002"
+  #   volumes:
+  #     - ./mobileApp:/app
+  #   stdin_open: true
+  #   tty: true
+  #   depends_on:
+  #     - backend
+  #   networks:
+  #     - monitor-net
 
   prometheus:
     image: prom/prometheus:v3.1.0
@@ -66,44 +85,6 @@ services:
       - 9090
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  alertmanager:
-    image: prom/alertmanager:v0.28.0
-    container_name: alertmanager
-    volumes:
-      - ./alertmanager:/etc/alertmanager
-    command:
-      - '--config.file=/etc/alertmanager/config.yml'
-      - '--storage.path=/alertmanager'
-    restart: unless-stopped
-    expose:
-      - 9093
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  nodeexporter:
-    image: prom/node-exporter:v1.8.2
-    container_name: nodeexporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    expose:
-      - 9100
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
 
   cadvisor:
     image: gcr.io/cadvisor/cadvisor:v0.51.0
@@ -116,14 +97,11 @@ services:
       - /var/run:/var/run:ro
       - /sys:/sys:ro
       - /var/lib/docker:/var/lib/docker:ro
-      #- /cgroup:/cgroup:ro # does not work on MacOS
     restart: unless-stopped
     expose:
       - 8080
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
 
   grafana:
     image: grafana/grafana:11.5.1
@@ -141,37 +119,3 @@ services:
       - 3000
     networks:
       - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  pushgateway:
-    image: prom/pushgateway:v1.11.0
-    container_name: pushgateway
-    restart: unless-stopped
-    expose:
-      - 9091
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
-
-  caddy:
-    image: caddy:2.9.1
-    container_name: caddy
-    ports:
-      - "3000:3000"
-      - "8080:8080"
-      - "9090:9090"
-      - "9093:9093"
-      - "9091:9091"
-    volumes:
-      - ./caddy:/etc/caddy
-    environment:
-      - ADMIN_USER=${ADMIN_USER:-admin}
-      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-      - ADMIN_PASSWORD_HASH=${ADMIN_PASSWORD_HASH:-$2a$14$1l.IozJx7xQRVmlkEQ32OeEEfP5mRxTpbDTCTcXRqn19gXD8YK1pO}
-    restart: unless-stopped
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "monitoring"
