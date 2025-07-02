@@ -19,10 +19,10 @@ const PlantesService = () => {
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des plantes');
         }
-        console.log(response);
+        //console.log(response);
   
         const data = await response.json();
-        console.log(data);
+        //console.log(data);
         return data;
       } catch (error) {
         // console.error('Erreur dans getPlantes:', error);
@@ -149,7 +149,7 @@ const PlantesService = () => {
         const data = await response.json();
         return data;
       } catch (error) {
-        console.error('Erreur dans deletePlante:', error);
+        //console.error('Erreur dans deletePlante:', error);
         // throw error;
       }
     };

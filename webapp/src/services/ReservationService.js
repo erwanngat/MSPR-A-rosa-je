@@ -108,13 +108,13 @@ const ReservationService = () => {
                     end_date: updatedReservation.end_date,
                 }),
             });
-            console.log("aaaaaaa");
-            console.log(response);
-            console.log("Objet reservation en BDD");
-            console.log(updatedReservation.gardener_user_id);
-            console.log(updatedReservation.plante_id);
-            console.log(updatedReservation.start_date);
-            console.log(updatedReservation.end_date);
+            // console.log("aaaaaaa");
+            // console.log(response);
+            // console.log("Objet reservation en BDD");
+            // console.log(updatedReservation.gardener_user_id);
+            // console.log(updatedReservation.plante_id);
+            // console.log(updatedReservation.start_date);
+            // console.log(updatedReservation.end_date);
 
             return response.ok;
         } catch (err) {

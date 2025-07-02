@@ -238,12 +238,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             </div>
           )}
           
-          <div className="button-position2">
-          {(name || description ||image ||previewImage)&& (
-              <button  onClick={resetAll}>
-              reset
-            </button>
-            )}
+          <div style={styles.buttons}>
             <button type="submit" disabled={loading}>
               {loading ? 'In progress...' : 'Add'}
             </button>
@@ -258,6 +253,15 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   );
 };
 
+const styles = {
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '0.6rem',
+  },
+};
+
+// Styles personnalisés pour react-select
 const customStyles = {
   control: (provided) => ({
     ...provided,
