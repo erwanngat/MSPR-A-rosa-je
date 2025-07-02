@@ -16,7 +16,7 @@ Route::withoutMiddleware([VerifyCsrfToken::class])->group(function () {
     Route::post('login', [AuthController::class, 'login']);
 });
 
-//Route::middleware('auth:sanctum')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('users', UserController::class);
     Route::apiResource('plantes', PlanteController::class);
     Route::apiResource('comments', CommentController::class);
@@ -27,4 +27,4 @@ Route::withoutMiddleware([VerifyCsrfToken::class])->group(function () {
     Route::get('withoutgardener/plantes/reservations', [PlanteController::class, 'getAllPlantesWithoutGardener']);
     Route::get('users/{id}/plantes', [UserController::class, 'getUserPlantes']);
     Route::get('users/{id}/addresses', [UserController::class, 'getUserAdresses']);
-//});
+});
