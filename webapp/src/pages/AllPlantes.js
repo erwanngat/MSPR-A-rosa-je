@@ -109,7 +109,7 @@ const AllPlantes = () => {
           //className={`toggle-button ${showReservedPlantes ? 'active' : ''}`}
           className='btn'
         >
-          {showReservedPlantes ? 'Afficher toutes les plantes' : 'Afficher les plantes réservées'}
+          {showReservedPlantes ? 'Show all plants' : 'Show reserved plants'}
         </button>
       </div>
       <br/>

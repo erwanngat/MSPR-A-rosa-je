@@ -9,7 +9,6 @@ const UserService = () => {
     };
 
     const register = async (user: IUser, password_confirmation: string): Promise<boolean> => {
-        try {
             const response = await fetch(`${baseUrl}/register`, {
                 method: 'POST',
                 headers: {
@@ -32,10 +31,7 @@ const UserService = () => {
             } else {
                 return false;
             }
-        } catch (err) {
-            // console.error(err);
-            return false;
-        }
+
     };
 
     const login = async (email: string, password: string) => {

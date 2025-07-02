@@ -8,7 +8,6 @@ const CommentService = () => {
       };
 
     const addComment = async (comment: IComment): Promise<boolean> => {
-        try {
             const token = getToken();
             const response = await fetch(`${baseUrl}/comments`, {
                 method: 'POST',
@@ -20,14 +19,10 @@ const CommentService = () => {
             });
 
             return response.ok;
-        } catch (err) {
-            // console.error(err);
-            return false;
-        }
+
     };
 
     const getCommentsByPlant = async (plant_id: number): Promise<IComment[]> => {
-        try {
             const token = getToken();
             const response = await fetch(`${baseUrl}/plantes/${plant_id}/comments`, {
                 method: 'GET',
@@ -40,10 +35,7 @@ const CommentService = () => {
             if (!response.ok) throw new Error('Failed to fetch comments');
             
             return await response.json();
-        } catch (err) {
-            // console.error(err);
-            return [];
-        }
+
     };
 
     const deleteComment = async (commentId: number): Promise<boolean> => {
@@ -58,13 +50,11 @@ const CommentService = () => {
 
             return response.ok;
         } catch (err) {
-            // console.error(err);
             return false;
         }
     };
 
     const updateComment = async (commentId: number, updatedComment: IComment): Promise<boolean> => {
-        try {
             const token = getToken();
             const response = await fetch(`${baseUrl}/comments/${commentId}`, {
                 method: 'PUT',
@@ -76,10 +66,7 @@ const CommentService = () => {
             });
 
             return response.ok;
-        } catch (err) {
-            // console.error(err);
-            return false;
-        }
+
     };
 
     return { addComment, getCommentsByPlant, deleteComment, updateComment };

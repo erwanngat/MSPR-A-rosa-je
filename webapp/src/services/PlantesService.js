@@ -6,7 +6,6 @@ const PlantesService = () => {
     };
   
     const getPlantes = async () => {
-      try {
         const token = getToken();
         const response = await fetch(`${baseUrl}plantes`, {
           method: 'GET',
@@ -19,26 +18,19 @@ const PlantesService = () => {
         if (!response.ok) {
           throw new Error('Erreur lors de la récupération des plantes');
         }
-        //console.log(response);
-  
+
         const data = await response.json();
-        //console.log(data);
         return data;
-      } catch (error) {
-        // console.error('Erreur dans getPlantes:', error);
-        // throw error;
-      }
+
     };
   
-    // Récupérer une plante par son ID
     const getPlantesById = async (id) => {
-      try {
         const token = getToken();
         const response = await fetch(`${baseUrl}plantes/${id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
+            Authorization: `Bearer ${token}`,
           },
         });
   
@@ -48,13 +40,9 @@ const PlantesService = () => {
   
         const data = await response.json();
         return data;
-      } catch (error) {
-        // console.error('Erreur dans getPlantesById:', error);
-        // throw error;
-      }
+
     };
     const getPlantesByUserId = async (id) => {
-      try {
         const token = getToken();
         const response = await fetch(`${baseUrl}users/${id}/plantes`, {
           method: 'GET',
@@ -70,10 +58,7 @@ const PlantesService = () => {
   
         const data = await response.json();
         return data;
-      } catch (error) {
-        // console.error('Erreur dans getPlantesById:', error);
-        // throw error;
-      }
+
     };
   
     const addPlante = async (planteData) => {
@@ -84,29 +69,23 @@ const PlantesService = () => {
             headers: {
               Authorization: `Bearer ${token}`, 
             },
-            body: planteData, // FormData
+            body: planteData,
           });
       
           if (!response.ok) {
             const errorText = await response.text(); 
-            // console.error('Erreur API:', errorText);
-            // throw new Error(`Erreur lors de l'ajout de la plante: ${errorText}`);
+
           }
       
           const data = await response.json();
           return data;
         } catch (error) {
-          // console.error('Erreur dans addPlante:', error);
-          // throw error;
+
         }
       };
   
     const updatePlante = async (id, planteData) => {
-        console.log(planteData);
-        console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD")
-        console.log(`${baseUrl}/${id}`);
-
-        try {
+      try {
           const token = getToken();
           console.log(token);
           const response = await fetch(`${baseUrl}plantes/${id}`, {
@@ -126,12 +105,10 @@ const PlantesService = () => {
           console.log(data);
           return data;
         } catch (error) {
-          // console.error('Erreur dans updatePlante:', error);
-          // throw error;
+
         }
       };
   
-    // Supprimer une plante
     const deletePlante = async (id) => {
       try {
         const token = getToken();
@@ -149,8 +126,6 @@ const PlantesService = () => {
         const data = await response.json();
         return data;
       } catch (error) {
-        //console.error('Erreur dans deletePlante:', error);
-        // throw error;
       }
     };
   

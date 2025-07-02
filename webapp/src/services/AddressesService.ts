@@ -1,22 +1,18 @@
 import { IAddress } from "../types/IAddress"; // Assurez-vous d'avoir un type IAddress défini
 
 const AddressesService = () => {
-  const baseUrl = 'http://localhost:8080/api/addresses'; // URL de base de l'API
-
-  // Récupérer le token depuis le sessionStorage
+  const baseUrl = 'http://localhost:8080/api/addresses';
   const getToken = () => {
-    return sessionStorage.getItem('token'); // Assurez-vous que le token est stocké ici après la connexion
+    return sessionStorage.getItem('token');
   };
 
-  // Récupérer toutes les adresses
   const getAddresses = async () => {
-    try {
-      const token = getToken();
+     const token = getToken();
       const response = await fetch(baseUrl, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Ajouter le token dans l'en-tête
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -26,15 +22,10 @@ const AddressesService = () => {
 
       const data = await response.json();
       return data;
-    } catch (error) {
-      // console.error('Erreur dans getAddresses:', error);
-      // throw error;
-    }
+
   };
 
-  // Créer une nouvelle adresse
   const createAddress = async (addressData: IAddress) => {
-    try {
       const token = getToken();
       const response = await fetch(baseUrl, {
         method: 'POST',
@@ -51,15 +42,10 @@ const AddressesService = () => {
 
       const data = await response.json();
       return data;
-    } catch (error) {
-      // console.error('Erreur dans createAddress:', error);
-      // throw error;
-    }
+
   };
 
-  // Mettre à jour une adresse existante
   const updateAddress = async (id: number, addressData: IAddress) => {
-    try {
       const token = getToken();
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'PUT',
@@ -76,15 +62,9 @@ const AddressesService = () => {
 
       const data = await response.json();
       return data;
-    } catch (error) {
-      // console.error('Erreur dans updateAddress:', error);
-      // throw error;
-    }
-  };
 
-  // Supprimer une adresse
+  };
   const deleteAddress = async (id: number) => {
-    try {
       const token = getToken();
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'DELETE',
@@ -99,10 +79,7 @@ const AddressesService = () => {
 
       const data = await response.json();
       return data;
-    } catch (error) {
-      // console.error('Erreur dans deleteAddress:', error);
-      // throw error;
-    }
+
   };
 
   return {
