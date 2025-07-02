@@ -246,7 +246,7 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
                 onClick={handleCreateAddress}
                 style={styles.createAddressButton}
               >
-                Creat adress
+                Create adress
               </button>
             </div>
           )}
@@ -279,89 +279,99 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
   );
 };
 
-// Styles CSS en ligne
 const styles = {
   overlay: {
     position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    top: 0, left: 0,
+    width: '100%', height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
   },
   dialog: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '8px',
-    width: '400px', // Ajustez la largeur si nécessaire
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    backgroundColor: '#ffffff',
+    padding: '2rem',
+    borderRadius: '1rem',
+    width: '400px',
+    boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+    fontFamily: 'Segoe UI, sans-serif',
+    marginRight: '20px', // marge à droite
   },
   input: {
     width: '100%',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
+    padding: '0.75rem',
+    marginBottom: '0.8rem',
+    borderRadius: '0.5rem',
+    border: '1px solid #c2c2c2',
+    background: '#f9fbf7',
   },
   textarea: {
     width: '100%',
-    padding: '10px',
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
+    padding: '0.75rem',
+    marginBottom: '0.8rem',
+    borderRadius: '0.5rem',
+    border: '1px solid #c2c2c2',
+    background: '#f9fbf7',
     resize: 'vertical',
   },
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end',
-    gap: '10px',
+    gap: '0.6rem',
   },
   error: {
-    color: 'red',
-    marginBottom: '10px',
+    color: '#c0392b',
+    marginBottom: '0.8rem',
+    fontSize: '0.9rem',
   },
   addressSection: {
     display: 'flex',
-    gap: '10px',
-    marginBottom: '10px',
+    gap: '0.6rem',
+    marginBottom: '0.8rem',
   },
   createButton: {
-    padding: '10px 20px',
-    borderRadius: '4px',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '1rem',
     border: 'none',
-    backgroundColor: '#28a745',
-    color: '#fff',
+    backgroundColor: '#6b8e23',
+    color: 'white',
     cursor: 'pointer',
+    fontSize: '0.95rem',
+    transition: 'background 0.3s',
   },
   addressForm: {
-    marginBottom: '10px',
+    marginBottom: '0.8rem',
   },
   createAddressButton: {
-    padding: '10px 20px',
-    borderRadius: '4px',
+    padding: '0.6rem 1.2rem',
+    borderRadius: '1rem',
     border: 'none',
-    backgroundColor: '#007bff',
-    color: '#fff',
+    backgroundColor: '#8fbc8f',
+    color: 'white',
     cursor: 'pointer',
+    fontSize: '0.95rem',
+    transition: 'background 0.3s',
   },
 };
 
-// Styles personnalisés pour react-select
+
+// Styles react-select cohérents et modernes
 const customStyles = {
-  control: (provided) => ({
+  control: (provided, state) => ({
     ...provided,
-    marginBottom: '10px',
-    borderRadius: '4px',
-    border: '1px solid #ccc',
+    marginBottom: '0.8rem',
+    borderRadius: '0.5rem',
+    borderColor: state.isFocused ? '#6b8e23' : '#c2c2c2',
+    boxShadow: state.isFocused ? '0 0 0 2px rgba(107,142,35,0.2)' : 'none',
+    background: '#f9fbf7',
   }),
   option: (provided, state) => ({
     ...provided,
-    backgroundColor: state.isSelected ? '#007bff' : 'white',
+    backgroundColor: state.isSelected ? '#6b8e23' : (state.isFocused ? '#dcedc8' : 'white'),
     color: state.isSelected ? 'white' : 'black',
   }),
 };
+
 
 export default EditPlanteDialog;

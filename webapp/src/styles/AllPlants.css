@@ -1,11 +1,28 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f1f8f4; /* vert très clair sur toute la page */
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+html, body {
+    width: 100%;
+    overflow-x: hidden;
+}
+
 .all-plantes-container {
     padding: 20px;
     font-family: Arial, sans-serif;
+    background-color: #f1f8f4; /* vert très clair en fond */
 }
 
 .all-plantes-title {
     text-align: center;
     margin-bottom: 20px;
+    color: #2e7d32; /* vert foncé */
+    font-size: 24px;
 }
 
 .all-plantes-search-container {
@@ -17,9 +34,16 @@
 .all-plantes-search-bar {
     width: 420px;
     padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
+    border-radius: 6px;
+    border: 1px solid #a5d6a7; /* vert clair */
     font-size: 16px;
+    background-color: #ffffff;
+    transition: border-color 0.3s;
+}
+
+.all-plantes-search-bar:focus {
+    outline: none;
+    border-color: #4caf50; /* vert plus vif au focus */
 }
 
 .all-plantes-plantes-grid {
@@ -30,18 +54,20 @@
 }
 
 .all-plantes-plante-card {
-    border: 1px solid #ccc;
+    border: 1px solid #c8e6c9; /* vert pâle */
     border-radius: 10px;
     padding: 15px;
     width: 200px;
     text-align: center;
+    background-color: #ffffff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
+    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
 }
 
 .all-plantes-plante-card:hover {
     transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 .all-plantes-plante-image {
@@ -49,9 +75,11 @@
     height: 100px;
     border-radius: 10px;
     margin-bottom: 10px;
+    object-fit: cover;
 }
 
 .all-plantes-plante-name {
     font-size: 16px;
     font-weight: bold;
+    color: #388e3c; /* vert légèrement plus foncé */
 }

@@ -1,75 +1,89 @@
 .add-plante-dialog-overlay {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .add-plante-dialog-dialog {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    width: 400px; /* Ajustez la largeur si nécessaire */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    width: 400px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    font-family: 'Segoe UI', sans-serif;
 }
 
-.add-plante-dialog-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-}
-
+/* Champs texte et textarea */
+.add-plante-dialog-input,
 .add-plante-dialog-textarea {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    resize: vertical;
+    padding: 0.75rem;
+    margin-bottom: 0.8rem;
+    border-radius: 0.5rem;
+    border: 1px solid #c2c2c2;
+    background: #f9fbf7;
+    transition: border 0.3s;
+}
+.add-plante-dialog-input:focus,
+.add-plante-dialog-textarea:focus {
+    border-color: #6b8e23;
+    outline: none;
 }
 
+/* Zone pour l'erreur */
+.add-plante-dialog-error {
+    color: #c0392b;
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+}
+
+/* Boutons */
 .add-plante-dialog-buttons {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
+    gap: 0.6rem;
 }
 
-.add-plante-dialog-error {
-    color: red;
-    margin-bottom: 10px;
+/* Bouton créer */
+.add-plante-dialog-create-button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: #6b8e23;
+    color: white;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.3s;
+}
+.add-plante-dialog-create-button:hover {
+    background-color: #556b2f;
 }
 
+/* Bouton pour créer l’adresse */
+.add-plante-dialog-create-address-button {
+    padding: 0.6rem 1.2rem;
+    border-radius: 1rem;
+    border: none;
+    background-color: #8fbc8f;
+    color: white;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.3s;
+}
+.add-plante-dialog-create-address-button:hover {
+    background-color: #6e9e6e;
+}
+
+/* Section et formulaire d’adresse */
 .add-plante-dialog-address-section {
     display: flex;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 0.6rem;
+    margin-bottom: 0.8rem;
 }
-
-.add-plante-dialog-create-button {
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: none;
-    background-color: #28a745;
-    color: #fff;
-    cursor: pointer;
-}
-
 .add-plante-dialog-address-form {
-    margin-bottom: 10px;
-}
-
-.add-plante-dialog-create-address-button {
-    padding: 10px 20px;
-    border-radius: 4px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+    margin-bottom: 0.8rem;
 }
