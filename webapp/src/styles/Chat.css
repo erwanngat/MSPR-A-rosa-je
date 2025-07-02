@@ -1,0 +1,169 @@
+/* Chat.css */
+.chat-app-container {
+  display: flex;
+  height: 94vh;
+}
+
+.chats-sidebar {
+  width: 300px;
+  background-color: #f5f5f5;
+  border-right: 1px solid #ddd;
+  overflow-y: auto;
+}
+
+.sidebar-title {
+  padding: 15px;
+  margin: 0;
+  border-bottom: 1px solid #ddd;
+  background-color: #4CAF50;
+  color: white;
+}
+
+.chat-list {
+  padding: 10px;
+}
+
+.chat-item {
+  display: flex;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  margin-bottom: 5px;
+  transition: background-color 0.2s;
+}
+
+.chat-item:hover {
+  background-color: #e0e0e0;
+}
+
+.chat-item.active {
+  background-color: #d4edda;
+}
+
+.chat-avatar {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.chat-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.chat-info h3 {
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-preview {
+  margin: 0;
+  color: #666;
+  font-size: 0.9em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  max-width: calc(100% - 300px);
+}
+
+.chat-header {
+  padding: 15px;
+  background-color: #4CAF50;
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.chat-partner-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  font-size: 24px;
+}
+
+.messages-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  background-color: #e5ddd5;
+  background-image: url('https://www.transparenttextures.com/patterns/light-paper-fibers.png');
+}
+
+.message {
+  margin-bottom: 15px;
+  display: flex;
+}
+
+.message-content {
+  display: flex;
+  align-items: flex-start;
+  max-width: 70%;
+}
+
+.message-sender-avatar {
+  margin-right: 8px;
+  font-size: 20px;
+}
+
+.message-text {
+  padding: 10px 15px;
+  border-radius: 18px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.sent .message-content {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.sent .message-text {
+  background-color: #dcf8c6;
+  color: #000;
+}
+
+.received .message-text {
+  background-color: white;
+  color: #000;
+}
+
+.message-input-form {
+  display: flex;
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-top: 1px solid #ddd;
+}
+
+.message-input-form input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  outline: none;
+  font-size: 16px;
+}
+
+.message-input-form button {
+  margin-left: 10px;
+  padding: 12px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.message-input-form button:hover {
+  background-color: #45a049;
+}
