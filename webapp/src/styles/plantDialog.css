@@ -1,0 +1,71 @@
+/* Styles pour l'image de la plante */
+
+
+/* Styles pour les sections */
+.dialog-section {
+    margin-top: 20px;
+}
+
+/* Styles pour les cartes (commentaires/réservations) */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card {
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    padding: 15px;
+    flex: 1 1 calc(50% - 20px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+/* Styles pour les boutons */
+
+/* Styles pour le formulaire de commentaire */
+.comment-form {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.comment-input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: vertical;
+    min-height: 100px;
+    margin-bottom: 10px;
+    font-family: inherit;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+/* Styles pour le texte */
+.dialog-title {
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.section-title {
+    color: #2c3e50;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.card-text {
+    margin: 5px 0;
+    color: #333;
+}
+
+.card-strong {
+    font-weight: bold;
+    color: #2c3e50;
+}

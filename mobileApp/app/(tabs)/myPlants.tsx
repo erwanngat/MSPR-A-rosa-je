@@ -30,7 +30,7 @@ export default function MyPlantsScreen() {
       }
       
     } catch (error) {
-      console.error('Erreur lors de la suppression :', error);
+      // console.error('Erreur lors de la suppression :', error);
     }
   };
 

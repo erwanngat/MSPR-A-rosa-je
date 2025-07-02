@@ -6,7 +6,6 @@ import EditPlanteDialog from '../composent/dialogs/EditPlanteDialog';
 
 const MyPlants = () => {
   const [plantes, setPlantes] = useState([]);
-  const [filteredPlantes, setFilteredPlantes] = useState([]); // Plantes filtrées par user_id
   const [selectedPlante, setSelectedPlante] = useState(null);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -25,22 +24,21 @@ const MyPlants = () => {
     fetchPlantes();
   }, []);
   useEffect(() => {
-    if (filteredPlantes.length > 0) {
-      filteredPlantes.forEach((plante) => {
+    if (plantes.length > 0) {
+      plantes.forEach((plante) => {
         fetchReservationsForPlant(plante.id);
       });
     }
-  }, [filteredPlantes]);
+  }, [plantes]);
 
   const fetchPlantes = async () => {
     try {
-      const data = await PlantesService().getPlantes();
+      const data = await PlantesService().getPlantesByUserId(userId);
       setPlantes(data);
 
       const userPlantes = data.filter((plante) => plante.user_id === userId);
-      setFilteredPlantes(userPlantes);
     } catch (error) {
-      console.error('Erreur lors de la récupération des plantes:', error);
+      // console.error('Erreur lors de la récupération des plantes:', error);
     }
   };
 
@@ -52,8 +50,11 @@ const MyPlants = () => {
         ...prev,
         [plantId]: reservations,
       }));
+      if (!reservations.ok){
+        return [];
+      }
     } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
+      // console.error('Erreur lors de la récupération des réservations:', error);
     }
   };
 
@@ -104,7 +105,7 @@ const MyPlants = () => {
         alert('Erreur lors de la création de la réservation.');
       }
     } catch (error) {
-      console.error('Erreur lors de la création de la réservation:', error);
+      // console.error('Erreur lors de la création de la réservation:', error);
       alert('Une erreur est survenue.');
     }
   };
@@ -112,21 +113,18 @@ const MyPlants = () => {
   // Gérer l'ajout réussi d'une plante
   const handleAddSuccess = (newPlante) => {
     setPlantes([...plantes, newPlante]);
-    setFilteredPlantes([...filteredPlantes, newPlante]);
   };
 
   // Gérer la mise à jour réussie d'une plante
   const handleUpdateSuccess = (updatedPlante) => {
     const updatedPlantes = plantes.map((p) => (p.id === updatedPlante.id ? updatedPlante : p));
     setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
   };
 
   // Gérer la suppression réussie d'une plante
   const handleDeleteSuccess = (planteId) => {
     const updatedPlantes = plantes.filter((p) => p.id !== planteId);
     setPlantes(updatedPlantes);
-    setFilteredPlantes(updatedPlantes.filter((p) => p.user_id === userId));
   };
 
   return (
@@ -137,11 +135,11 @@ const MyPlants = () => {
 
       {/* Conteneur pour les plantes et les boutons */}
       <div className="my-plants-list">
-        {filteredPlantes.map((plante) => (
+        {plantes.map((plante) => (
           <div key={plante.id} className="my-plants-item">
             <div className="my-plants-plante-card" onClick={() => openEditDialog(plante)}>
               <img
-                src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
+                src={plante.image != null ? plante.image : "./../img/default-plant.png" }
                 alt={plante.name}
                 className="my-plants-plante-image"
               />

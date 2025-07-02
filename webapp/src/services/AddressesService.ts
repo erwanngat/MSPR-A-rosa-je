@@ -1,7 +1,7 @@
 import { IAddress } from "../types/IAddress"; // Assurez-vous d'avoir un type IAddress défini
 
 const AddressesService = () => {
-  const baseUrl = 'http://localhost:8081/api/addresses'; // URL de base de l'API
+  const baseUrl = 'http://localhost:8080/api/addresses'; // URL de base de l'API
 
   // Récupérer le token depuis le sessionStorage
   const getToken = () => {
@@ -27,8 +27,8 @@ const AddressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getAddresses:', error);
-      throw error;
+      // console.error('Erreur dans getAddresses:', error);
+      // throw error;
     }
   };
 
@@ -52,8 +52,8 @@ const AddressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans createAddress:', error);
-      throw error;
+      // console.error('Erreur dans createAddress:', error);
+      // throw error;
     }
   };
 
@@ -77,8 +77,8 @@ const AddressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans updateAddress:', error);
-      throw error;
+      // console.error('Erreur dans updateAddress:', error);
+      // throw error;
     }
   };
 
@@ -100,8 +100,8 @@ const AddressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans deleteAddress:', error);
-      throw error;
+      // console.error('Erreur dans deleteAddress:', error);
+      // throw error;
     }
   };
 

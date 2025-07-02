@@ -30,7 +30,7 @@ const Login = () => {
         setError('Invalid email or password');
       }
     } catch (err) {
-      console.error('Login error:', err);
+      // console.error('Login error:', err);
       setError('An error occurred during login');
     }
   };
@@ -40,7 +40,7 @@ const Login = () => {
       <div className="login-form">
         <h2>A'Rosa-je</h2>
         
-        {error && <div className="error-message">{error}</div>}  {/* Afficher l'erreur si elle existe */}
+        {error && <div className="text-error">{error}</div>}  {/* Afficher l'erreur si elle existe */}
 
         <form onSubmit={handleSubmit}>
           <div className="input-group">

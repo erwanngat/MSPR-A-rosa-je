@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import PlantesService from '../../services/PlantesService';
 import UserService from '../../services/userService.ts';
 import CommentService from '../../services/CommentService.ts';
 import { useNavigate } from 'react-router-dom';
 
 
 const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
-  //const [reservations, setReservations] = useState([]);
   const [comments, setComments] = useState([]);
-  const [users, setUsers] = useState({});
+  const [usersCache, setUsersCache] = useState({});
   const [showCommentForm, setShowCommentForm] = useState(false);
   const [newComment, setNewComment] = useState('');
   const [loading, setLoading] = useState(false);
@@ -31,56 +29,35 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
 
   useEffect(() => {
     if (plante) {
-      //fetchReservations();
       fetchComments();
     }
   }, [plante]);
   useEffect(() => {
-    // Charger les informations des utilisateurs pour les réservations
-    // reservations.forEach((reservation) => {
-    //   fetchUser(reservation.owner_user_id);
-    //   fetchUser(reservation.gardener_user_id);
-    // });
-
-    // Charger les informations des utilisateurs pour les commentaires
     comments.forEach((comment) => {
       fetchUser(comment.user_id);
     });
-  }, [comments]); //[reservations, comments]);
+  }, [comments]); 
 
-  // const fetchReservations = async () => {
-  //   try {
-  //     const data = await PlantesService().getReservationsByPlanteId(plante.id);
-  //     setReservations(data);
-  //   } catch (error) {
-  //     console.error('Erreur lors de la récupération des réservations:', error);
-  //   }
-  // };
 
   const fetchComments = async () => {
     try {
-      const data = await CommentService().getCommentsByPlant(plante.id, getToken());
+      const data = await CommentService().getCommentsByPlant(plante.id);
       setComments(data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des commentaires:', error);
+      // console.error('Erreur lors de la récupération des commentaires:', error);
     }
   };
 
   const fetchUser = async (userId) => {
-    if (users[userId]) {
-      return users[userId];
-    }
+    if (usersCache[userId]!== undefined) return usersCache[userId];  
     try {
-      const userData = await UserService().getUser(getToken(), userId);
-      setUsers((prevUsers) => ({ ...prevUsers, [userId]: userData }));
+      const userData = await UserService().getUser(userId);
+      setUsersCache((prevUsers) => ({ ...prevUsers, [userId]: userData }));
       return userData;
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      // console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       return null;
     }
-  };
-  const getToken = () => {
-    return sessionStorage.getItem('token');
   };
 
   const handleAddComment = async (e) => {
@@ -100,7 +77,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
         plant_id: plante.id,
       };
 
-      const success = await CommentService().addComment(commentData, getToken());
+      const success = await CommentService().addComment(commentData);
       if (success) {
         await fetchComments();
         setNewComment('');
@@ -109,7 +86,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
         setError('Erreur lors de l\'ajout du commentaire.');
       }
     } catch (error) {
-      console.error('Erreur lors de l\'ajout du commentaire:', error);
+      // console.error('Erreur lors de l\'ajout du commentaire:', error);
       setError('Erreur lors de l\'ajout du commentaire.');
     } finally {
       setLoading(false);
@@ -120,59 +97,40 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
   };
 
   return (
-    <div style={styles.overlay} onClick={onClose}>
-      <div style={styles.dialog} onClick={(e) => e.stopPropagation()}>
-        <h2>{plante.name} </h2>  
-        {/* ({userPlante.name}) */}
+    <div className="dialog-overlay" onClick={onClose}>
+      <div className="dialog-large" onClick={(e) => e.stopPropagation()}>
+        <h2 className="dialog-title">{plante.name}</h2>
+        
         <img
-          src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
-          
-          //alt={plante.name}
-          style={styles.planteImage}
+          src={plante.image != null ? plante.image : "./../img/default-plant.png"}
+          className="plante-image"
+          alt={plante.name}
         />
+        
         <p><strong>Description:</strong> {plante.description}</p>
-        <button onClick={handleNavigateToProfil} className='btn'>
-           Get in touch
+        
+        <button onClick={handleNavigateToProfil} className="btn btn-primary">
+          Get in touch
         </button>
 
-        {/* Réservations de la plante */}
-        {/* <div style={styles.section}>
-          <h3>Reservations</h3>
-          <div style={styles.cardContainer}>
-            {reservations.length > 0 ? (
-              reservations.map((reservation) => {
-                const ownerName = users[reservation.owner_user_id]?.name || 'Loading...';
-                const gardenerName = users[reservation.gardener_user_id]?.name || 'Loading...';
-
-                return (
-                  <div key={reservation.id} style={styles.card}>
-                   <p><strong>ID:</strong> {reservation.id}</p>
-                    <p><strong>Owner:</strong> {ownerName}</p>
-                    <p><strong>Gardener:</strong> {gardenerName}</p>
-                    <p><strong>Start date:</strong> {formatDate(reservation.start_date)}</p>
-                    <p><strong>End date:</strong> {formatDate(reservation.end_date)}</p>
-                  </div>
-                );
-              })
-            ) : (
-              <p>No reservation for this plant.</p>
-            )}
-          </div>
-        </div> */}
-
-        {/* Commentaires de la plante */}
-        <div style={styles.section}>
-          <h3>Comments</h3>
-          <div style={styles.cardContainer}>
+        {/* Section Commentaires */}
+        <div className="dialog-section">
+          <h3 className="section-title">Comments</h3>
+          <div className="card-container">
             {comments.length > 0 ? (
               comments.map((comment) => {
-                const userName = users[comment.user_id]?.name || 'Loading...';
+                //const user = usersCache[comment.user_id];
+                let user = usersCache[comment.user_id]; 
+                if (!user) {
+                  user = fetchUser(plante.user_id);
+                }
 
                 return (
-                  <div key={comment.id} style={styles.card}>
-                    <p><strong>{userName}</strong> </p>
-                    <p>{comment.comment}</p>
-                    <p><strong>Date:</strong> {formatDate(comment.created_at)}</p>
+                  <div key={comment.id} className="card">
+                    <img src={user.profile_photo_url} alt="Avatar" className="profile-avatar2"/><span className="card-strong">{user ? user.name : 'Chargement...'}</span>
+                    {/* <p className="card-text"></p> */}
+                    <p className="card-text">{comment.comment}</p>
+                    <p className="card-text"><span className="card-strong">Date:</span> {formatDate(comment.created_at)}</p>
                   </div>
                 );
               })
@@ -182,34 +140,32 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
           </div>
         </div>
 
-        {/* Bouton pour ajouter un commentaire */}
-        { sessionStorage.getItem('role') == "botaniste" &&(
-        <button
-          onClick={() => setShowCommentForm(true)}
-          style={styles.addCommentButton}
-        >
-          Add a comment
-        </button>
+        {sessionStorage.getItem('role') == "botaniste" && (
+          <button
+            onClick={() => setShowCommentForm(true)}
+            className="btn btn-primary"
+          >
+            Add a comment
+          </button>
         )}
 
-        {/* Formulaire pour ajouter un commentaire */}
         {showCommentForm && (
-          <form onSubmit={handleAddComment} style={styles.commentForm}>
+          <form onSubmit={handleAddComment} className="comment-form">
             <textarea
               placeholder="Votre commentaire"
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              style={styles.commentInput}
+              className="comment-input"
             />
-            {error && <div style={styles.error}>{error}</div>}
-            <div style={styles.commentFormButtons}>
-              <button type="submit" disabled={loading}>
+            {error && <div className="error-message">{error}</div>}
+            <div className="form-buttons">
+              <button type="submit" className="btn btn-primary" disabled={loading}>
                 {loading ? 'En cours...' : 'Ajouter'}
               </button>
               <button
                 type="button"
                 onClick={() => setShowCommentForm(false)}
-                style={styles.cancelButton}
+                className="btn btn-danger"
               >
                 Cancel
               </button>
@@ -217,8 +173,7 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
           </form>
         )}
 
-        {/* Bouton pour fermer la boîte de dialogue */}
-        <button onClick={onClose} style={styles.closeButton}>
+        <button onClick={onClose} className="btn btn-danger">
           Close
         </button>
       </div>
@@ -226,95 +181,5 @@ const PlanteDialog = ({ plante, userPlante, reservation = null , onClose }) => {
   );
 };
 
-// Styles CSS en ligne
-const styles = {
-  overlay: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  dialog: {
-    backgroundColor: '#fff',
-    padding: '20px',
-    borderRadius: '10px',
-    width: '800px',
-    maxHeight: '80vh',
-    overflowY: 'auto',
-    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  },
-  planteImage: {
-    maxWidth: '100%',
-    maxHeight: '400px',
-    borderRadius: '10px',
-    marginBottom: '20px',
-  },
-  section: {
-    marginTop: '20px',
-  },
-  cardContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    gap: '10px',
-  },
-  card: {
-    border: '1px solid #ccc',
-    borderRadius: '10px',
-    padding: '15px',
-    flex: '1 1 calc(50% - 20px)',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-  },
-  addCommentButton: {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#28a745',
-    color: '#fff',
-    cursor: 'pointer',
-    marginTop: '20px',
-  },
-  commentForm: {
-    marginTop: '20px',
-  },
-  commentInput: {
-    width: '100%',
-    padding: '10px',
-    borderRadius: '5px',
-    border: '1px solid #ccc',
-    resize: 'vertical',
-  },
-  commentFormButtons: {
-    display: 'flex',
-    gap: '10px',
-    marginTop: '10px',
-  },
-  cancelButton: {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#dc3545',
-    color: '#fff',
-    cursor: 'pointer',
-  },
-  closeButton: {
-    padding: '10px 20px',
-    borderRadius: '5px',
-    border: 'none',
-    backgroundColor: '#dc3545',
-    color: '#fff',
-    cursor: 'pointer',
-    marginTop: '20px',
-  },
-  error: {
-    color: 'red',
-    marginBottom: '10px',
-  },
-  
-};
 
 export default PlanteDialog;

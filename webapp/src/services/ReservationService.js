@@ -1,12 +1,13 @@
 const ReservationService = () => {
-    const baseUrl = 'http://localhost:8081/api';
+    const baseUrl = 'http://localhost:8080/api';
 
     const getToken = () => {
         return sessionStorage.getItem('token'); // Assurez-vous que le token est stocké ici après la connexion
       };
 
-    const addReservation = async (reservation, token) => {
+    const addReservation = async (reservation) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations`, {
                 method: 'POST',
                 headers: {
@@ -23,13 +24,14 @@ const ReservationService = () => {
             });
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
 
-    const getAllReservations = async (token) => {
+    const getAllReservations = async () => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations`, {
                 method: 'GET',
                 headers: {
@@ -38,16 +40,17 @@ const ReservationService = () => {
                 },
             });
 
-            if (!response.ok) throw new Error('Failed to fetch reservations');
+                // if (!response.ok) throw new Error('Failed to fetch reservations');
 
             return await response.json();
         } catch (error) {
-            console.error('Erreur lors de la récupération des réservations:', error);
+            // console.error('Erreur lors de la récupération des réservations:', error);
         }
     };
 
-    const getReservationsByPlant = async (plant_id, token) => {
+    const getReservationsByPlant = async (plant_id) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/plantes/${plant_id}/reservations`, {
                 method: 'GET',
                 headers: {
@@ -56,17 +59,18 @@ const ReservationService = () => {
                 },
             });
 
-            if (!response.ok) throw new Error('Failed to fetch reservations');
+            // if (!response.ok) throw new Error('Failed to fetch reservations');
 
             return await response.json();
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return [];
         }
     };
 
-    const deleteReservation = async (reservationId, token) => {
+    const deleteReservation = async (reservationId) => {
         try {
+            const token = getToken();
             const response = await fetch(`${baseUrl}/reservations/${reservationId}`, {
                 method: 'DELETE',
                 headers: {
@@ -76,7 +80,7 @@ const ReservationService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -104,17 +108,17 @@ const ReservationService = () => {
                     end_date: updatedReservation.end_date,
                 }),
             });
-            console.log("aaaaaaa");
-            console.log(response);
-            console.log("Objet reservation en BDD");
-            console.log(updatedReservation.gardener_user_id);
-            console.log(updatedReservation.plante_id);
-            console.log(updatedReservation.start_date);
-            console.log(updatedReservation.end_date);
+            // console.log("aaaaaaa");
+            // console.log(response);
+            // console.log("Objet reservation en BDD");
+            // console.log(updatedReservation.gardener_user_id);
+            // console.log(updatedReservation.plante_id);
+            // console.log(updatedReservation.start_date);
+            // console.log(updatedReservation.end_date);
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };

@@ -1,99 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import PlantesService from '../services/PlantesService';
-import UserService from '../services/userService.ts'; // Pour récupérer les informations des utilisateurs
-import ReservationService from '../services/ReservationService'; // Importer le service de réservation
-import PlanteDialog from '../composent/dialogs/PlanteDialog'; // Boîte de dialogue pour afficher les détails de la plante
+import UserService from '../services/userService.ts'; 
+import ReservationService from '../services/ReservationService'; 
+import PlanteDialog from '../composent/dialogs/PlanteDialog';
 
 const AllPlantes = () => {
-  const [plantes, setPlantes] = useState([]); // Liste de toutes les plantes
-  const [filteredPlantes, setFilteredPlantes] = useState([]); // Liste des plantes filtrées
-  const [searchTerm, setSearchTerm] = useState(''); // Terme de recherche
-  const [selectedPlante, setSelectedPlante] = useState(null); // Plante sélectionnée
+  const [plantes, setPlantes] = useState([]); // all plants
+  const [filteredPlantes, setFilteredPlantes] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedPlante, setSelectedPlante] = useState(null); 
   const [selectedUserPlante, setselectedUserPlante] = useState(null); 
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // État pour ouvrir/fermer la boîte de dialogue
-  const [users, setUsers] = useState({}); // Cache des utilisateurs pour éviter de les récupérer plusieurs fois
+  const [isDialogOpen, setIsDialogOpen] = useState(false); 
+  const [usersCache, setUsersCache] = useState({}); // Dictionary Users (cache)
   const [reservations, setReservations] = useState([]); // État pour stocker les réservations
-  const [showReservedPlantes, setShowReservedPlantes] = useState(false); // État pour basculer entre les modes d'affichage
+  const [showReservedPlantes, setShowReservedPlantes] = useState(false); 
   const [selectedReservation, setSelectedReservation] = useState(null); // Réservation associée à la plante sélectionnée
 
-  // Récupérer toutes les plantes et les réservations au chargement de la page
   useEffect(() => {
     fetchPlantes();
     fetchReservations();
   }, []);
 
-  // Fonction pour récupérer toutes les plantes
   const fetchPlantes = async () => {
     try {
       const data = await PlantesService().getPlantes();
       setPlantes(data);
-      setFilteredPlantes(data); // Initialiser les plantes filtrées avec toutes les plantes
+      setFilteredPlantes(data); // Initialisation
     } catch (error) {
-      console.error('Erreur lors de la récupération des plantes:', error);
+      // console.error('Erreur lors de la récupération des plantes:', error);
     }
   };
 
-  // Fonction pour récupérer toutes les réservations
   const fetchReservations = async () => {
     try {
-      const token = getToken();
-      const data = await ReservationService().getAllReservations(token);
+      const data = await ReservationService().getAllReservations();
       setReservations(data);
     } catch (error) {
-      console.error('Erreur lors de la récupération des réservations:', error);
+      // console.error('Erreur lors de la récupération des réservations:', error);
     }
   };
 
-  // Récupérer les informations de l'utilisateur associé à une plante
   const fetchUser = async (userId) => {
-    if (users[userId]) return users[userId]; // Utiliser le cache si l'utilisateur est déjà récupéré
-
+    if (usersCache[userId] !== undefined) return usersCache[userId]; // Return if already in cache
     try {
-      const userData = await UserService().getUser(getToken(), userId);
-      setUsers((prevUsers) => ({ ...prevUsers, [userId]: userData })); // Mettre à jour le cache
+      const userData = await UserService().getUser(userId);
+      setUsersCache(prevCache => ({
+        ...prevCache,
+        [userId]: userData
+      }));
       return userData;
     } catch (error) {
-      console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+      // console.error('Erreur lors de la récupération de l\'utilisateur:', error);
       return null;
     }
   };
 
-  // Récupérer le token depuis le sessionStorage
-  const getToken = () => {
-    return sessionStorage.getItem('token');
-  };
-
-  // Ouvrir la boîte de dialogue avec les détails de la plante
   const openDialog = async (plante, user) => {
     setSelectedPlante(plante);
     setselectedUserPlante(user);
 
-    // Trouver la réservation associée à la plante
+    // find plant reservation
     const reservation = reservations.find((res) => res.plante_id === plante.id);
-    setSelectedReservation(reservation || null); // Si aucune réservation n'est trouvée, définir à null
+    setSelectedReservation(reservation || null);
 
     setIsDialogOpen(true);
   };
 
-  // Fermer la boîte de dialogue
   const closeDialog = () => {
     setIsDialogOpen(false);
     setSelectedPlante(null);
-    setSelectedReservation(null); // Réinitialiser la réservation sélectionnée
+    setSelectedReservation(null); 
   };
 
-  // Filtrer les plantes en fonction du terme de recherche
+  // Filter plants
   useEffect(() => {
     let filtered = plantes;
-
-    // Appliquer le filtre de recherche
     if (searchTerm) {
       filtered = filtered.filter((plante) =>
         plante.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Appliquer le filtre des plantes réservées si le mode est activé
     if (showReservedPlantes) {
       const reservedPlanteIds = reservations.map((res) => res.plante_id);
       filtered = filtered.filter((plante) => reservedPlanteIds.includes(plante.id));
@@ -130,9 +117,9 @@ const AllPlantes = () => {
       {/* Grille des plantes */}
       <div className="all-plantes-plantes-grid">
         {filteredPlantes.map((plante) => {
-          const user = users[plante.user_id]; 
+          let user = usersCache[plante.user_id]; 
           if (!user) {
-            fetchUser(plante.user_id);
+            user = fetchUser(plante.user_id);
           }
 
           return (
@@ -142,8 +129,7 @@ const AllPlantes = () => {
               onClick={() => openDialog(plante, user)}
             >
               <img
-                //src={plante.image != null ? plante.image : "https://s3-alpha-sig.figma.com/img/1431/9e48/80ec1bccb575003f30796046cac5a12c?Expires=1740960000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=TVRbPcbJpfzbEgBlLGf8xxyh2HpbRf4oB1kA4sjoLWfGg0sNHr9dNWo4jnZbWHLlgEmf4dlS9eg8N9UeNIgWnNK50im1NePXktHn~sQkEVV530-aZHuKGKLQH54-cE~fH8dDm03TYMDp0dRG~WSz3HlX5h6P879XPQaFXm~UUSC3C5SFpyKRHO5kqP~6UBZzdabNqfHy5JWrWHordj6kVnd6TDsjpseovBdS5wnxkMDV6GkWFvOsqHp~aL16yoRvdzWlMhuHecn-ni71D4GfvmwQc-8d7B0T566oZ8jDGNpwVzZinHkrwGum4ABXNGxHRpIgy-i6z~1hgYrJ2bwNOw__"}
-                src={plante.image != null ? plante.image : "https://media.discordapp.net/attachments/1313422181556027394/1343955211659645009/aHlicmlk.png?ex=67c078d3&is=67bf2753&hm=5347bc6f83fa7f74e608cdcbffe4571d79691ae44bba16bb09ff1bb4616636bf&=&format=webp&quality=lossless" }
+                src={plante.image != null ? plante.image : "./../img/default-plant.png" }
                 alt={plante.name}
                 className="all-plantes-plante-image"
               />

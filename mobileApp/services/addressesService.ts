@@ -27,8 +27,8 @@ const addressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans getAddresses:', error);
-      throw error;
+      // console.error('Erreur dans getAddresses:', error);
+      // throw error;
     }
   };
 
@@ -52,8 +52,8 @@ const addressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans createAddress:', error);
-      throw error;
+      // console.error('Erreur dans createAddress:', error);
+      // throw error;
     }
   };
 
@@ -77,8 +77,8 @@ const addressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans updateAddress:', error);
-      throw error;
+      // console.error('Erreur dans updateAddress:', error);
+      // throw error;
     }
   };
 
@@ -100,8 +100,8 @@ const addressesService = () => {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erreur dans deleteAddress:', error);
-      throw error;
+      // console.error('Erreur dans deleteAddress:', error);
+      // throw error;
     }
   };
 

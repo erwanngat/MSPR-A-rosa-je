@@ -7,14 +7,14 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
   const [name, setName] = useState('');
   const [addressId, setAddressId] = useState('');
   const [description, setDescription] = useState('');
-  const [image, setImage] = useState(null); // État pour l'image
-  const [previewImage, setPreviewImage] = useState(null); // État pour l'URL de prévisualisation
+  const [image, setImage] = useState(null); 
+  const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [addresses, setAddresses] = useState([]); // Liste des adresses
-  const [selectedAddress, setSelectedAddress] = useState(null); // Adresse sélectionnée
-  const [showAddressForm, setShowAddressForm] = useState(false); // Afficher le formulaire d'adresse
-  const [newAddress, setNewAddress] = useState({ // Données de la nouvelle adresse
+  const [addresses, setAddresses] = useState([]); 
+  const [selectedAddress, setSelectedAddress] = useState(null); 
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [newAddress, setNewAddress] = useState({ 
     country: '',
     city: '',
     zip_code: '',
@@ -31,62 +31,67 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
     };
   }, [previewImage]);
 
-  // Récupérer toutes les adresses au chargement du composant
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
         const data = await AddressesService().getAddresses();
         setAddresses(data);
       } catch (error) {
-        console.error('Erreur lors de la récupération des adresses:', error);
+        // console.error('Erreur lors de la récupération des adresses:', error);
       }
     };
 
     fetchAddresses();
   }, []);
 
-  // Options pour le dropdown (format attendu par react-select)
+  //Adress show
   const addressOptions = addresses.map((address) => ({
-    value: address.id, // ID de l'adresse
-    label: `${address.street}, ${address.city}, ${address.country}`, // Affichage dans le dropdown
+    value: address.id, 
+    label: `${address.street}, ${address.city}, ${address.country}`,
   }));
 
-  // Gérer la sélection d'une adresse
   const handleAddressChange = (selectedOption) => {
     setSelectedAddress(selectedOption);
-    setAddressId(selectedOption ? selectedOption.value : ''); // Mettre à jour l'ID de l'adresse
+    setAddressId(selectedOption ? selectedOption.value : ''); 
   };
 
-  // Gérer les changements dans le formulaire de création d'adresse
   const handleAddressInputChange = (e) => {
     const { name, value } = e.target;
     setNewAddress({ ...newAddress, [name]: value });
   };
 
-  // Créer une nouvelle adresse
   const handleCreateAddress = async () => {
     try {
       const createdAddress = await AddressesService().createAddress(newAddress);
-      setAddresses([...addresses, createdAddress]); // Ajouter la nouvelle adresse à la liste
-      setSelectedAddress({ value: createdAddress.id, label: `${createdAddress.street}, ${createdAddress.city}, ${createdAddress.country}` }); // Sélectionner la nouvelle adresse
-      setAddressId(createdAddress.id); // Mettre à jour l'ID de l'adresse
-      setShowAddressForm(false); // Masquer le formulaire d'adresse
+      setAddresses([...addresses, createdAddress]);
+      setSelectedAddress({ value: createdAddress.id, label: `${createdAddress.street}, ${createdAddress.city}, ${createdAddress.country}` });
+      setAddressId(createdAddress.id); 
+      setShowAddressForm(false); 
     } catch (error) {
-      console.error('Erreur lors de la création de l\'adresse:', error);
+      // console.error('Erreur lors de la création de l\'adresse:', error);
       setError('Erreur lors de la création de l\'adresse.');
     }
   };
 
-  // Gérer la sélection d'une image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file); // Stocker le fichier image
-      setPreviewImage(URL.createObjectURL(file)); // Créer une URL de prévisualisation
+      setImage(file); 
+      setPreviewImage(URL.createObjectURL(file));
     }
   };
 
-  // Gérer la soumission du formulaire
+  const resetImage = () => {
+      setImage(null);
+      setPreviewImage(null);
+  }
+  const resetAll = () => {
+      setName('');
+      setDescription('');
+      setImage(null);
+      setPreviewImage(null);
+      setError('');
+}
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -103,9 +108,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       formData.append('name', name);
       formData.append('address_id', addressId);
       formData.append('description', description);
-      if (image) {
-        formData.append('image', image);
-      }
+      if (image) formData.append('image', image);
 
       const newPlante = await PlantesService().addPlante(formData);
       onAddSuccess(newPlante);
@@ -113,37 +116,38 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
       setName('');
       setDescription('');
       setImage(null);
+      setPreviewImage(null);
     } catch (err) {
       setError('Erreur lors de l\'ajout de la plante.');
-      console.error(err);
+      // console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Fermer la boîte de dialogue si l'utilisateur clique sur l'overlay
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) {
       onClose();
+      setError('');
     }
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="add-plante-dialog-overlay" onClick={handleOverlayClick}>
-      <div className="add-plante-dialog-dialog">
+    <div className="dialog-overlay" onClick={handleOverlayClick}>
+      <div className="dialog-small">
         <h2>Add plant</h2>
-        {error && <div className="add-plante-dialog-error">{error}</div>}
+        {error && <div className="text-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <input
             type="text"
             placeholder="Plant name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="add-plante-dialog-input"
+            className="text-input"
           />
-          <div className="add-plante-dialog-address-section">
+          <div className="button-position">
             <Select
               placeholder="Select adress"
               options={addressOptions}
@@ -156,20 +160,20 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             <button
               type="button"
               onClick={() => setShowAddressForm(!showAddressForm)}
-              className="add-plante-dialog-create-button"
+              className="button-green"
             >
               Create
             </button>
           </div>
           {showAddressForm && (
-            <div className="add-plante-dialog-address-form">
+            <div>
               <input
                 type="text"
                 name="country"
                 placeholder="country"
                 value={newAddress.country}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -177,7 +181,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="city"
                 value={newAddress.city}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -185,7 +189,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="Post code"
                 value={newAddress.zip_code}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -193,7 +197,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="street"
                 value={newAddress.street}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <input
                 type="text"
@@ -201,12 +205,12 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 placeholder="Further details"
                 value={newAddress.additional_address_details}
                 onChange={handleAddressInputChange}
-                className="add-plante-dialog-input"
+                className="text-input"
               />
               <button
                 type="button"
                 onClick={handleCreateAddress}
-                className="add-plante-dialog-create-address-button"
+                className="button-blue"
               >
                 Create adress
               </button>
@@ -216,16 +220,13 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             placeholder="Description of the plant"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="add-plante-dialog-textarea"
+            className="textarea"
           />
-          {/* Champ de téléchargement d'image */}
           <input
             type="file"
             accept="image/*"
             onChange={handleImageChange}
-            //className="add-plante-dialog-input"
           />
-          {/* Prévisualisation de l'image */}
           {previewImage && (
             <div className="add-plante-dialog-image-preview">
               <img
@@ -233,6 +234,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
                 alt="Preview"
                 className="img-preview"
               />
+              <button onClick={resetImage}>delete img</button>
             </div>
           )}
           
@@ -240,6 +242,7 @@ const AddPlanteDialog = ({ isOpen, onClose, onAddSuccess }) => {
             <button type="submit" disabled={loading}>
               {loading ? 'In progress...' : 'Add'}
             </button>
+            
             <button type="button" onClick={onClose}>
               Cancel
             </button>

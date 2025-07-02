@@ -21,8 +21,8 @@ const ReservationService = () => {
             });
             return response.ok;
         } catch (err) {
-            console.error(err);
-            return false;
+            // console.error(err);
+            // return false;
         }
     };
 
@@ -38,7 +38,7 @@ const ReservationService = () => {
             });
             return await response.json();
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return [];
         }
     };
@@ -54,7 +54,7 @@ const ReservationService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };
@@ -79,7 +79,7 @@ const ReservationService = () => {
 
             return response.ok;
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };

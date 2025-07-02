@@ -29,7 +29,7 @@ const UserService = () => {
                 return false;
             }
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             return false;
         }
     };

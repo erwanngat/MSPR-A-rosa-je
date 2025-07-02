@@ -52,7 +52,7 @@ const Profil = () => {
         alert('Échec de la mise à jour de la réservation.');
       }
     } catch (error) {
-      console.error('Erreur lors de la mise à jour de la réservation:', error);
+      // console.error('Erreur lors de la mise à jour de la réservation:', error);
       alert('Une erreur est survenue lors de la mise à jour de la réservation.');
     }
   };

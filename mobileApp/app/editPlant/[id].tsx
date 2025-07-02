@@ -33,7 +33,7 @@ export default function EditPlanteScreen() {
         setImageUri(planteData.image);
         setAddressId(planteData.address_id);
       } catch (error) {
-        console.error('Erreur lors de la récupération de la plante:', error);
+        // console.error('Erreur lors de la récupération de la plante:', error);
         Alert.alert('Erreur', 'Impossible de récupérer la plante.');
       }
     };
@@ -111,7 +111,7 @@ export default function EditPlanteScreen() {
         // Analysez l'erreur si c'est du JSON
         try {
           const errorData = JSON.parse(response.text);
-          console.error('Erreur détaillée:', errorData);
+          // console.error('Erreur détaillée:', errorData);
           
           // Affichez les messages d'erreur spécifiques si disponibles
           if (errorData.name || errorData.description) {
@@ -134,7 +134,7 @@ export default function EditPlanteScreen() {
       Alert.alert('Succès', 'Plante mise à jour avec succès !');
       router.push('/');
     } catch (error) {
-      console.error('Erreur lors de la mise à jour de la plante:', error);
+      // console.error('Erreur lors de la mise à jour de la plante:', error);
       Alert.alert('Erreur', 'Impossible de mettre à jour la plante.');
     }
   };

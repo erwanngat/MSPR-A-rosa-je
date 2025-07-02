@@ -109,7 +109,7 @@ export default function AddPlanteScreen() {
       Alert.alert('Succès', 'Plante ajoutée avec succès !');
       router.push('/');
     } catch (error) {
-      console.error('Erreur lors de l\'ajout de la plante:', error);
+      // console.error('Erreur lors de l\'ajout de la plante:', error);
       Alert.alert('Erreur', 'Impossible d\'ajouter la plante.');
     }
   };

@@ -14,13 +14,6 @@
   align-items: center;
 }
 
-.profile-avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 60%;
-  cursor: pointer;
-}
-
 .profile-container {
   display: flex;
   justify-content: center;
