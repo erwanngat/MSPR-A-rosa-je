@@ -42,7 +42,6 @@ export default function EditPlanteScreen() {
   }, [id]);
 
   const handleImagePicker = async () => {
-    console.log(imageUri);
     const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permission.granted) {
       const result = await ImagePicker.launchImageLibraryAsync({
@@ -52,7 +51,6 @@ export default function EditPlanteScreen() {
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        console.log(result.assets[0]);
       }
     } else {
       Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie.');
@@ -103,17 +101,12 @@ export default function EditPlanteScreen() {
     }
   
     try {
-      console.log('Envoi des données...');
-      // Utilisez la nouvelle version du service
       const response = await service.updatePlante(idPlante, formData);
   
       if (!response.ok) {
-        // Analysez l'erreur si c'est du JSON
         try {
           const errorData = JSON.parse(response.text);
-          // console.error('Erreur détaillée:', errorData);
-          
-          // Affichez les messages d'erreur spécifiques si disponibles
+
           if (errorData.name || errorData.description) {
             const errorMessages = [
               ...(errorData.name ? errorData.name : []),
@@ -125,7 +118,6 @@ export default function EditPlanteScreen() {
             Alert.alert('Erreur', 'Validation échouée. Vérifiez les données saisies.');
           }
         } catch (e) {
-          // Si ce n'est pas du JSON
           Alert.alert('Erreur', `Erreur du serveur: ${response.text}`);
         }
         return;
@@ -134,7 +126,6 @@ export default function EditPlanteScreen() {
       Alert.alert('Succès', 'Plante mise à jour avec succès !');
       router.push('/');
     } catch (error) {
-      // console.error('Erreur lors de la mise à jour de la plante:', error);
       Alert.alert('Erreur', 'Impossible de mettre à jour la plante.');
     }
   };

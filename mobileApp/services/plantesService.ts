@@ -5,8 +5,6 @@ const plantesService = (token: string) => {
   const baseUrlUser = 'http://localhost:8080';
 
   const getPlantesById = async (id: number) => {
-    try {
-      console.log(`${baseUrl}/${id}`);
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'GET',
         headers: {
@@ -20,12 +18,8 @@ const plantesService = (token: string) => {
       }
 
       const data = await response.json();
-      console.log('bedore' + data);
       return data;
-    } catch (error) {
-      //console.error('Erreur dans getPlantes:', error);
-      //throw error;
-    }
+
   };
 
   const getPlantes = async () => {
@@ -51,7 +45,6 @@ const plantesService = (token: string) => {
   };
 
   const getPlantesByUserId = async (id: number) => {
-    console.log(`${baseUrlUser}/users/${id}/plantes`);
     try {
       const response = await fetch(`${baseUrlUser}/api/users/${id}/plantes`, {
         method: 'GET',
@@ -94,12 +87,8 @@ const plantesService = (token: string) => {
 
   // Mettre à jour une plante existante
   const updatePlante = async (id: number, formData: FormData) => {
-    try {
-      // Vérifiez le contenu de FormData avant envoi (pour débogage)
-      console.log("FormData content:");
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
+
+
   
       const response = await fetch(`${baseUrl}/${id}`, {
         method: 'PUT',
@@ -123,10 +112,7 @@ const plantesService = (token: string) => {
       // Si le texte n'est pas vide, essayez de l'analyser comme du JSON
       const data = responseText ? JSON.parse(responseText) : {};
       return { ok: true, data };
-    } catch (error) {
-      //console.error('Erreur dans updatePlante:', error);
-      //throw error;
-    }
+
   };
 
   // Supprimer une plante

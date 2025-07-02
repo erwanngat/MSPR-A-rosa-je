@@ -30,7 +30,6 @@ export default function AddPlanteScreen() {
 
       if (!result.canceled) {
         setImageUri(result.assets[0].uri);
-        console.log(result.assets[0]);
       }
     } else {
       Alert.alert('Permission refusée', 'Vous devez autoriser l\'accès à la galerie.');
@@ -93,11 +92,7 @@ export default function AddPlanteScreen() {
 
     try {
       const response = await service.addPlante(formData);
-      console.log("id" + user.id);
       const plantes = await service.getPlantesByUserId(user.id);
-      console.log(plantes);
-      console.log("id" + plantes[plantes.length-1].id);
-      //@ts-ignore
       const responseReservation = await reservationService.addReservation({
         plante_id: plantes[plantes.length-1].id,
         owner_user_id: user.id,

@@ -33,15 +33,12 @@ const Profil = () => {
         ...reservation,
         gardener_user_id: tmpUser.id, // Ajouter 1 à gardener_user_id
       };
-      console.log("Reservation :")
-      console.log(updateReservation);
       //console.log(reservation);
 
       const success = await ReservationService().updateReservation(
         reservation.id,
         updatedReservation,
       );
-      console.log(success);
 
       if (success) {
 

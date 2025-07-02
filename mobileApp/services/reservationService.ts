@@ -60,8 +60,7 @@ const ReservationService = () => {
     };
 
     const updateReservation = async (reservationId: number, updatedReservation: IReservation, token: string): Promise<boolean> => {
-        try {
-            console.log(updatedReservation)
+
             const response = await fetch(`${baseUrl}/reservations/${reservationId}`, {
                 method: 'PUT',
                 headers: {
@@ -78,10 +77,7 @@ const ReservationService = () => {
             });
 
             return response.ok;
-        } catch (err) {
-            // console.error(err);
-            return false;
-        }
+
     };
 
     return { addReservation, getReservationsByPlant, deleteReservation, updateReservation };

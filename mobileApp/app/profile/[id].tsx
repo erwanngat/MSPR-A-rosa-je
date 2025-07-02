@@ -18,8 +18,7 @@ export default function ProfileScreen () {
         try {
           // Appel au service pour récupérer les données
           const userProfile = await UserService().getUser(userStored?.token, id);
-          console.log(userProfile);
-          
+
           // Formatage des données du profil
           setProfile({
             name: userProfile.name,

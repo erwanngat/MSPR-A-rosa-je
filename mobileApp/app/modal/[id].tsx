@@ -30,17 +30,10 @@ export default function ModalScreen() {
         const fetchPlanteData = async () => {
             if (id && token) {
                 const service = plantesService(token);
-                try {
                     const data = await service.getPlantesById(Number(id));
-                    setPlanteData(data);  // Stocker les données de la plante
-                    // Vérifier si la plante est déjà réservée
+                    setPlanteData(data);
                     const reservation = await ReservationService().getReservationsByPlant(Number(id), token);
-                    console.log(reservation);
-                    setIsReserved(reservation[0].gardener_user_id != null) // Si une réservation existe, la plante est réservée
-                    console.log(isReserved)
-                } catch (error) {
-                    // console.error("Erreur lors de la récupération des données de la plante", error);
-                }
+
             }
         };
 
@@ -142,19 +135,15 @@ export default function ModalScreen() {
     };
 
     const onReservation = async () => {
-        console.log("id: " + id);
         const reservation = await ReservationService().getReservationsByPlant(id, token);
-        console.log(reservation);
         if (reservation[0].gardener_user_id == null) {
-            console.log("null");
-            
+
             reservation[0].gardener_user_id = user?.id;
             const reservationSuccess = await ReservationService().updateReservation(reservation[0].id, reservation[0], token);
             if (reservationSuccess) {
                 setIsReserved(!isReserved);  // Mettre à jour l'état de la réservation
             }
         } else {
-            console.log("not null");
             // Annuler la réservation
             reservation[0].gardener_user_id == null;
             const cancelSuccess = await ReservationService().updateReservation(reservation[0].id, reservation[0], token);

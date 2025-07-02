@@ -5,7 +5,6 @@ const UserService = () => {
     const baseUrl: string = 'http://localhost:8080/api';
 
     const register = async (user: IUser, password_confirmation: string): Promise<boolean> => {
-        try {
             const response = await fetch(`${baseUrl}/register`, {
                 method: 'POST',
                 headers: {
@@ -22,16 +21,12 @@ const UserService = () => {
             });
 
             const data = await response.json();
-            console.log(data);
             if (response.ok) {
                 return true;
             } else {
                 return false;
             }
-        } catch (err) {
-            // console.error(err);
-            return false;
-        }
+
     };
 
     const login = async (email: string, password: string) => {
@@ -45,7 +40,6 @@ const UserService = () => {
         });
 
         const data = await response.json();
-        console.log("data: "  + data)
         return data;
     }
 
@@ -76,7 +70,6 @@ const UserService = () => {
                 phone_number: userData.phone,
             }),
         });
-        console.log(response);
     }
 
     return { register, login, getUser, updateUser };

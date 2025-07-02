@@ -87,7 +87,6 @@ const PlantesService = () => {
     const updatePlante = async (id, planteData) => {
       try {
           const token = getToken();
-          console.log(token);
           const response = await fetch(`${baseUrl}plantes/${id}`, {
             method: 'PATCH',
             headers: {
@@ -101,8 +100,7 @@ const PlantesService = () => {
           }
       
           const data = await response.json();
-          console.log(response);
-          console.log(data);
+
           return data;
         } catch (error) {
 

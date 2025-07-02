@@ -25,7 +25,6 @@ const UserService = () => {
             });
 
             const data = await response.json();
-            console.log(data);
             if (response.ok) {
                 return true;
             } else {
@@ -46,7 +45,6 @@ const UserService = () => {
         });
 
         const data = await response.json();
-        console.log(data);
         return data;
     }
 

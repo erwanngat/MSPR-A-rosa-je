@@ -18,7 +18,6 @@ const LoginScreen = () => {
     setError('');
     try {
       const data = await userService().login(email, password);
-      console.log(data);
       login({
         id: data.user.id,
         name: data.user.name,
@@ -31,7 +30,6 @@ const LoginScreen = () => {
       });
       router.replace('/');
     } catch (err) {
-      console.log(err);
       setError("Aucun utilisateur trouvé");
     }
   };

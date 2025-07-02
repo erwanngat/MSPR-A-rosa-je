@@ -41,7 +41,6 @@ export default function EditProfileScreen() {
         token: storedUser?.token,
         image: "https://i.ytimg.com/vi/P0EvZl8KvaE/maxresdefault.jpg?sqp=-oaymwEmCIAKENAF8quKqQMa8AEB-AHUBoAC4AOKAgwIABABGEUgWihlMA8=&rs=AOn4CLDEE4iluX-R8mt0njywABDdPaQOVQ",
       });
-      console.log(useUserStore.getState().user);
       const success = await UserService().updateUser(userData, storedUser?.token, password, passwordConfirmation);
     } catch (e) {
 

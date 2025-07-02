@@ -114,8 +114,6 @@ const EditPlanteDialog = ({ isOpen, onClose, plante, onUpdateSuccess, onDeleteSu
       formData.append('name', name);
       formData.append('address_id', addressId);
       formData.append('description', description);
-      console.log(planteData);
-      console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
       // Appel API pour mettre à jour la plante
       const updatedPlante = await PlantesService().updatePlante(plante.id, formData);
   
