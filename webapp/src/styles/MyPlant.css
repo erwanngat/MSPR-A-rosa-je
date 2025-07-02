@@ -1,126 +1,133 @@
+/* Container principal */
 .my-plants-container {
-    padding: 20px;
-    font-family: Arial, sans-serif;
+  padding: 2rem;
+  background: #f7f9f4; /* ton clair naturel */
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
 }
 
-.my-plants-title {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
+/* Bouton d'ajout */
 .my-plants-add-button {
-    padding: 10px 20px;
-    border-radius: 5px;
-    border: none;
-    background-color: #28a745;
-    color: #fff;
-    cursor: pointer;
-    margin-bottom: 20px;
+  background-color: #6b8e23; /* vert olive doux */
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 1.5rem;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: background 0.3s;
+}
+.my-plants-add-button:hover {
+  background-color: #556b2f; /* vert plus foncé au hover */
 }
 
+/* Liste des plantes */
 .my-plants-list {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    align-items: flex-start; /* Aligner les plantes à gauche */
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
 }
 
+/* Carte d'une plante */
 .my-plants-item {
-    display: flex;
-    align-items: center;
-    gap: 20px; /* Espace entre la plante et le bouton */
+  background: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s;
+}
+.my-plants-item:hover {
+  transform: translateY(-4px);
 }
 
-.my-plants-plante-card {
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    width: 150px;
-    text-align: center;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s;
-    cursor: pointer;
-}
-
-.my-plants-plante-card:hover {
-    transform: scale(1.05);
-}
-
+/* Image de la plante */
 .my-plants-plante-image {
-    width: 100px;
-    height: 100px;
-    border-radius: 10px;
-    margin-bottom: 10px;
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
 }
 
+/* Texte de la carte */
+.my-plants-plante-card {
+  padding: 1rem;
+  cursor: pointer;
+}
 .my-plants-plante-name {
-    font-size: 16px;
-    font-weight: bold;
+  font-weight: 600;
+  color: #2f4f4f; /* vert-gris naturel */
+  margin: 0.5rem 0;
 }
 
+/* Bouton de réservation */
 .my-plants-info-button {
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+  background-color: #8fbc8f; /* vert doux */
+  color: white;
+  border: none;
+  padding: 0.6rem;
+  border-radius: 0 0 1rem 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.3s;
+}
+.my-plants-info-button:disabled {
+  background-color: #a9a9a9; /* gris doux si désactivé */
+  cursor: not-allowed;
+}
+.my-plants-info-button:not(:disabled):hover {
+  background-color: #6e9e6e; /* vert plus foncé au hover */
 }
 
-.my-plants-info-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.my-plants-info-dialog-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-}
+/* Dialog réservation */
 .my-plants-reservation-dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
 .my-plants-reservation-dialog-content {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
+  background: white;
+  padding: 2rem;
+  border-radius: 1rem;
+  max-width: 400px;
+  width: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+.my-plants-reservation-dialog-content h2 {
+  margin-bottom: 1rem;
+  color: #2f4f4f;
+}
+.my-plants-reservation-dialog-content label {
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 0.3rem;
+  color: #556b2f;
+}
+.my-plants-reservation-dialog-content input[type="date"] {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
 }
 
-.my-plants-reservation-dialog-content input {
-    margin: 10px 0;
-    padding: 5px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-}
-
+/* Boutons du dialog */
 .my-plants-reservation-dialog-content button {
-    margin: 5px;
-    padding: 5px 10px;
-    border-radius: 5px;
-    border: none;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
+  margin-top: 1rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 1rem;
+  cursor: pointer;
+  background-color: #6b8e23;
+  color: white;
+  font-size: 0.9rem;
+  margin-right: 0.5rem;
+  transition: background 0.3s;
 }
-
 .my-plants-reservation-dialog-content button:hover {
-    background-color: #0056b3;
+  background-color: #556b2f;
 }
