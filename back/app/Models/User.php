@@ -31,6 +31,11 @@ class User extends Authenticatable
         'password',
         'phone_number'
     ];
+    public $casts = [
+        'name' => 'encrypted',
+        'email' => 'encrypted',
+        'phone_number' => 'encrypted'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.
