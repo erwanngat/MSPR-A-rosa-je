@@ -7,9 +7,10 @@ Il inclus:
 - Une API
 - Un site web 
 - Une application mobile
+- Un dashboard avec toutes les métriques des différents containers
 
 ## Prérequis
-- Docker
+- Avoir Docker
 
 ## Installation
 ```bash
@@ -21,5 +22,8 @@ $ cd MSPR-A-rosa-je
 
 # Lancer le docker-compose
 $ docker-compose up --build
-$ composer install
 ```
+
+Pour se connecter au site web aller sur l'url http://localhost:3001
+Pour se connecter à l'application mobile http://localhost:19000
+Pour se connecter au dashboard grafana http://localhost:3000, ensuite le user et le mot de passe sont admin.
