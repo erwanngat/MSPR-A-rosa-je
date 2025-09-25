@@ -1,6 +1,25 @@
-Pour lancer le back :
-Aller sur la branche develop puis cd back
-Apres avoir lancer docker desktop, faire docker build -t monImage .
-une fois finis faire :
-docker run -p <port>:<port> monImage
-ex: docker run -p 8080:80 monImage ou encore docker run -p 8000:80 monImage
+# Site A-rosa-je 
+
+## Ce projet regroupe une application mobile et web sur le thème des plantes.
+
+Ce projet est fait en PHP avec le framework Laravel, React et React Native.
+Il inclus:
+- Une API
+- Un site web 
+- Une application mobile
+
+## Prérequis
+- Docker
+
+## Installation
+```bash
+# Cloner le repository
+$ git clone https://github.com/erwanngat/MSPR-A-rosa-je
+
+# Aller dans le repository
+$ cd MSPR-A-rosa-je
+
+# Lancer le docker-compose
+$ docker-compose up --build
+$ composer install
+```
